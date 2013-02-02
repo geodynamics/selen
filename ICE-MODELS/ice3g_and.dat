@@ -1,0 +1,40 @@
+ice3g_and.dat 
+Region of the Andes 
+Authors: Tushingham and Peltier, JGR, 1991. 
+20   number of elements 
+20   header lines 
+2    lines for each element 
+18   time since the LGM (kyrs)
+1    lenght of each time step (kyrs)
+---------------
+For each ice element, the data are presented in two lines, with the following meaning: 
+a label, colatitude and longitude of the disc center (deg), half-amplitude of the disc 
+element (deg), a dummy variable, and disc element thickness (m). The first value is 
+thickness before the beginning of deglaciation (i.e. from -infinity to 18 kyrs BP), 
+the 18 elements that follow are ice thickness at 1 kyrs intervals up to present time, 
+and the last three elements are thicknesses during the future 3 kyrs (not used in the 
+computations). File SH3.F of SELEN reads this file and indicates with h_0 ice thickness 
+before melting begins, h_1 between 18 and 17 kyrs BP, ..., and with h_18 ice thickness 
+between 1 and 0 kyrs BP. With h_19=h_18 SELEN denotes the ice (constant) thickness in 
+the future. GS July 28 2007.  
+---------------
+ 175  128.700  288.400 0.625 1.000  156. 125.  98.   0.   0.   0.   0.   0.
+   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.
+ 176  129.900  288.200 0.625 1.000  274. 219. 171.   0.   0.   0.   0.   0.
+   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.
+ 177  131.000  288.200 0.625 1.000  352. 281. 220.   0.   0.   0.   0.   0.
+   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.
+ 178  132.700  287.500 1.000 1.000  417. 333. 261.   0.   0.   0.   0.   0.
+   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.
+ 179  134.800  286.800 1.250 1.000  417. 333. 261.   0.   0.   0.   0.   0.
+   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.
+ 180  137.000  286.400 1.300 1.000  417. 333. 261.   0.   0.   0.   0.   0.
+   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.
+ 181  139.600  286.000 1.175 1.000  417. 333. 261.   0.   0.   0.   0.   0.
+   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.
+ 182  141.800  286.200 1.250 1.000  417. 333. 261.   0.   0.   0.   0.   0.
+   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.
+ 183  143.700  288.300 1.600 1.000  417. 333. 261.   0.   0.   0.   0.   0.
+   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.
+ 184  145.200  291.500 0.875 1.000  350. 280. 220.   0.   0.   0.   0.   0.
+   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.

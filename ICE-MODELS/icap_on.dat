@@ -1,0 +1,22 @@
+icap.dat 
+The "DISK" model, similar to ICE3G, but written in ===> FREE FORMAT <===  
+Authors: GS & Giulio dal Forno 
+1    number of elements 
+20   header lines 
+2    lines for each element 
+18   time since the LGM (kyrs)
+1    lenght of each time step 
+---------------
+For each ice element, the data are presented in two lines, with the following meaning: 
+a label, colatitude and longitude of the disc center (deg), half-amplitude of the disc 
+element (deg), a dummy variable, and disc element thickness (m). The first value is 
+thickness before the beginning of deglaciation (i.e. from -infinity to 18 kyrs BP), 
+the 18 elements that follow are ice thickness at 1 kyrs intervals up to present time, 
+and the last three elements are thicknesses during the future 3 kyrs (not used in the 
+ computations). File SH3.F of SELEN reads this file and indicates with h_0 ice thickness 
+before melting begins, h_1 between 18 and 17 kyrs BP, ..., and with h_18 ice thickness 
+between 1 and 0 kyrs BP. With h_19=h_18 SELEN denotes the ice (constant) thickness in 
+the future. GS July 25 2008.  
+------------------------------- ---------------------------- ---------------------------
+   1     0.0     0.0    15.0      0. 2480. 2480. 2480. 2480. 2480. 2480. 2480.  
+                               2480. 2480. 2480. 2480. 2480. 2480. 2480. 2480. 2480. 2480. 2480. 

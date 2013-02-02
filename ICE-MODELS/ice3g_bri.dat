@@ -1,0 +1,26 @@
+ice3g_bri.dat 
+British Isles 
+Authors: Tushingham and Peltier, JGR, 1991. 
+3    number of elements 
+20   header lines 
+2    lines for each element 
+18   time since the LGM (kyrs)
+1    lenght of each time step 
+---------------
+For each ice element, the data are presented in two lines, with the following meaning: 
+a label, colatitude and longitude of the disc center (deg), half-amplitude of the disc 
+element (deg), a dummy variable, and disc element thickness (m). The first value is 
+thickness before the beginning of deglaciation (i.e. from -infinity to 18 kyrs BP), 
+the 18 elements that follow are ice thickness at 1 kyrs intervals up to present time, 
+and the last three elements are thicknesses during the future 3 kyrs (not used in the 
+computations). File SH3.F of SELEN reads this file and indicates with h_0 ice thickness 
+before melting begins, h_1 between 18 and 17 kyrs BP, ..., and with h_18 is thickness 
+between 1 and 0 kyrs BP. With h_19=h_18 SELEN denotes the ice (constant) thickness in 
+the future. GS July 28 2007.  
+---------------
+   1   33.000  356.000 0.970 1.000 1706.1699.1681.1537.1446.1049. 572. 233.
+   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.
+   2   34.300  355.500 0.650 1.000 1205.1154.1103.1051. 691. 376. 176.   0.
+   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.
+   3   35.500  353.000 0.650 1.000  831. 794. 756. 681. 610. 259. 143.   0.
+   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.

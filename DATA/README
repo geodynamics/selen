@@ -1,0 +1,25 @@
+#
+#  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+#  As of May 30 2010, the directory /DATA contains the following files: 
+#  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+#
+#  => Settings for SELEN -----------------------------------
+#     - rls-region.dat:     Regional RSL analysis 
+#     - 3d-regions.dat:     Regional geodetic analysis
+#
+#  => Data for TABOO ---------------------------------------
+#     - prem1.dat:          1s PREM 
+#     - prem200.dat:        200s PREM 
+#
+#  => Relative Sea Level (RSL) data ------------------------
+#     - sealevel.dat:       The Peltier RSL database (fmt=0)
+#     - seal-mod.dat:       A Modified Peltier database (0)
+#
+#  => Tide gauge (TG) data ---------------------------------
+#     - rlr-trends.txt:     TG PSMSL data 
+#
+#  => Add more data/settings here ...   
+#     - ... 
+#     - ...
+#
+#

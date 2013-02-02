@@ -1,0 +1,28 @@
+ice3g_ice.dat 
+Iceland
+Authors: Tushingham and Peltier, JGR, 1991. 
+4    number of elements 
+20   header lines 
+2    lines for each element 
+18   time since the LGM (kyrs)
+1    lenght of each time step 
+---------------
+For each ice element, the data are presented in two lines, with the following meaning: 
+a label, colatitude and longitude of the disc center (deg), half-amplitude of the disc 
+element (deg), a dummy variable, and disc element thickness (m). The first value is 
+thickness before the beginning of deglaciation (i.e. from -infinity to 18 kyrs BP), 
+the 18 elements that follow are ice thickness at 1 kyrs intervals up to present time, 
+and the last three elements are thicknesses during the future 3 kyrs (not used in the 
+computations). File SH3.F of SELEN reads this file and indicates with h_0 ice thickness 
+before melting begins, h_1 between 18 and 17 kyrs BP, ..., and with h_18 ice thickness 
+between 1 and 0 kyrs BP. With h_19=h_18 SELEN denotes the ice (constant) thickness in 
+the future. GS July 28 2007.  
+---------------
+   1   24.000  338.000 0.688 1.000  828. 765. 703. 641. 579. 289. 108.   0.
+   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.
+   2   24.000  343.000 0.918 1.000 1250.1156.1063. 969. 875. 437. 150.   0.
+   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.
+   3   25.680  339.000 0.978 1.000 1824.1713.1531.1493.1385.1021. 655. 509.
+ 363. 182.  75.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.
+   4   25.680  343.000 0.978 1.000 1931.1834.1739.1642.1545.1352.1159. 901.
+ 644. 321. 124.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.
