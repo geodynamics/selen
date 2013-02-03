@@ -63,10 +63,27 @@ SLE_OBJECTS = \
 	$O/harmonics.o \
 	$O/sle.o
 
+# Equivalent sea level
+ESL_OBJECTS = \
+	$O/harmonics.o \
+	$O/esl.o
+
+# Ice sheets contours
+MS_OBJECTS = \
+	$O/harmonics.o \
+	$O/ms.o
+
+# Love numbers tools (TABOO)
+TB_OBJECTS = \
+	$O/harmonics.o \
+	$O/tb.o
+
+# Pixelization (i)
 PX_OBJECTS = \
 	$O/harmonics.o \
 	$O/px.o
 
+# Pixelization (ii) 
 PXREC_OBJECTS = \
 	$O/harmonics.o \
 	$O/pxrec.o
@@ -112,6 +129,15 @@ config: req_dirs $(CONFIG_OBJECTS)
 
 sle: req_dirs $(SLE_OBJECTS)
 	${FCCOMPILE} -o ${E}/sle $(SLE_OBJECTS)
+
+esl: req_dirs $(ESL_OBJECTS)
+	${FCCOMPILE} -o ${E}/esl $(ESL_OBJECTS)
+
+ms: req_dirs $(MS_OBJECTS)
+	${FCCOMPILE} -o ${E}/ms $(MS_OBJECTS)
+
+tb: req_dirs $(TB_OBJECTS)
+	${FCCOMPILE} -o ${E}/tb $(TB_OBJECTS)
 
 clean:
 	rm -rf $O/* bin obj
@@ -206,4 +232,4 @@ $O/wnw.o: ${SETUP}/data.inc $S/harmonics.f90 $S/wnw.f90
 	${FCCOMPILE} -c -o $O/wnw.o $S/wnw.f90
 
 ${SETUP}/data.inc: config config.dat
-	${E}/config config.dat
+	${E}/config config.dat ${SETUP}/data.inc
