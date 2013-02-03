@@ -583,6 +583,8 @@ echo 'BEGIN {' >"$ac_tmp/subs1.awk" &&
 cat >>"$ac_tmp/subs1.awk" <<\_ACAWK &&
 S["LTLIBOBJS"]=""
 S["LIBOBJS"]=""
+S["ps2pdf"]="ps2pdf14"
+S["OPENMP_FCFLAGS"]=""
 S["OBJEXT"]="o"
 S["EXEEXT"]=""
 S["ac_ct_FC"]="g95"
