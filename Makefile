@@ -46,7 +46,7 @@ O = ${B}/obj
 # S : source file directory
 S = ${B}/src
 ## setup file directory
-SETUP = ${B}/setup
+SETUP = ${B}/tmp
 ## output file directory
 OUTPUT = ${B}/OUTPUT_FILES
 
@@ -78,6 +78,14 @@ TB_OBJECTS = \
 	$O/harmonics.o \
 	$O/tb.o
 
+# Computation of ice Shape factors and SH dechomposition
+SHAPE_FACTORS_OBJECTS = \
+	$O/harmonics.o \
+	$O/shape_factors.o
+SHICE_OBJECTS = \
+	$O/harmonics.o \
+	$O/shice.o
+
 # Pixelization (i)
 PX_OBJECTS = \
 	$O/harmonics.o \
@@ -86,7 +94,22 @@ PX_OBJECTS = \
 # Pixelization (ii) 
 PXREC_OBJECTS = \
 	$O/harmonics.o \
-	$O/pxrec.o
+	$O/px_rec.o
+
+# Pixelization partitioning - missing source file px_part.f90
+# Copy to local storage - missing source file px_copy.f90
+# Parallel wet/dry pixel separation - missing source file px_select.f90
+
+# Spherical harmonics 
+SH_OBJECTS = \
+	$O/harmonics.o \
+	$O/sh.o
+
+# Window function
+WNW_OBJECTS = \
+	$O/harmonics.o \
+	$O/wnw.o
+
 
 #######################################
 ####
@@ -98,7 +121,7 @@ DEFAULT = \
 	config \
 	sle \
 	px \
-	px_rec
+	pxrec
 
 default: $(DEFAULT)
 
@@ -110,7 +133,7 @@ backup:
 
 bak: backup
 
-req_dirs: bindir objdir
+req_dirs: bindir objdir tmpdir
 
 bindir:
 	mkdir -p bin
@@ -118,6 +141,8 @@ bindir:
 objdir:
 	mkdir -p obj
 
+tmpdir:
+	mkdir -p tmp
 
 #######################################
 ####
@@ -136,11 +161,17 @@ esl: req_dirs $(ESL_OBJECTS)
 ms: req_dirs $(MS_OBJECTS)
 	${FCCOMPILE} -o ${E}/ms $(MS_OBJECTS)
 
+px: req_dirs $(PX_OBJECTS)
+	${FCCOMPILE} -o ${E}/px $(PX_OBJECTS)
+
+pxrec: req_dirs $(PXREC_OBJECTS)
+	${FCCOMPILE} -o ${E}/pxrec $(PXREC_OBJECTS)
+
 tb: req_dirs $(TB_OBJECTS)
 	${FCCOMPILE} -o ${E}/tb $(TB_OBJECTS)
 
 clean:
-	rm -rf $O/* bin obj
+	rm -rf $O/* bin obj tmp
 
 #######################################
 ####
@@ -232,4 +263,5 @@ $O/wnw.o: ${SETUP}/data.inc $S/harmonics.f90 $S/wnw.f90
 	${FCCOMPILE} -c -o $O/wnw.o $S/wnw.f90
 
 ${SETUP}/data.inc: config config.dat
-	${E}/config config.dat ${SETUP}/data.inc
+	(cd tmp ; ../${E}/config config.dat ${SETUP}/data.inc ; cd ..)
+
