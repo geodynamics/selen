@@ -393,7 +393,7 @@ on `(hostname || uname -n) 2>/dev/null | sed 1q`
 "
 
 # Files that config.status was made for.
-config_files=" Makefile src/Makefile"
+config_files=" Makefile"
 
 ac_cs_usage="\
 \`$as_me' instantiates files and other configuration actions
@@ -429,9 +429,6 @@ gives unlimited permission to copy, distribute and modify it."
 
 ac_pwd='/Users/eheien/Downloads/selen'
 srcdir='.'
-INSTALL='/usr/bin/install -c'
-MKDIR_P='./install-sh -c -d'
-AWK='awk'
 test -n "$AWK" || AWK=awk
 # The default lists apply if the user does not specify any file.
 ac_need_defaults=:
@@ -521,7 +518,6 @@ for ac_config_target in $ac_config_targets
 do
   case $ac_config_target in
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
-    "src/Makefile") CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
   esac
@@ -585,8 +581,6 @@ fi
 
 echo 'BEGIN {' >"$ac_tmp/subs1.awk" &&
 cat >>"$ac_tmp/subs1.awk" <<\_ACAWK &&
-S["am__EXEEXT_FALSE"]=""
-S["am__EXEEXT_TRUE"]="#"
 S["LTLIBOBJS"]=""
 S["LIBOBJS"]=""
 S["OBJEXT"]="o"
@@ -595,33 +589,6 @@ S["ac_ct_FC"]="g95"
 S["LDFLAGS"]=""
 S["FCFLAGS"]="-g -O2"
 S["FC"]="g95"
-S["AM_BACKSLASH"]="\\"
-S["AM_DEFAULT_VERBOSITY"]="1"
-S["AM_DEFAULT_V"]="$(AM_DEFAULT_VERBOSITY)"
-S["AM_V"]="$(V)"
-S["am__untar"]="$${TAR-tar} xf -"
-S["am__tar"]="$${TAR-tar} chof - \"$$tardir\""
-S["AMTAR"]="$${TAR-tar}"
-S["am__leading_dot"]="."
-S["SET_MAKE"]=""
-S["AWK"]="awk"
-S["mkdir_p"]="$(MKDIR_P)"
-S["MKDIR_P"]="./install-sh -c -d"
-S["INSTALL_STRIP_PROGRAM"]="$(install_sh) -c -s"
-S["STRIP"]=""
-S["install_sh"]="${SHELL} /Users/eheien/Downloads/selen/install-sh"
-S["MAKEINFO"]="${SHELL} /Users/eheien/Downloads/selen/missing makeinfo"
-S["AUTOHEADER"]="${SHELL} /Users/eheien/Downloads/selen/missing autoheader"
-S["AUTOMAKE"]="${SHELL} /Users/eheien/Downloads/selen/missing automake-1.13"
-S["AUTOCONF"]="${SHELL} /Users/eheien/Downloads/selen/missing autoconf"
-S["ACLOCAL"]="${SHELL} /Users/eheien/Downloads/selen/missing aclocal-1.13"
-S["VERSION"]="2.9"
-S["PACKAGE"]="selen"
-S["CYGPATH_W"]="echo"
-S["am__isrc"]=""
-S["INSTALL_DATA"]="${INSTALL} -m 644"
-S["INSTALL_SCRIPT"]="${INSTALL}"
-S["INSTALL_PROGRAM"]="${INSTALL}"
 S["target_alias"]=""
 S["host_alias"]=""
 S["build_alias"]=""
@@ -630,7 +597,7 @@ S["ECHO_T"]=""
 S["ECHO_N"]=""
 S["ECHO_C"]="\\c"
 S["DEFS"]="-DPACKAGE_NAME=\\\"SELEN\\\" -DPACKAGE_TARNAME=\\\"selen\\\" -DPACKAGE_VERSION=\\\"2.9\\\" -DPACKAGE_STRING=\\\"SELEN\\ 2.9\\\" -DPACKAGE_BUGREPORT=\\\"BUG-REPORT-ADDR"\
-"ESS\\\" -DPACKAGE_URL=\\\"\\\" -DPACKAGE=\\\"selen\\\" -DVERSION=\\\"2.9\\\""
+"ESS\\\" -DPACKAGE_URL=\\\"\\\""
 S["mandir"]="${datarootdir}/man"
 S["localedir"]="${datarootdir}/locale"
 S["libdir"]="${exec_prefix}/lib"
@@ -831,15 +798,6 @@ ac_abs_srcdir=$ac_abs_top_srcdir$ac_dir_suffix
   # CONFIG_FILE
   #
 
-  case $INSTALL in
-  [\\/$]* | ?:[\\/]* ) ac_INSTALL=$INSTALL ;;
-  *) ac_INSTALL=$ac_top_build_prefix$INSTALL ;;
-  esac
-  ac_MKDIR_P=$MKDIR_P
-  case $MKDIR_P in
-  [\\/$]* | ?:[\\/]* ) ;;
-  */*) ac_MKDIR_P=$ac_top_build_prefix$MKDIR_P ;;
-  esac
 # If the template does not know about datarootdir, expand it.
 # FIXME: This hack should be removed a few years after 2.60.
 ac_datarootdir_hack=; ac_datarootdir_seen=
@@ -895,8 +853,6 @@ s&@abs_top_srcdir@&$ac_abs_top_srcdir&;t t
 s&@builddir@&$ac_builddir&;t t
 s&@abs_builddir@&$ac_abs_builddir&;t t
 s&@abs_top_builddir@&$ac_abs_top_builddir&;t t
-s&@INSTALL@&$ac_INSTALL&;t t
-s&@MKDIR_P@&$ac_MKDIR_P&;t t
 $ac_datarootdir_hack
 "
 eval sed \"\$ac_sed_extra\" "$ac_file_inputs" | $AWK -f "$ac_tmp/subs.awk" \
