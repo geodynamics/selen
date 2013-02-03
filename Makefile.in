@@ -27,8 +27,9 @@
 
 # @configure_input@
 
+EXEEXT = .exe
 FC = @FC@
-FCFLAGS = -I${SETUP} -I${B}
+FCFLAGS = -I${SETUP} -I${B} -w ${OPENMP_FCFLAGS}
 
 FCCOMPILE = ${FC} ${FCFLAGS}
 
@@ -72,6 +73,11 @@ ESL_OBJECTS = \
 MS_OBJECTS = \
 	$O/harmonics.o \
 	$O/ms.o
+
+# Ice sheets contours
+RECOF_OBJECTS = \
+	$O/harmonics.o \
+	$O/rec_of.o
 
 # Love numbers tools (TABOO)
 TB_OBJECTS = \
@@ -118,15 +124,22 @@ WNW_OBJECTS = \
 
 # default targets
 DEFAULT = \
-	config \
-	sle \
-	px \
-	pxrec
+	config$(EXEEXT) \
+	sle$(EXEEXT) \
+	sh$(EXEEXT) \
+	ms$(EXEEXT) \
+	px$(EXEEXT) \
+	shapefactors$(EXEEXT) \
+	recof$(EXEEXT) \
+	pxrec$(EXEEXT)
 
 default: $(DEFAULT)
 
 all: clean default
 
+run: default
+	(cd ${SETUP} ; PATH=${PATH}:`pwd`/../${E} source selen.sh)
+	
 backup:
 	mkdir -p bak
 	cp *f90 *h Makefile bak
@@ -136,10 +149,10 @@ bak: backup
 req_dirs: bindir objdir tmpdir
 
 bindir:
-	mkdir -p bin
+	mkdir -p ${E}
 	
 objdir:
-	mkdir -p obj
+	mkdir -p ${O}
 
 tmpdir:
 	mkdir -p tmp
@@ -149,29 +162,38 @@ tmpdir:
 #### rules for executables
 ####
 
-config: req_dirs $(CONFIG_OBJECTS)
-	${FCCOMPILE} -o ${E}/config $(CONFIG_OBJECTS)
+config$(EXEEXT): req_dirs $(CONFIG_OBJECTS)
+	${FCCOMPILE} -o ${E}/config$(EXEEXT) $(CONFIG_OBJECTS)
 
-sle: req_dirs $(SLE_OBJECTS)
-	${FCCOMPILE} -o ${E}/sle $(SLE_OBJECTS)
+sle$(EXEEXT): req_dirs $(SLE_OBJECTS)
+	${FCCOMPILE} -o ${E}/sle$(EXEEXT) $(SLE_OBJECTS)
 
-esl: req_dirs $(ESL_OBJECTS)
-	${FCCOMPILE} -o ${E}/esl $(ESL_OBJECTS)
+shapefactors$(EXEEXT): req_dirs $(SHAPE_FACTORS_OBJECTS)
+	${FCCOMPILE} -o ${E}/shapefactors$(EXEEXT) $(SHAPE_FACTORS_OBJECTS)
 
-ms: req_dirs $(MS_OBJECTS)
-	${FCCOMPILE} -o ${E}/ms $(MS_OBJECTS)
+recof$(EXEEXT): req_dirs $(ESL_OBJECTS)
+	${FCCOMPILE} -o ${E}/recof$(EXEEXT) $(ESL_OBJECTS)
 
-px: req_dirs $(PX_OBJECTS)
-	${FCCOMPILE} -o ${E}/px $(PX_OBJECTS)
+esl$(EXEEXT): req_dirs $(ESL_OBJECTS)
+	${FCCOMPILE} -o ${E}/esl$(EXEEXT) $(ESL_OBJECTS)
 
-pxrec: req_dirs $(PXREC_OBJECTS)
-	${FCCOMPILE} -o ${E}/pxrec $(PXREC_OBJECTS)
+ms$(EXEEXT): req_dirs $(MS_OBJECTS)
+	${FCCOMPILE} -o ${E}/ms$(EXEEXT) $(MS_OBJECTS)
 
-tb: req_dirs $(TB_OBJECTS)
-	${FCCOMPILE} -o ${E}/tb $(TB_OBJECTS)
+sh$(EXEEXT): req_dirs $(SH_OBJECTS)
+	${FCCOMPILE} -o ${E}/sh$(EXEEXT) $(SH_OBJECTS)
+
+px$(EXEEXT): req_dirs $(PX_OBJECTS)
+	${FCCOMPILE} -o ${E}/px$(EXEEXT) $(PX_OBJECTS)
+
+pxrec$(EXEEXT): req_dirs $(PXREC_OBJECTS)
+	${FCCOMPILE} -o ${E}/pxrec$(EXEEXT) $(PXREC_OBJECTS)
+
+tb$(EXEEXT): req_dirs $(TB_OBJECTS)
+	${FCCOMPILE} -o ${E}/tb$(EXEEXT) $(TB_OBJECTS)
 
 clean:
-	rm -rf $O/* bin obj tmp
+	rm -rf ${E} ${O} tmp
 
 #######################################
 ####
@@ -262,6 +284,6 @@ $O/tgauges.o: ${SETUP}/data.inc $S/harmonics.f90 $S/tgauges.f90
 $O/wnw.o: ${SETUP}/data.inc $S/harmonics.f90 $S/wnw.f90
 	${FCCOMPILE} -c -o $O/wnw.o $S/wnw.f90
 
-${SETUP}/data.inc: config config.dat
-	(cd tmp ; ../${E}/config config.dat ${SETUP}/data.inc ; cd ..)
+${SETUP}/data.inc: config$(EXEEXT) config.dat
+	(cp config.dat tmp ; cd tmp ; ../${E}/config$(EXEEXT) ; cd ..)
 

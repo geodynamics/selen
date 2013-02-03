@@ -644,7 +644,7 @@ ENDIF
 	  Endif
 !
 ! ---- Counts the ice elements listed in the ice file 
-	  xfile='./ICE-MODELS/'//trim(adjustl(ice_file))
+	  xfile='../ICE-MODELS/'//trim(adjustl(ice_file))
           call ice_count(xfile, imul, header_lines, nice)
    	  Write(88,*) 'There are ', nice, 'elements in the ice file ', ice_file 
 !
@@ -725,7 +725,7 @@ ENDIF
 !       option_nm  = ss(1)
 	nv         = ss(1)
 	code       = ss(2) 
-	visco_file = './VSC/'//ss(3)	
+	visco_file = '../VSC/'//ss(3)	
 !
         option_nm='y'
 !
@@ -1062,7 +1062,7 @@ IF(line(1:3)=="240") THEN
 !	
         If(option_rsla=='y') then 
 !
-		RSL_FILE = './DATA/'//SS(2)
+		RSL_FILE = '../DATA/'//SS(2)
 !		
 		RSL_DATABASE_FORMAT = SS(3)		
 !
@@ -1352,7 +1352,7 @@ IF(line(1:3)=="251") THEN
 	call scan_string (line, 2, ss, nout)
 	option_rslc     = ss(1) 
 !
-	file_region     = './DATA/'//ss(2) 
+	file_region     = '../DATA/'//ss(2) 
 !
 	if(option_rslc=='y') then 	
 !
@@ -1413,7 +1413,7 @@ IF(line(1:3)=="260") THEN
 !	
  	OPTION_TGA    = SS(1)
 !
-	TGAUGES_FILE  = './DATA/'//SS(2) 
+	TGAUGES_FILE  = '../DATA/'//SS(2) 
 !
         if(option_tga=='y') then 
 !
@@ -1582,7 +1582,7 @@ IF(line(1:3)=="275") THEN
 !		Call Stop_Config 
 !	Endif 
 !	
-	file_3d = './DATA/'//ss(2) 
+	file_3d = '../DATA/'//ss(2) 
 !
         Write(88,*) "Point estimates for Glacial Isostatic Adjustment (GIA)"	   
 	Write(88,*) "3D velocities and \dot S and N at sites on file ", & 
@@ -1712,18 +1712,18 @@ Write(2,*) "echo '---------------------------------------'"
 !
 !
 ! --- Compilation: shtools module
-Write(2,*) "echo '--- shtools.f90'"
-Write(2,*) trim(CompileSeq), " -O3 -c shtools.f90" 
+! Write(2,*) "echo '--- shtools.f90'"
+! Write(2,*) trim(CompileSeq), " -O3 -c shtools.f90" 
 !
 !
 ! --- Compilation: harmonics module
-Write(2,*) "echo '--- harmonics.f90'"
-Write(2,*) trim(CompileSeq), " -O3 -c harmonics.f90" 
+! Write(2,*) "echo '--- harmonics.f90'"
+! Write(2,*) trim(CompileSeq), " -O3 -c harmonics.f90" 
 !
 !
 ! --- Compilation: SLE
-Write(2,*) "echo '--- sle.f90'"
-Write(2,*) trim(CompileMpi), " sle.f90 harmonics.o -o sle.exe -O3" 
+! Write(2,*) "echo '--- sle.f90'"
+! Write(2,*) trim(CompileMpi), " sle.f90 harmonics.o -o sle.exe -O3" 
 !
 
 !
@@ -1732,24 +1732,24 @@ Write(2,*) trim(CompileMpi), " sle.f90 harmonics.o -o sle.exe -O3"
 ! --- Computation of ice Shape factors and SH dechomposition 
 If(option_sf=='y') then    
 !
-Write(2,*) "echo '--- shape_factors.f90'" 
-Write(2,*) trim(CompileSmp), " shape_factors.f90 harmonics.o -o shapefactors.exe -O3" 
+! Write(2,*) "echo '--- shape_factors.f90'" 
+! Write(2,*) trim(CompileSmp), " shape_factors.f90 harmonics.o -o shapefactors.exe -O3" 
 !
-Write(2,*) "echo '--- shice.f90'"
-Write(2,*) trim(CompileSmp), " shice.f90 harmonics.o -o shice.exe"
+! Write(2,*) "echo '--- shice.f90'"
+! Write(2,*) trim(CompileSmp), " shice.f90 harmonics.o -o shice.exe"
 !
 Endif
 !
 ! --- Equivalent sea level 
 If     (option_esl=='y') then 
-	Write(2,*) "echo '--- esl.f90'"
-	Write(2,*) trim(CompileSeq), " esl.f90 harmonics.o -o esl.exe"
+! 	Write(2,*) "echo '--- esl.f90'"
+! 	Write(2,*) trim(CompileSeq), " esl.f90 harmonics.o -o esl.exe"
 endif 
 !
 ! --- Ice sheets contours 
 If(option_or=='y') then 
-Write(2,*) "echo '--- ms.f90'"
-Write(2,*) trim(CompileSeq), " ms.f90 harmonics.o -o ms.exe"
+! Write(2,*) "echo '--- ms.f90'"
+! Write(2,*) trim(CompileSeq), " ms.f90 harmonics.o -o ms.exe"
 endif
 !
 !
@@ -1757,8 +1757,8 @@ endif
 If    (option_nm=='y') then 
 !
 ! --- TABOO
-Write(2,*) "echo '--- tb.f90'"
-Write(2,*) trim(CompileSeq), " tb.F90 harmonics.o -o tb.exe"  
+! Write(2,*) "echo '--- tb.f90'"
+! Write(2,*) trim(CompileSeq), " tb.F90 harmonics.o -o tb.exe"  
 !
 elseif(option_pw=='y') then 
  continue 
@@ -1769,131 +1769,131 @@ elseif(option_pwa=='y') then
 endif 
 !
 ! --- Compilation: Pixelization (i) 
-Write(2,*) "echo '--- px.f90'"      
-Write(2,*) trim(CompileSeq), " px.f90 harmonics.o -o px.exe" 
+! Write(2,*) "echo '--- px.f90'"      
+! Write(2,*) trim(CompileSeq), " px.f90 harmonics.o -o px.exe" 
 !
 ! --- Compilation: Pixelization (ii) 
-Write(2,*) "echo '--- px_rec.f90'"      
-Write(2,*) trim(CompileSeq), " px_rec.f90 harmonics.o  -o pxrec.exe" 
+! Write(2,*) "echo '--- px_rec.f90'"      
+! Write(2,*) trim(CompileSeq), " px_rec.f90 harmonics.o  -o pxrec.exe" 
 !
 ! --- Compilation: Pixelization partitioning
 if (option_mpi=='y') then
-  Write(2,*) "echo '--- px_part.f90'"      
-  Write(2,*) trim(CompileSeq),  " px_part.f90 harmonics.o -o pxpart.exe" 
+!   Write(2,*) "echo '--- px_part.f90'"      
+!   Write(2,*) trim(CompileSeq),  " px_part.f90 harmonics.o -o pxpart.exe" 
 endif
 !
 ! --- Compilation: Copy to local storage
 if (option_nls=='y') then
-  Write(2,*) "echo '--- px_copy.f90'"      
-  Write(2,*) trim(CompileMpi),  " px_copy.f90 harmonics.o -o pxcopy.exe" 
+!   Write(2,*) "echo '--- px_copy.f90'"      
+!   Write(2,*) trim(CompileMpi),  " px_copy.f90 harmonics.o -o pxcopy.exe" 
 endif
 !
 ! --- Compilation: Parallel wet/dry pixel separation
 if (option_mpi=='y') then
-  Write(2,*) "echo '--- px_select.f90'"      
-  Write(2,*) trim(CompileMpi),  " px_select.f90 harmonics.o -o pxselect.exe" 
+!   Write(2,*) "echo '--- px_select.f90'"      
+!   Write(2,*) trim(CompileMpi),  " px_select.f90 harmonics.o -o pxselect.exe" 
 endif
 !
 ! --- Compilation: Spherical harmonics 
 If(option_sh=='y') then 
-Write(2,*) "echo '--- sh.f90'"      
-Write(2,*) trim(CompileMpi), " sh.f90 harmonics.o -o sh.exe" 
+! Write(2,*) "echo '--- sh.f90'"      
+! Write(2,*) trim(CompileMpi), " sh.f90 harmonics.o -o sh.exe" 
 Endif
 !
 ! --- Compilation: Window function
 If(option_wi=='y') then 
-Write(2,*) "echo '--- wnw.f90'"      
-Write(2,*) trim(CompileSeq), " wnw.f90 harmonics.o -O3 -o wnw.exe" 
+! Write(2,*) "echo '--- wnw.f90'"      
+! Write(2,*) trim(CompileSeq), " wnw.f90 harmonics.o -O3 -o wnw.exe" 
 Endif
 !     
 ! --- Compilation: Ocean function (OF) harmonics 
 If(option_oh=='y') then 
-Write(2,*) "echo '--- sh_of.f90'"   
-Write(2,*) trim(CompileMpi), " sh_of.f90 harmonics.o -o shof.exe"   
+! Write(2,*) "echo '--- sh_of.f90'"   
+! Write(2,*) trim(CompileMpi), " sh_of.f90 harmonics.o -o shof.exe"   
 Endif 
 !
 ! --- Compilation: OF DV computation  
 If(option_ofdv=='y') then 
-Write(2,*) "echo '--- of_dv.f90'"  
-Write(2,*) trim(CompileSeq), " of_dv.f90 harmonics.o -o ofdv.exe"
+! Write(2,*) "echo '--- of_dv.f90'"  
+! Write(2,*) trim(CompileSeq), " of_dv.f90 harmonics.o -o ofdv.exe"
 Endif
 !
 ! --- Compilation: OF Rechonstruction 
 If(option_of=='y') then 
-Write(2,*) "echo '--- rec_of.f90'"  
-Write(2,*) trim(CompileMpi), " rec_of.f90 harmonics.o -o recof.exe"
+! Write(2,*) "echo '--- rec_of.f90'"  
+! Write(2,*) trim(CompileMpi), " rec_of.f90 harmonics.o -o recof.exe"
 Endif
 !
 ! --- Compilation: Ice sheets Rechonstruction 
 If(option_ri=='y') then 
-Write(2,*) "echo '--- rec_ice.f90'" 
-Write(2,*) trim(CompileMpi), " rec_ice.f90 harmonics.o -o recice.exe"
+! Write(2,*) "echo '--- rec_ice.f90'" 
+! Write(2,*) trim(CompileMpi), " rec_ice.f90 harmonics.o -o recice.exe"
 Endif 
 !
 ! --- Compilation: Global maps 
 If(option_gm=='y') then 
-Write(2,*) "echo '--- gmaps.f90'"
-Write(2,*) trim(CompileMpi), " gmaps.f90 harmonics.o -o gmaps.exe"
+! Write(2,*) "echo '--- gmaps.f90'"
+! Write(2,*) trim(CompileMpi), " gmaps.f90 harmonics.o -o gmaps.exe"
 Endif
 !
 ! --- Compilation: Regional maps 
 If(option_rm(0)=='y') then 
-Write(2,*) "echo '--- rmaps.f90'"
-Write(2,*) trim(CompileMpi), " rmaps.f90 harmonics.o -o rmaps.exe"
+! Write(2,*) "echo '--- rmaps.f90'"
+! Write(2,*) trim(CompileMpi), " rmaps.f90 harmonics.o -o rmaps.exe"
 Endif
 !
 ! --- Compilation: 3D veolcity and \dot S, N, U at sites
 If(option_3d=='y') then 
-Write(2,*) "echo '--- geo.f90'"
-Write(2,*) trim(CompileSmp), " geo.f90 harmonics.o -o geo.exe"
+! Write(2,*) "echo '--- geo.f90'"
+! Write(2,*) trim(CompileSmp), " geo.f90 harmonics.o -o geo.exe"
 Endif
 !
 ! --- Compilation: 3D veolcity and \dot U at pixels on maps
 If(option_3d_regions=='y') then 
-Write(2,*) "echo '--- geo_maps.f90'"
-Write(2,*) trim(CompileSeq), " geo_maps.f90 harmonics.o -o geomaps.exe"
+! Write(2,*) "echo '--- geo_maps.f90'"
+! Write(2,*) trim(CompileSeq), " geo_maps.f90 harmonics.o -o geomaps.exe"
 Endif
 !
 ! --- Compilation: SH at Relative Sea Level (RSL) sites 
 If(option_rsl=='y') then
-Write(2,*) "echo '--- sh_rsl.f90'"
-Write(2,*) trim(CompileSeq), " sh_rsl.f90 harmonics.o -o shrsl.exe" 
+! Write(2,*) "echo '--- sh_rsl.f90'"
+! Write(2,*) trim(CompileSeq), " sh_rsl.f90 harmonics.o -o shrsl.exe" 
 !
 ! --- Compilation: RSL at RSL sites 
-Write(2,*) "echo '--- rsl.f90'" 
-Write(2,*) trim(CompileSeq), " rsl.f90 harmonics.o -o rsl.exe"
+! Write(2,*) "echo '--- rsl.f90'" 
+! Write(2,*) trim(CompileSeq), " rsl.f90 harmonics.o -o rsl.exe"
 Endif
 !
 ! --- Compilation: RSL Zones 
 If(option_rslz=='y') then
-Write(2,*) "echo '--- rsl_zones.f90'"
-Write(2,*) trim(CompileSeq), " rsl_zones.f90 harmonics.o -o rslzones.exe" 
+! Write(2,*) "echo '--- rsl_zones.f90'"
+! Write(2,*) trim(CompileSeq), " rsl_zones.f90 harmonics.o -o rslzones.exe" 
 Endif
 !
 ! --- Compilation: SH at virtual sites for RSL contours
 If(option_rslc=='y') then
-Write(2,*) "echo '--- sh_rslc.f90'"
-Write(2,*) trim(CompileSeq), " sh_rslc.f90 harmonics.o -o shrslc.exe" 
+! Write(2,*) "echo '--- sh_rslc.f90'"
+! Write(2,*) trim(CompileSeq), " sh_rslc.f90 harmonics.o -o shrslc.exe" 
 !
 ! --- Compilation: RSL at virtual sites for RSL contours 
-Write(2,*) "echo '--- rslc.f90'" 
-Write(2,*) trim(CompileSeq), " rslc.f90 harmonics.o -o rslc.exe"
+! Write(2,*) "echo '--- rslc.f90'" 
+! Write(2,*) trim(CompileSeq), " rslc.f90 harmonics.o -o rslc.exe"
 Endif
 !
 ! --- Compilation: SH at tide gauges
 If(option_tg=='y') then
-Write(2,*) "echo '--- sh_tgauges.f90'" 
-Write(2,*) trim(CompileSeq), " sh_tgauges.f90 harmonics.o -o shtgauges.exe" 
+! Write(2,*) "echo '--- sh_tgauges.f90'" 
+! Write(2,*) trim(CompileSeq), " sh_tgauges.f90 harmonics.o -o shtgauges.exe" 
 !
 ! --- Compilation: SL change at tide gauges
-Write(2,*) "echo '--- tgauges.f90'" 
-Write(2,*) trim(CompileSeq), " tgauges.f90 harmonics.o -o tgauges.exe"
+! Write(2,*) "echo '--- tgauges.f90'" 
+! Write(2,*) trim(CompileSeq), " tgauges.f90 harmonics.o -o tgauges.exe"
 endif
 !
 ! --- Stokes coefficients
 If(option_st=='y') then
-Write(2,*) "echo '--- stokes.f90'"
-Write(2,*) trim(CompileSeq), " stokes.f90 harmonics.o -o stokes.exe" 
+! Write(2,*) "echo '--- stokes.f90'"
+! Write(2,*) trim(CompileSeq), " stokes.f90 harmonics.o -o stokes.exe" 
 Endif
 !	      
 ! --- End of compilation
@@ -2056,7 +2056,7 @@ Write(2,*) "#echo --------------------------------------------------------"
 Write(2,*) "echo                                                          "
 Write(2,*) " echo '---> PX.F90: Hicosahedral pixelization of the sphere  '"
 Write(2,*) "#echo --------------------------------------------------------"
-Write(2,*) "./px.exe"
+Write(2,*) "px.exe"
 Write(2,*) "cp px.dat ", depot//"/px"
 Write(2,*) "cp pxa.dat ", depot//"/px"
 Write(2,*) "cp px-lat.dat ", depot//"/px"
@@ -2093,7 +2093,7 @@ Write(2,*) "cp px-lat.dat ", depot//"/px"
  Endif
 !
  if( option_mpi=='y' ) then
-    Write(2,*) trim(RunCmd)//" ./pxselect.exe"
+    Write(2,*) trim(RunCmd)//" pxselect.exe"
  else
     Write(2,*) "sh px.gmt"
  endif
@@ -2105,7 +2105,7 @@ Write(2,*) "cp px-lat.dat ", depot//"/px"
  Write(2,*) "echo" 
  Write(2,*) " echo '---> PX_REC.F90: Merging the wet & dry pixels tables'"
  Write(2,*) "#echo ---------------------------------------" 
- Write(2,*) "./pxrec.exe"
+ Write(2,*) "pxrec.exe"
  Write(2,*) "cp px-table.dat ", depot//"/px" 
 ! 
  If(option_mpi=='y') then
@@ -2114,7 +2114,7 @@ Write(2,*) "cp px-lat.dat ", depot//"/px"
     Write(2,*) "echo" 
     Write(2,*) " echo '---> PX_PART.F90: Partitioning the pixels for parallel execution'"
     Write(2,*) "#echo ---------------------------------------" 
-    Write(2,*) "./pxpart.exe"
+    Write(2,*) "pxpart.exe"
     Write(2,*) "cp px-partition.dat ", depot//"/px" 
  EndIf
 !
@@ -2124,7 +2124,7 @@ Write(2,*) "cp px-lat.dat ", depot//"/px"
     Write(2,*) "echo" 
     Write(2,*) " echo '---> Copying pixel files to node local storage'"
     Write(2,*) "#echo ---------------------------------------" 
-    Write(2,*) trim(RunCmd)," ./pxcopy.exe"
+    Write(2,*) trim(RunCmd)," pxcopy.exe"
  Endif
 !
  Write(2,*) "mv px.gmt ", depot//"/px"
@@ -2160,7 +2160,7 @@ If(option_sh=='y') then
 	Write(2,*) "echo" 
 	Write(2,*) " echo '---> SH.F90: Building the spherical harmonics'"
 	Write(2,*) "#echo ----------------------------------------"
-	Write(2,*) trim(RunCmd)," ./sh.exe"
+	Write(2,*) trim(RunCmd)," sh.exe"
 	Write(2,*) "cp sh.bin ", trim(adjustl(sh_file)) 
 !
 	           else
@@ -2184,7 +2184,7 @@ If(option_wi=='y') then
 	Write(2,*) "echo" 
 	Write(2,*) " echo '--->  WNW.F90: SH orthonormality evaluating the window function'"
 	Write(2,*) "#echo -----------------------------------------------------"
-	Write(2,*) "./wnw.exe"
+	Write(2,*) "wnw.exe"
 	file_gmt="wnw.gmt"
 	call make_wnw (resolution, degree, file_gmt)
 !
@@ -2218,7 +2218,7 @@ If(option_oh=='y') then
 	Write(2,*) "echo                                         " 
 	Write(2,*) " echo '---> SH_OF.F90: SH expansion of the present-day ocean function'"
 	Write(2,*) "#echo ------------------------------------------"
-	Write(2,*) trim(RunCmd)," ./shof.exe"
+	Write(2,*) trim(RunCmd)," shof.exe"
 	Write(2,*) "cp shof.dat ", trim(adjustl(shof_file)) 
 	Write(2,*) "cp ", trim(adjustl(shof_file)), " ", depot//"/of"
 		   else
@@ -2247,7 +2247,7 @@ If(option_ofdv=='y') then
 	Write(2,*) "#echo ---------------------------"
 !
 ! Computing the DV 
-	Write(2,*) "./ofdv.exe"  
+	Write(2,*) "ofdv.exe"  
 !
 ! Producing a script for plotting the degree variance 
 	file_gmt="ofdv.gmt"
@@ -2275,7 +2275,7 @@ If(option_of=='y') then
 	Write(2,*) "#echo -----------------------------------------------------"
 !
 ! Rechonstruction 
-	Write(2,*) trim(RunCmd)," ./recof.exe"  
+	Write(2,*) trim(RunCmd)," recof.exe"  
 !		
 ! Mapping 	
 	file_gmt="of.gmt"
@@ -2303,7 +2303,7 @@ Endif
 	Write(2,*) "echo"   
         Write(2,*) " echo '---> Importing '", trim(adjustl(ice_file))," from ICE-MODELS/"   
         Write(2,*) "#echo --------------------------------------------------------------------"  	
-	Write(2,*) "cp ./ICE-MODELS/"//trim(adjustl(ice_file)), " ", "./"//trim(adjustl(ice_file))
+	Write(2,*) "cp ../ICE-MODELS/"//trim(adjustl(ice_file)), " ", "./"//trim(adjustl(ice_file))
 !
 !
 ! ======================================
@@ -2317,14 +2317,14 @@ IF(option_sf=='y') THEN
   Write(2,*) "echo                                                                   " 
   Write(2,*) " echo '---> SHAPE_FACTORS.F90: Computing the shape factors for model: '", trim(adjustl(ice_file))   
   Write(2,*) "#echo ------------------------------------------------------------"  
-  Write(2,*) "./shapefactors.exe"
+  Write(2,*) "shapefactors.exe"
 !
   Write(2,*) " "
   Write(2,*) "#echo -------------------------------------------"
   Write(2,*) "echo                                                                "   
   Write(2,*) " echo '---> SHICE.F90: Computing SH coefficients for the ice model'"  
   Write(2,*) "#echo -------------------------------------------"  
-  Write(2,*) "./shice.exe" 
+  Write(2,*) "shice.exe" 
 !
   Write(2,*) "cp shice.dat ", depot//"/"//trim(adjustl(titlice))//"/sh/"
 !
@@ -2366,7 +2366,7 @@ Write(2,*) "#echo ---------------------------------------------"
 Write(2,*) "echo"    
 Write(2,*) "echo '---> MS.F90: Creating multi-segment files for ice sheets maps'"
 Write(2,*) "#echo ---------------------------------------------"  
-Write(2,*) "./ms.exe" 
+Write(2,*) "ms.exe" 
 !
 !
 Write(2,*) " "
@@ -2413,7 +2413,7 @@ Write(2,*) "#echo -------------------------------------------------"
 !
 ! --- Rechonstruction ...
 !
-   Write(2,*) trim(RunCmd)," ./recice.exe"
+   Write(2,*) trim(RunCmd)," recice.exe"
 !	 
 ! --- ... and mapping of rechonstruction 
 ! 
@@ -2462,7 +2462,7 @@ Write(2,*) "#echo  -------------------------------------------------------------
 Write(2,*) "echo " 
 Write(2,*) " echo  '---> TB.F90: Load-deformation coefficients by TABOO (Normal Modes)'"
 Write(2,*) "#echo  ---------------------------------------------------------------------"  
-Write(2,*) "./tb.exe"         
+Write(2,*) "tb.exe"         
 Write(2,*) "echo " 
 Write(2,*) "echo '+++> WARNING/ in SELEN 2.9, the average density of the Earth is computed by the'"
 Write(2,*) "echo '            / density structure of the input model, NOT using an a-priori'"
@@ -2545,7 +2545,7 @@ Write(2,*) "#echo  -------------------------------------------------------------
 Write(2,*) "echo " 
 Write(2,*) " echo  '---> SLE.F90: Solving the Sea Level Equation - SLE - for FIXED coastlines'"
 Write(2,*) "#echo  ------------------------------------------------------------------- "  
-Write(2,*) trim(RunCmd)," ./sle.exe" 
+Write(2,*) trim(RunCmd)," sle.exe" 
 !
 
 
@@ -2564,7 +2564,7 @@ If(option_esl=='y') then
     Write(2,*) "echo "   
     Write(2,*) " echo '---> ESL.F90: Plotting the ESL curve'"
     Write(2,*) "#echo -------------------------------"  
-    Write(2,*) "./esl.exe" 
+    Write(2,*) "esl.exe" 
 !
    file_gmt='eslplot.gmt'
    Call make_eslplot (ninc, titlice, shof_file, file_gmt)
@@ -2621,8 +2621,8 @@ ENDIF
 		Write(2,*) "echo"	
 		Write(2,*) " echo '---> RSL.F90: Predicting RSL at the sites of database: '", trim(rsl_file)
 		Write(2,*) "#echo  ---------------------------------------------------------"	
-	        Write(2,*) "./shrsl.exe"
-		Write(2,*) "./rsl.exe" 		
+	        Write(2,*) "shrsl.exe"
+		Write(2,*) "rsl.exe" 		
 !Write(2,*) "mv shrsl.bin ", depot//"/bin"
 !
 ! --- ... and drawing RSL figures for each site		
@@ -2718,7 +2718,7 @@ ENDIF
 		file2_gmt='rsl-allzones.gmt'
         	Call MAKE_RSLZONES (NV, CODE, RUN, NINC, NRSL, TITLICE, RESOLUTION, ITER, & 
 			            MODE, DEGREE, VSTRING, FILE1_GMT, FILE2_GMT, SHORT_VISCO_FILENAME)
-		Write(2,*) "./rslzones.exe"
+		Write(2,*) "rslzones.exe"
 		if(option_gmt=='y') Write(2,*) "sh ", trim(adjustl(file1_gmt)) 
 		if(option_gmt=='y') Write(2,*) "sh ", trim(adjustl(file2_gmt)) 
 		Write(2,*) "mv ", trim(adjustl(file1_gmt)), " "//depot//"/rsl/rsl-zones/" 
@@ -2737,8 +2737,8 @@ ENDIF
 		Write(2,*) "echo"					            			    
 		Write(2,*) " echo '---> RSLC.F90: Regional RSL contour lines'"
 		Write(2,*) "#echo  ----------------------------------"
-	        Write(2,*) "./shrslc.exe"
-		Write(2,*) "./rslc.exe" 
+	        Write(2,*) "shrslc.exe"
+		Write(2,*) "rslc.exe" 
 		file_gmt='rslc.gmt'
 		Call MAKE_RSLC (TIME_BPCC, MIN_RSLC, MAX_RSLC, RSL_INT, & 
 				LONMINC, LONMAXC, LATMINC, LATMAXC, & 
@@ -2828,8 +2828,8 @@ ENDIF
 		Write(2,*) "echo"		
 		Write(2,*) " echo '---> TGAUGES.F90: Dot-S, U, and N predictions at tide gauges'"
 		Write(2,*) "#echo --------------------------------------------------"
-		Write(2,*) "./shtgauges.exe"
-		Write(2,*) "./tgauges.exe"					
+		Write(2,*) "shtgauges.exe"
+		Write(2,*) "tgauges.exe"					
 !Write(2,*) "mv shtidegauges.bin ", depot//"/bin/"
 !Write(2,*) "cp shs.bin ", depot//"/bin/"	
 		Write(2,*) "mv ptidegauges.dat ", " "//depot//"/tgauges/tgauges-predictions/"			
@@ -2847,7 +2847,7 @@ ENDIF
 		Write(2,*) " echo '---> GMAPS.F90: Global maps of dot S, U and N at present time'"
 		Write(2,*) "#echo -----------------------------------------------------"		
 		file_gmt='gmaps.gmt'
-		Write(2,*) trim(RunCmd)," ./gmaps.exe"  
+		Write(2,*) trim(RunCmd)," gmaps.exe"  
         	Call MAKE_GMAPS (TITLICE, RESOLUTION, NV, CODE, ITER, MODE, & 
 				 DEGREE, VSTRING, OPTION_ROF, FILE_CAP, FILE_GMT, SHORT_VISCO_FILENAME)
 		if(option_gmt=='y') Write(2,*) "sh ", trim(adjustl(file_gmt)) 
@@ -2880,7 +2880,7 @@ ENDIF
 		Write(2,*) "echo"
 		Write(2,*) " echo '---> RMAPS.F90: Regional maps of dot S, U and N at present time'"
 		Write(2,*) "#echo -------------------------------------------------------"
-		Write(2,*) trim(RunCmd)," ./rmaps.exe"  
+		Write(2,*) trim(RunCmd)," rmaps.exe"  
 		Write(2,*) " cp sdotmap.dat ", depot//"/rmaps/sun_data"
 		Write(2,*) " cp udotmap.dat ", depot//"/rmaps/sun_data"
 		Write(2,*) " cp ndotmap.dat ", depot//"/rmaps/sun_data"
@@ -2970,7 +2970,7 @@ ENDIF
 		Write(2,*) "echo"
 		Write(2,*) " echo '---> GEO.F90: 3D velocity and S and N-dot today at specific sites'"
 		Write(2,*) "#echo -----------------------------------------------------------"
-		Write(2,*) "./geo.exe"  
+		Write(2,*) "geo.exe"  
 		Write(2,*) "cp ", file_3d, depot//"/geod/sites" 		
 		Write(2,*) "mv geodetic-predictions.dat ", depot//"/geod/sites" 		
 	Endif 
@@ -2987,7 +2987,7 @@ ENDIF
 		Write(2,*) "echo"
 		Write(2,*) " echo '---> GEO_MAPS.F90: 3D velocity and U-dot today at points on maps'"
 		Write(2,*) "#echo -----------------------------------------------------------"
-		Write(2,*) "./geomaps.exe"  
+		Write(2,*) "geomaps.exe"  
 	Endif 
 !
 !
@@ -3004,7 +3004,7 @@ ENDIF
 		Write(2,*) " echo '---> STOKES.F90: Present-time rate of change of Stokes coefficients'"
 		Write(2,*) "#echo ----------------------------------------------------------------"		
 		file_gmt='stokes.gmt'
-		Write(2,*) "./stokes.exe"  					   
+		Write(2,*) "stokes.exe"  					   
                 Call MAKE_STOKES (RUN, NV, CODE, TITLICE, RESOLUTION, ITER, & 
 			          MODE, DEGREE, VSTRING, SHORT_VISCO_FILENAME, FILE_GMT)
 		if(option_gmt=='y') Write(2,*) "sh ", trim(adjustl(file_gmt)) 

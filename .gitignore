@@ -2,3 +2,12 @@
 *.swp
 
 .DS_Store
+
+bin/
+
+obj/
+
+tmp/
+
+
+config.log
