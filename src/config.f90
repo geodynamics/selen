@@ -62,7 +62,6 @@
 !
 !
 !
-INCLUDE "harmonics.f90" 
 PROGRAM CONFIG
 IMPLICIT NONE 
 !
