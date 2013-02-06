@@ -75,7 +75,7 @@ PX_OBJECTS = \
 	$O/px.o
 
 # Retrieve pixelization info from existing table
-PXREC_OBJECTS = \
+PXREBUILD_OBJECTS = \
 	$O/harmonics.o \
 	$O/px_rebuild.o
 
