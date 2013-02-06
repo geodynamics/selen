@@ -129,6 +129,7 @@ SHOF_OBJECTS = \
 SHAPE_FACTORS_OBJECTS = \
 	$O/harmonics.o \
 	$O/shape_factors.o
+
 SHICE_OBJECTS = \
 	$O/harmonics.o \
 	$O/shice.o
@@ -176,7 +177,6 @@ WNW_OBJECTS = \
 # Copy to local storage - missing source file px_copy.f90
 # Parallel wet/dry pixel separation - missing source file px_select.f90
 # 3D veolcity and \dot U at pixels on maps - missing source file geo_maps.f90
-# Computation of SH dechomposition - missing source file shice.f90
 
 #######################################
 ####
@@ -279,6 +279,9 @@ shof$(EXEEXT): req_dirs $(SHOF_OBJECTS)
 
 shapefactors$(EXEEXT): req_dirs $(SHAPE_FACTORS_OBJECTS)
 	${FCCOMPILE} -o ${E}/shapefactors$(EXEEXT) $(SHAPE_FACTORS_OBJECTS)
+
+shice$(EXEEXT): req_dirs $(SHICE_OBJECTS)
+	${FCCOMPILE} -o ${E}/shice$(EXEEXT) $(SHICE_OBJECTS)
 
 shrsl$(EXEEXT): req_dirs $(SHRSL_OBJECTS)
 	${FCCOMPILE} -o ${E}/shrsl$(EXEEXT) $(SHRSL_OBJECTS)
