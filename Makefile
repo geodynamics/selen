@@ -200,6 +200,7 @@ DEFAULT = \
 	rslzones$(EXEEXT) \
 	sle$(EXEEXT) \
 	sh$(EXEEXT) \
+	shice$(EXEEXT) \
 	shof$(EXEEXT) \
 	shapefactors$(EXEEXT) \
 	shrsl$(EXEEXT) \
