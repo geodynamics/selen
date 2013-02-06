@@ -3361,9 +3361,9 @@ END
 !
   open(9,file=file_gmt,status='unknown')
 !
-  Write(9,*) "gmtset PAPER_MEDIA A4+"
-  Write(9,*) "gmtset LABEL_FONT_SIZE 26p"
-  Write(9,*) "gmtset ANOT_FONT_SIZE 16p"
+  Write(9,*) "${GMT} gmtset PAPER_MEDIA A4+"
+  Write(9,*) "${GMT} gmtset LABEL_FONT_SIZE 26p"
+  Write(9,*) "${GMT} gmtset ANOT_FONT_SIZE 16p"
   Write(9,*) " "
 !
 !
@@ -3398,7 +3398,7 @@ END
 !
 
 ! - Psbasemap 	
-  Write(9,*) "psbasemap -U/-2/-2/'SELEN 2.9' -K", " ", & 
+  Write(9,*) "${GMT} psbasemap -U/-2/-2/'SELEN 2.9' -K", " ", & 
   	     trim(adjustl(XY_OPTION)), " ", & 
 	     trim(adjustl(R_OPTION)),  " ", &    
 	     trim(adjustl(B_OPTION)),  " ", &    
@@ -3410,25 +3410,25 @@ END
 !
 !
 ! - Plotting the interpolating line  
-  Write(9,*) "psxy predof.dat -O -K -H3 -B -R -JX ", & 
+  Write(9,*) "${GMT} psxy predof.dat -O -K -H3 -B -R -JX ", & 
   	     trim(adjustl(W_OPTION)), " ", & 
 	     ">> ", trim(adjustl(psfilename))  
 !
 ! - Plotting symbols 
-  Write(9,*) "psxy ofdv.dat -O -K -H3 -B -R -JX ", & 
+  Write(9,*) "${GMT} psxy ofdv.dat -O -K -H3 -B -R -JX ", & 
   	     trim(adjustl(S_OPTION)), " ", & 
   	     trim(adjustl(G_OPTION)), " ", & 
 	     ">> ", trim(adjustl(psfilename))  
 !
 ! - Plotting a string with harmonic degree	     
   Write(9,*) "echo '20 5e-2 18 0 0 BL MAX DEGREE=", trim(adjustl(DEGREE)), "'", & 
-  	     " | pstext -N ", trim(adjustl(J_OPTION)), " ", & 
+  	     " | ${GMT} pstext -N ", trim(adjustl(J_OPTION)), " ", & 
 	                      trim(adjustl(R_OPTION)), " ", & 
 			      " -G0 -W255 -O -K ", & 
 	     		      ">> ", trim(adjustl(psfilename))  
 !
 ! - Plotting a string with "power" of the interpolating line
-  Write(9,*) "pstext -O dv-power.tmp -N -JX -R -G0 -W255 >> ", trim(adjustl(psfilename)) 
+  Write(9,*) "${GMT} pstext -O dv-power.tmp -N -JX -R -G0 -W255 >> ", trim(adjustl(psfilename)) 
 !
 !
 ! - Cleaning 
@@ -3497,10 +3497,10 @@ END
  CHARACTER*100 SHORT
 !	
   open(9,file=file_gmt,status='unknown')
-  Write(9,*) "gmtset PAPER_MEDIA A4+"
-  Write(9,*) "gmtset LABEL_FONT_SIZE 24p"
-  Write(9,*) "gmtset ANOT_FONT_SIZE 10p"
-  Write(9,*) "gmtset FRAME_WIDTH 0.15c"
+  Write(9,*) "${GMT} gmtset PAPER_MEDIA A4+"
+  Write(9,*) "${GMT} gmtset LABEL_FONT_SIZE 24p"
+  Write(9,*) "${GMT} gmtset ANOT_FONT_SIZE 10p"
+  Write(9,*) "${GMT} gmtset FRAME_WIDTH 0.15c"
   Write(9,*) " "
 !
 !
@@ -3556,7 +3556,7 @@ END
 ! ======= Writing the GMT script ======
 !	   
 ! --- Surface ---  
-    	   Write(9,*) "surface ", & 
+    	   Write(9,*) "${GMT} surface ", & 
 	               trim(adjustl(GSPAC)), " ", & 
 		       trim(adjustl(H_OPTION)), & 
 		       " rslc.dat ", & 
@@ -3564,19 +3564,19 @@ END
 		       " -Gg.grd"
 !
 ! --- A no-green palette ---
-           Write(9,*) "makecpt -Cno_green ", & 
+           Write(9,*) "${GMT} makecpt -Cno_green ", & 
 	   	       trim(adjustl(GSPAC)), " ", & 
 		       trim(adjustl(T_OPTION)), & 
 		       " > pal_rslc.cpt"
 !
 ! --- Psbasemap ---
-	   Write(9,*) "psbasemap -Y4 -X4 -R  ", & 
+	   Write(9,*) "${GMT} psbasemap -Y4 -X4 -R  ", & 
 	   	       trim(adjustl(J_OPTION)), " ", & 
 		       trim(adjustl(B_OPTION)), & 
 		       "  -K > rslc-map.ps"
 !
 ! --- Coastlines ---
-	   Write(9,*) "pscoast ", &
+	   Write(9,*) "${GMT} pscoast ", &
 	   	       trim(adjustl(R_OPTION)), " ", &  
 		       trim(adjustl(J_OPTION)), " ", & 
 		       trim(adjustl(D_OPTION)), " ", & 
@@ -3623,8 +3623,8 @@ END
 	   Write(4,*) lon_time, lat_time, "10 0 0 BR ", trim(adjustl(timebp)), " ka"
 	   close(4)	   	   
 !
- 	   Write(9,*) "pstext rslc1.tmp -N -JM -R -G0 -O -K >> rslc-map.ps" 
- 	   Write(9,*) "pstext rslc2.tmp -N -JM -R -G0 -W255 -O >> rslc-map.ps" 
+ 	   Write(9,*) "${GMT} pstext rslc1.tmp -N -JM -R -G0 -O -K >> rslc-map.ps" 
+ 	   Write(9,*) "${GMT} pstext rslc2.tmp -N -JM -R -G0 -W255 -O >> rslc-map.ps" 
 
 !
  End Subroutine MAKE_RSLC
@@ -3827,9 +3827,9 @@ END
 !
 !
         open(9,file=file_gmt,status='unknown')
-        Write(9,*) "gmtset PAPER_MEDIA A4+"
-        Write(9,*) "gmtset LABEL_FONT_SIZE 24p"
-        Write(9,*) "gmtset ANOT_FONT_SIZE 12p"
+        Write(9,*) "${GMT} gmtset PAPER_MEDIA A4+"
+        Write(9,*) "${GMT} gmtset LABEL_FONT_SIZE 24p"
+        Write(9,*) "${GMT} gmtset ANOT_FONT_SIZE 12p"
         Write(9,*) " "
 !
 !
@@ -3867,7 +3867,7 @@ END
        endif
 !	
 ! --- A psbasemap 
-        Write(9,*) "psbasemap -U'SELEN 2.9' -X6 -Y10 ", " ", & 
+        Write(9,*) "${GMT} psbasemap -U'SELEN 2.9' -X6 -Y10 ", " ", & 
 	            trim(adjustl(b_option)), " ", & 
 		    trim(adjustl(R_OPTION)), " -JX14/9 -K > plot.ps"
  
@@ -3879,13 +3879,13 @@ END
         if(ninc=='40') awkstring="'{print (40.-$1)*0.050125, $2}'"
 !	
 	Write(9,*) "awk "//trim(adjustl(awkstring))//" esl-thin.dat > esl.tmp"	
-	Write(9,*) "psxy esl.tmp -M -B -R -JX -W2/0 -O -K >> plot.ps"
+	Write(9,*) "${GMT} psxy esl.tmp -M -B -R -JX -W2/0 -O -K >> plot.ps"
 !
 	Write(9,*) "awk "//trim(adjustl(awkstring))//" esl.dat > esl.tmp"	
-	Write(9,*) "psxy esl.tmp -M -B -R -JX -W6/0 -O -K >> plot.ps"
+	Write(9,*) "${GMT} psxy esl.tmp -M -B -R -JX -W6/0 -O -K >> plot.ps"
 !
 ! --- Inset with total Equivalent Sea level 
-	 Write(9,*) "pstext -N esl-tot.dat -JX -R -O >> plot.ps"
+	 Write(9,*) "${GMT} pstext -N esl-tot.dat -JX -R -O >> plot.ps"
 !
 ! --- The end 
          Write(9,*) "mv plot.ps esl.ps"
@@ -3922,8 +3922,8 @@ END
 	Write(13,*)"#               REALISTIC OCEAN FUNCTION             " 
 	Write(13,*)"# ====== Made by GS and FC on December 8, 2007 ======"	
 	Write(13,*)"#" 
-	Write(13,*)"gmtselect pxa.dat -H4 -Df -R0/360/-90/90  -A0 -JQ180/200 -Nk/s/k/s/k > weta.dat"
-	Write(13,*)"gmtselect pxa.dat -H4 -Df -R              -A0 -JQ        -Ns/k/s/k/s > drya.dat"
+	Write(13,*)"${GMT} gmtselect pxa.dat -H4 -Df -R0/360/-90/90  -A0 -JQ180/200 -Nk/s/k/s/k > weta.dat"
+	Write(13,*)"${GMT} gmtselect pxa.dat -H4 -Df -R              -A0 -JQ        -Ns/k/s/k/s > drya.dat"
 	close(13) 		
 	End Subroutine OF_PIXELIZATION_REAL
 !
@@ -4169,9 +4169,9 @@ END
 !
 ! --- Target fiel for GMT script 
  	 open (19,file=file1_gmt,status='unknown')
-	 Write(19,*) "gmtset PAPER_MEDIA A4+" 
-	 Write(19,*) "gmtset HEADER_FONT_SIZE 24p"
-	 Write(19,*) "gmtset FRAME_WIDTH 0.1c"
+	 Write(19,*) "${GMT} gmtset PAPER_MEDIA A4+" 
+	 Write(19,*) "${GMT} gmtset HEADER_FONT_SIZE 24p"
+	 Write(19,*) "${GMT} gmtset FRAME_WIDTH 0.1c"
 	 Write(19,*) " "
 !
 ! --- -R and -B options 
@@ -4179,30 +4179,30 @@ END
 	 b_option = "-Ba30f10:'Lenght of rechord (yr)':/a"//trim(adjustl(deltac))//"f"//trim(adjustl(deltac))//"WSen:'Rate of SLC, mm/yr':"
 !
 ! --- Basemap for the top frame 
-	 Write(19,*) "psbasemap -X4 -Y17 ", " "//trim(adjustl(b_option)), & 	 		                    
+	 Write(19,*) "${GMT} psbasemap -X4 -Y17 ", " "//trim(adjustl(b_option)), & 	 		                    
 	 	 			            " "//trim(adjustl(r_option)), " -P -JX14/8  -K >  plot.ps" 
 !
 ! --- A title for top frame
 	 open (8,file='tmpctitle1',status='unknown')
 	 Write(8,*) iears_max/2, trend_max+trend_max/6, " 16 0 1 BC Scatterplot from file: ", trim(adjustl(datafile)) ; close(8)  
-	 Write(19,*) "pstext -N tmpctitle1", " -JX -R -O -K >> plot.ps"
+	 Write(19,*) "${GMT} pstext -N tmpctitle1", " -JX -R -O -K >> plot.ps"
 !
 ! --- Filters the useful data	 
          Write(19,*) "awk '{print $1, $2, $3}' tgauges-scpl.dat > tgauges-scpl.tmp"
 !	 
 ! --- Top frame: data with errorbars  
-	 Write(19,*) "psxy tgauges-scpl.tmp ", "-Ey0.25/2 -B -R -JX -O -K >> plot.ps" 
+	 Write(19,*) "${GMT} psxy tgauges-scpl.tmp ", "-Ey0.25/2 -B -R -JX -O -K >> plot.ps" 
 !
 ! --- Basemap for the bottom frame 
-	 Write(19,*) "psbasemap -U'SELEN 2.9' -X0 -Y-12 ", " "//trim(adjustl(b_option)), & 
+	 Write(19,*) "${GMT} psbasemap -U'SELEN 2.9' -X0 -Y-12 ", " "//trim(adjustl(b_option)), & 
 	 		                        " "//trim(adjustl(r_option)), " -P -JX14/8  -O -K >>  plot.ps" 	
 ! --- A title for bottom frame
 	 open (8,file='tmpctitle2',status='unknown')
 	 Write(8,*) iears_max/2, trend_max+trend_max/6, " 16 0 1 BC Scatterplot from file: ", trim(adjustl(datafile)) ; close(8)  
-	 Write(19,*) "pstext -N tmpctitle2", " -JX -R -O -K >> plot.ps"
+	 Write(19,*) "${GMT} pstext -N tmpctitle2", " -JX -R -O -K >> plot.ps"
 !	 
 ! --- Bottom frame: data w/o errorbars, only dots   
-	 Write(19,*) "psxy tgauges-scpl.tmp ", "-Sc0.1 -G0 -B -R -JX -O -K >> plot.ps" 
+	 Write(19,*) "${GMT} psxy tgauges-scpl.tmp ", "-Sc0.1 -G0 -B -R -JX -O -K >> plot.ps" 
 !	 
 ! --- A note about the average rate, in the bottom frame
 	open (8,file='tmpctitle3',status='unknown')
@@ -4350,57 +4350,57 @@ END
 !
  	open(29,file=file_gmt,status='unknown')
 !
-	Write(29,*) "gmtset PAPER_MEDIA A4+" 
-	Write(29,*) "gmtset HEADER_FONT_SIZE 24p"
-	Write(29,*) "gmtset FRAME_WIDTH 0.1c"
-	Write(29,*) "gmtset ANOT_FONT_SIZE 12p"
+	Write(29,*) "${GMT} gmtset PAPER_MEDIA A4+" 
+	Write(29,*) "${GMT} gmtset HEADER_FONT_SIZE 24p"
+	Write(29,*) "${GMT} gmtset FRAME_WIDTH 0.1c"
+	Write(29,*) "${GMT} gmtset ANOT_FONT_SIZE 12p"
 !
 ! ------ Four frames (Mercator projection)
 !
 ! --- Frame with all data 
-	Write(29,*) "psbasemap -X5 -Y11 -Ba180/a80f80Wsen -R0/360/-80/80  -JM9 -K > map-tgauges.ps"
- 	Write(29,*) "pscoast -G0/120/0 -S0/0/220 -B -R -O -K  -JM -Dc  -A10000 >> map-tgauges.ps"
- 	Write(29,*) "psxy -H1 lon-lat-tgauges-all.dat -B -R -JM -Sc0.08 -G220 -O -K >> map-tgauges.ps"
+	Write(29,*) "${GMT} psbasemap -X5 -Y11 -Ba180/a80f80Wsen -R0/360/-80/80  -JM9 -K > map-tgauges.ps"
+ 	Write(29,*) "${GMT} pscoast -G0/120/0 -S0/0/220 -B -R -O -K  -JM -Dc  -A10000 >> map-tgauges.ps"
+ 	Write(29,*) "${GMT} psxy -H1 lon-lat-tgauges-all.dat -B -R -JM -Sc0.08 -G220 -O -K >> map-tgauges.ps"
 	open(18,file='titleall.tmp',status='unknown') 
 	Write(18,*) " 180 84.4 16 0 1 BC all tide gauge stations"
 	Write(18,*) " 180 82.2 12 0 2 BC N=", nall ; close(18) 	
-	Write(29,*) "pstext -N titleall.tmp -G0 -JM -R -O -K>> map-tgauges.ps"
+	Write(29,*) "${GMT} pstext -N titleall.tmp -G0 -JM -R -O -K>> map-tgauges.ps"
 	Write(29,*) ""
 !
 ! --- Title for all frames 
 	open(18,file='titletgauges.tmp',status='unknown') 
 	Write(18,*) "0 87.4 24 0 3 BL Distribution of tide gauge stations as of 1/22/07" ; close(18) 		
-	Write(29,*) "pstext -N titletgauges.tmp -G0 -JM -R -O -K >> map-tgauges.ps"
+	Write(29,*) "${GMT} pstext -N titletgauges.tmp -G0 -JM -R -O -K >> map-tgauges.ps"
 	Write(29,*) ""
 !
 ! --- Frame with data with age >= 30 yrs  
-	Write(29,*) "psbasemap -X10 -Y0 -Ba180/a80f80wsEn -R -JM -O -K >> map-tgauges.ps"
- 	Write(29,*) "pscoast -G120 -S0/0/220 -B -R -O -K  -JM -Dc  -A10000 >> map-tgauges.ps"
- 	Write(29,*) "psxy -H1 lon-lat-tgauges-ge30.dat -B -R -JM -Sc0.08 -G220 -O -K >> map-tgauges.ps"
+	Write(29,*) "${GMT} psbasemap -X10 -Y0 -Ba180/a80f80wsEn -R -JM -O -K >> map-tgauges.ps"
+ 	Write(29,*) "${GMT} pscoast -G120 -S0/0/220 -B -R -O -K  -JM -Dc  -A10000 >> map-tgauges.ps"
+ 	Write(29,*) "${GMT} psxy -H1 lon-lat-tgauges-ge30.dat -B -R -JM -Sc0.08 -G220 -O -K >> map-tgauges.ps"
 	open(18,file='titlege30.tmp',status='unknown') 
  	Write(18,*) "180 84.4 16 0 1 BC more than 30 years of data"
  	Write(18,*) "180 82.2 12 0 2 BC N=", nge30  ; close(18) 
- 	Write(29,*) "pstext -N titlege30.tmp -G0 -JM -R -O -K >> map-tgauges.ps"
+ 	Write(29,*) "${GMT} pstext -N titlege30.tmp -G0 -JM -R -O -K >> map-tgauges.ps"
 	Write(29,*) ""
 !
 ! --- Frame with data with age >= 60 yrs  
- 	Write(29,*) "psbasemap -X-10 -Y-9 -Ba180/a80f80WSen -R -JM -O -K -U"//"'SELEN 2.9'", " >> map-tgauges.ps"
- 	Write(29,*) "pscoast -G120 -S0/0/220 -B -R -O -K  -JM -Dc  -A10000 >> map-tgauges.ps"
- 	Write(29,*) "psxy -H1 lon-lat-tgauges-ge60.dat -B -R -JM -Sc0.08 -G220 -O -K >> map-tgauges.ps"
+ 	Write(29,*) "${GMT} psbasemap -X-10 -Y-9 -Ba180/a80f80WSen -R -JM -O -K -U"//"'SELEN 2.9'", " >> map-tgauges.ps"
+ 	Write(29,*) "${GMT} pscoast -G120 -S0/0/220 -B -R -O -K  -JM -Dc  -A10000 >> map-tgauges.ps"
+ 	Write(29,*) "${GMT} psxy -H1 lon-lat-tgauges-ge60.dat -B -R -JM -Sc0.08 -G220 -O -K >> map-tgauges.ps"
 	open(18,file='titlege60.tmp',status='unknown') 
  	Write(18,*) "180 84.4 16 0 1 BC more than 60 years of data"
  	Write(18,*) "180 82.2 12 0 2 BC N=", nge60 ; close(18)  
- 	Write(29,*) "pstext -N titlege60.tmp -G0 -JM -R  -O -K >> map-tgauges.ps"
+ 	Write(29,*) "${GMT} pstext -N titlege60.tmp -G0 -JM -R  -O -K >> map-tgauges.ps"
 	Write(29,*) ""
 !
 ! --- Frame with data with age >= 90 yrs 
-	Write(29,*) "psbasemap -X10 -Y0 -Ba180/a80f80wSEn -R -JM -O -K >> map-tgauges.ps"
- 	Write(29,*) "pscoast -G120 -S0/0/220 -B -R -O -K  -JM -Dc  -A10000 >> map-tgauges.ps"
- 	Write(29,*) "psxy -H1 lon-lat-tgauges-ge90.dat -B -R -JM -Sc0.08 -G220 -O -K >> map-tgauges.ps"
+	Write(29,*) "${GMT} psbasemap -X10 -Y0 -Ba180/a80f80wSEn -R -JM -O -K >> map-tgauges.ps"
+ 	Write(29,*) "${GMT} pscoast -G120 -S0/0/220 -B -R -O -K  -JM -Dc  -A10000 >> map-tgauges.ps"
+ 	Write(29,*) "${GMT} psxy -H1 lon-lat-tgauges-ge90.dat -B -R -JM -Sc0.08 -G220 -O -K >> map-tgauges.ps"
 	open(18,file='titlege90.tmp',status='unknown')  	
  	Write(18,*) "180 84.4 16 0 1 BC more than 90 years of data"
 	Write(18,*) "180 82.2 12 0 2 BC N=", nge90 ; close(18)  !
-	Write(29,*) "pstext -N titlege90.tmp -G0 -JM -R -O >> map-tgauges.ps"
+	Write(29,*) "${GMT} pstext -N titlege90.tmp -G0 -JM -R -O >> map-tgauges.ps"
 !
 	close(29) 	
 !	
@@ -4476,10 +4476,10 @@ END
 !
   us=11 
   Open (us,file=script_name,status='unknown') 
-  Write(us,*)"gmtset PAPER_MEDIA A4+"
-  Write(us,*)"gmtset LABEL_FONT_SIZE 24p"
-  Write(us,*)"gmtset ANOT_FONT_SIZE 16p" 
-  Write(us,*)"gmtset FRAME_WIDTH 0.1c"
+  Write(us,*)"${GMT} gmtset PAPER_MEDIA A4+"
+  Write(us,*)"${GMT} gmtset LABEL_FONT_SIZE 24p"
+  Write(us,*)"${GMT} gmtset ANOT_FONT_SIZE 16p" 
+  Write(us,*)"${GMT} gmtset FRAME_WIDTH 0.1c"
   Write(us,*)" " 
 !
   do 100 u=12, 14 
@@ -4521,15 +4521,15 @@ END
 ! ..............................................................................
 !
 !
-  Write(us,*)"psbasemap -P -X4 -Y10 -Ba2f2WSEn -R5/21/35/47 -JJ13/14 -K > ", & 
+  Write(us,*)"${GMT} psbasemap -P -X4 -Y10 -Ba2f2WSEn -R5/21/35/47 -JJ13/14 -K > ", & 
   	      trim(adjustl(ps_file))
-  Write(us,*)"pscontour -I -JJ -R -O -K ", trim(adjustl(data_file)), " -C"//trim(adjustl(table_name)), " >> ", & 
+  Write(us,*)"${GMT} pscontour -I -JJ -R -O -K ", trim(adjustl(data_file)), " -C"//trim(adjustl(table_name)), " >> ", & 
               trim(adjustl(ps_file)) 
-  Write(us,*) "pscontour -G16 -W1/255 -A -JJ -R -O -K ", trim(adjustl(data_file)), & 
+  Write(us,*) "${GMT} pscontour -G16 -W1/255 -A -JJ -R -O -K ", trim(adjustl(data_file)), & 
               " -C"//trim(adjustl(table_name)), " >> ",  trim(adjustl(ps_file))	    
-  Write(us,*)"pscoast -R -JJ -Di -B -W2/0 -A1000 -O -K >> ", & 
+  Write(us,*)"${GMT} pscoast -R -JJ -Di -B -W2/0 -A1000 -O -K >> ", & 
               trim(adjustl(ps_file))
-  Write(us,*)"pstext -N -R -JJ -B -G0 -O -K ", trim(adjustl(tmp_file)), " >> ", & 
+  Write(us,*)"${GMT} pstext -N -R -JJ -B -G0 -O -K ", trim(adjustl(tmp_file)), " >> ", & 
               trim(adjustl(ps_file))
   Write(us,*)"psscale -E -U/0.5/0.5/'SELEN 2.9' ", "-C"//trim(adjustl(table_name)), " -Bf0.1a0.5/:mm/yr: -D7/-2/10/1h -O >> ", & 
               trim(adjustl(ps_file))
@@ -4557,10 +4557,10 @@ END
 !
   us=11 
   Open (us,file=script_name,status='unknown') 
-  Write(us,*)"gmtset PAPER_MEDIA A4+"
-  Write(us,*)"gmtset LABEL_FONT_SIZE 24p"
-  Write(us,*)"gmtset ANOT_FONT_SIZE 16p" 
-  Write(us,*)"gmtset FRAME_WIDTH 0.1c"
+  Write(us,*)"${GMT} gmtset PAPER_MEDIA A4+"
+  Write(us,*)"${GMT} gmtset LABEL_FONT_SIZE 24p"
+  Write(us,*)"${GMT} gmtset ANOT_FONT_SIZE 16p" 
+  Write(us,*)"${GMT} gmtset FRAME_WIDTH 0.1c"
   Write(us,*)" " 
 !
   do 200 u=12, 14 
@@ -4601,15 +4601,15 @@ END
 ! ..............................................................................
 !
 !  
-  Write(us,*)"psbasemap -X3 -Y6 -Ba8f4WSEn -R-8/48/30/50 -JJ18/24 -K > ", & 
+  Write(us,*)"${GMT} psbasemap -X3 -Y6 -Ba8f4WSEn -R-8/48/30/50 -JJ18/24 -K > ", & 
   	      trim(adjustl(ps_file))
-  Write(us,*)"pscontour -I -JJ -R -O -K ", trim(adjustl(data_file)), " -C"//trim(adjustl(table_name)), " >> ", & 
+  Write(us,*)"${GMT} pscontour -I -JJ -R -O -K ", trim(adjustl(data_file)), " -C"//trim(adjustl(table_name)), " >> ", & 
               trim(adjustl(ps_file)) 
-  Write(us,*)"pscontour -G16 -W1/255 -A -JJ -R -O -K ", trim(adjustl(data_file)), " -C"//trim(adjustl(table_name)), " >> ", & 
+  Write(us,*)"${GMT} pscontour -G16 -W1/255 -A -JJ -R -O -K ", trim(adjustl(data_file)), " -C"//trim(adjustl(table_name)), " >> ", & 
               trim(adjustl(ps_file))	     	      
-  Write(us,*)"pscoast -R -JJ -Di -B -W2/0 -A1000 -O -K >> ", & 
+  Write(us,*)"${GMT} pscoast -R -JJ -Di -B -W2/0 -A1000 -O -K >> ", & 
               trim(adjustl(ps_file))
-  Write(us,*)"pstext -N -R -JJ -B -G0 -O -K ", trim(adjustl(tmp_file)), " >> ", & 
+  Write(us,*)"${GMT} pstext -N -R -JJ -B -G0 -O -K ", trim(adjustl(tmp_file)), " >> ", & 
               trim(adjustl(ps_file))
   Write(us,*)"psscale -E -U/0.5/0.5/'SELEN 2.9' ", "-C"//trim(adjustl(table_name)), " -Bf0.1a0.5/:mm/yr: -D12/-1.5/10/1h -O >> ", & 
               trim(adjustl(ps_file))
@@ -4637,10 +4637,10 @@ END
 !
   us=11 
   Open (us,file=script_name,status='unknown') 
-  Write(us,*)"gmtset PAPER_MEDIA A4+"
-  Write(us,*)"gmtset LABEL_FONT_SIZE 24p"
-  Write(us,*)"gmtset ANOT_FONT_SIZE 16p" 
-  Write(us,*)"gmtset FRAME_WIDTH 0.1c"
+  Write(us,*)"${GMT} gmtset PAPER_MEDIA A4+"
+  Write(us,*)"${GMT} gmtset LABEL_FONT_SIZE 24p"
+  Write(us,*)"${GMT} gmtset ANOT_FONT_SIZE 16p" 
+  Write(us,*)"${GMT} gmtset FRAME_WIDTH 0.1c"
   Write(us,*)" " 
 !
   do 300 u=12, 14 
@@ -4683,15 +4683,15 @@ END
 !
 !
 !  
-  Write(us,*)"psbasemap -X3 -Y5 -Ba20f10/a10f5WSEn -R-40/80/25/75 -JJ20/18 -K > ", & 
+  Write(us,*)"${GMT} psbasemap -X3 -Y5 -Ba20f10/a10f5WSEn -R-40/80/25/75 -JJ20/18 -K > ", & 
   	      trim(adjustl(ps_file))
-  Write(us,*)"pscontour -I -JJ -R -O -K ", trim(adjustl(data_file)), " -C"//trim(adjustl(table_name)), " >> ", & 
+  Write(us,*)"${GMT} pscontour -I -JJ -R -O -K ", trim(adjustl(data_file)), " -C"//trim(adjustl(table_name)), " >> ", & 
               trim(adjustl(ps_file)) 
-  Write(us,*)"pscontour -G16 -W1/255 -A -JJ -R -O -K ", trim(adjustl(data_file)), " -C"//trim(adjustl(table_name)), " >> ", & 
+  Write(us,*)"${GMT} pscontour -G16 -W1/255 -A -JJ -R -O -K ", trim(adjustl(data_file)), " -C"//trim(adjustl(table_name)), " >> ", & 
               trim(adjustl(ps_file))
-  Write(us,*)"pscoast -R -JJ -Di -B -W2/0 -A1000 -O -K >> ", & 
+  Write(us,*)"${GMT} pscoast -R -JJ -Di -B -W2/0 -A1000 -O -K >> ", & 
               trim(adjustl(ps_file))
-  Write(us,*)"pstext -N -R -JJ -B -G0 -O -K ", trim(adjustl(tmp_file)), " >> ", & 
+  Write(us,*)"${GMT} pstext -N -R -JJ -B -G0 -O -K ", trim(adjustl(tmp_file)), " >> ", & 
               trim(adjustl(ps_file))
   Write(us,*)"psscale -E -U/0.5/0.5/'SELEN 2.9' ", "-C"//trim(adjustl(table_name)), " -Bf1a4/:mm/yr: -D9/-1.5/10/1h -O >> ", & 
               trim(adjustl(ps_file))
@@ -4723,10 +4723,10 @@ END
 !
   us=11 
   Open (us,file=script_name,status='unknown') 
-  Write(us,*)"gmtset PAPER_MEDIA A4+"
-  Write(us,*)"gmtset LABEL_FONT_SIZE 24p"
-  Write(us,*)"gmtset ANOT_FONT_SIZE 16p" 
-  Write(us,*)"gmtset FRAME_WIDTH 0.1c"
+  Write(us,*)"${GMT} gmtset PAPER_MEDIA A4+"
+  Write(us,*)"${GMT} gmtset LABEL_FONT_SIZE 24p"
+  Write(us,*)"${GMT} gmtset ANOT_FONT_SIZE 16p" 
+  Write(us,*)"${GMT} gmtset FRAME_WIDTH 0.1c"
   Write(us,*)" " 
 !
   do 400 u=12, 14 
@@ -4772,15 +4772,15 @@ END
   if(u==12.or.u==13) table_name=table_name_su
   if(u==14) 	     table_name=table_name_n
 !
-  Write(us,*)"psbasemap -X3 -Y5 -Ba10f5WSEn -R0/60/50/75 -JJ26/20 -K  > ", & 
+  Write(us,*)"${GMT} psbasemap -X3 -Y5 -Ba10f5WSEn -R0/60/50/75 -JJ26/20 -K  > ", & 
   	      trim(adjustl(ps_file))
-  Write(us,*)"pscontour -I -JJ -R -O -K ", trim(adjustl(data_file)), " -C"//trim(adjustl(table_name)), " >> ", & 
+  Write(us,*)"${GMT} pscontour -I -JJ -R -O -K ", trim(adjustl(data_file)), " -C"//trim(adjustl(table_name)), " >> ", & 
               trim(adjustl(ps_file)) 
-  Write(us,*)"pscontour -G16 -W1/255 -A -JJ -R -O -K ", trim(adjustl(data_file)), " -C"//trim(adjustl(table_name)), " >> ", & 
+  Write(us,*)"${GMT} pscontour -G16 -W1/255 -A -JJ -R -O -K ", trim(adjustl(data_file)), " -C"//trim(adjustl(table_name)), " >> ", & 
               trim(adjustl(ps_file))
-  Write(us,*)"pscoast -R -JJ -Di -B -W2/0 -A1000 -O -K >> ", & 
+  Write(us,*)"${GMT} pscoast -R -JJ -Di -B -W2/0 -A1000 -O -K >> ", & 
               trim(adjustl(ps_file))
-  Write(us,*)"pstext -N -R -JJ -B -G0 -O -K ", trim(adjustl(tmp_file)), " >> ", & 
+  Write(us,*)"${GMT} pstext -N -R -JJ -B -G0 -O -K ", trim(adjustl(tmp_file)), " >> ", & 
               trim(adjustl(ps_file))
   if(u==12.or.u==13) &   
   Write(us,*)"psscale -E -U/0.5/0.5/'SELEN 2.9' ", "-C"//trim(adjustl(table_name)), " -Bf1a5/:mm/yr: -D10/-1.5/10/1h -O >> ", & 
@@ -4816,10 +4816,10 @@ END
 !
   us=11 
   Open (us,file=script_name,status='unknown') 
-  Write(us,*)"gmtset PAPER_MEDIA A4+"
-  Write(us,*)"gmtset LABEL_FONT_SIZE 24p"
-  Write(us,*)"gmtset ANOT_FONT_SIZE 16p" 
-  Write(us,*)"gmtset FRAME_WIDTH 0.1c"
+  Write(us,*)"${GMT} gmtset PAPER_MEDIA A4+"
+  Write(us,*)"${GMT} gmtset LABEL_FONT_SIZE 24p"
+  Write(us,*)"${GMT} gmtset ANOT_FONT_SIZE 16p" 
+  Write(us,*)"${GMT} gmtset FRAME_WIDTH 0.1c"
   Write(us,*)" " 
 !
   do 500 u=12, 14 
@@ -4863,15 +4863,15 @@ END
   if(u==12.or.u==13) table_name=table_name_su
   if(u==14) 	     table_name=table_name_n
 !
-  Write(us,*)"psbasemap -P -X3 -Y9 -Ba10f10/f10a10WSEn -R-80/0/50/87.5 -JJ-40/16 -K  > ", & 
+  Write(us,*)"${GMT} psbasemap -P -X3 -Y9 -Ba10f10/f10a10WSEn -R-80/0/50/87.5 -JJ-40/16 -K  > ", & 
   	      trim(adjustl(ps_file))
-  Write(us,*)"pscontour -I -JJ -R -O -K ", trim(adjustl(data_file)), " -C"//trim(adjustl(table_name)), " >> ", & 
+  Write(us,*)"${GMT} pscontour -I -JJ -R -O -K ", trim(adjustl(data_file)), " -C"//trim(adjustl(table_name)), " >> ", & 
               trim(adjustl(ps_file)) 
-  Write(us,*)"pscontour -G16 -W1/255 -A -JJ -R -O -K ", trim(adjustl(data_file)), " -C"//trim(adjustl(table_name)), " >> ", & 
+  Write(us,*)"${GMT} pscontour -G16 -W1/255 -A -JJ -R -O -K ", trim(adjustl(data_file)), " -C"//trim(adjustl(table_name)), " >> ", & 
               trim(adjustl(ps_file))
-  Write(us,*)"pscoast -R -JJ -Di -B -W2/0 -A1000 -O -K >> ", & 
+  Write(us,*)"${GMT} pscoast -R -JJ -Di -B -W2/0 -A1000 -O -K >> ", & 
               trim(adjustl(ps_file))
-  Write(us,*)"pstext -N -R -JJ -B -G0 -O -K ", trim(adjustl(tmp_file)), " >> ", & 
+  Write(us,*)"${GMT} pstext -N -R -JJ -B -G0 -O -K ", trim(adjustl(tmp_file)), " >> ", & 
               trim(adjustl(ps_file))
   if(u==12.or.u==13) &   
   Write(us,*)"psscale -U/0.5/13/'SELEN 2.9' -E ", "-C"//trim(adjustl(table_name)), " -Bf1a5/:mm/yr: -D8/-1.5/10/1h -O >> ", & 
@@ -4907,10 +4907,10 @@ END
 !
   us=11 
   Open (us,file=script_name,status='unknown') 
-  Write(us,*)"gmtset PAPER_MEDIA A4+"
-  Write(us,*)"gmtset LABEL_FONT_SIZE 24p"
-  Write(us,*)"gmtset ANOT_FONT_SIZE 16p" 
-  Write(us,*)"gmtset FRAME_WIDTH 0.1c"
+  Write(us,*)"${GMT} gmtset PAPER_MEDIA A4+"
+  Write(us,*)"${GMT} gmtset LABEL_FONT_SIZE 24p"
+  Write(us,*)"${GMT} gmtset ANOT_FONT_SIZE 16p" 
+  Write(us,*)"${GMT} gmtset FRAME_WIDTH 0.1c"
   Write(us,*)" " 
 !
   do 600 u=12, 14 
@@ -4954,15 +4954,15 @@ END
   if(u==12.or.u==13) table_name=table_name_su
   if(u==14) 	     table_name=table_name_n
 !
-  Write(us,*)"psbasemap -P -X3 -Y9 -Ba20f10/f10a10WSEn -R200/340/10/87.5 -JJ-90/16 -K  > ", & 
+  Write(us,*)"${GMT} psbasemap -P -X3 -Y9 -Ba20f10/f10a10WSEn -R200/340/10/87.5 -JJ-90/16 -K  > ", & 
   	      trim(adjustl(ps_file))
-  Write(us,*)"pscontour -I -JJ -R -O -K ", trim(adjustl(data_file)), " -C"//trim(adjustl(table_name)), " >> ", & 
+  Write(us,*)"${GMT} pscontour -I -JJ -R -O -K ", trim(adjustl(data_file)), " -C"//trim(adjustl(table_name)), " >> ", & 
               trim(adjustl(ps_file)) 
-  Write(us,*)"pscontour -G16 -W1/255 -A -JJ -R -O -K ", trim(adjustl(data_file)), " -C"//trim(adjustl(table_name)), " >> ", & 
+  Write(us,*)"${GMT} pscontour -G16 -W1/255 -A -JJ -R -O -K ", trim(adjustl(data_file)), " -C"//trim(adjustl(table_name)), " >> ", & 
               trim(adjustl(ps_file))
-  Write(us,*)"pscoast -R -JJ -Di -B -W2/0 -A1000 -O -K >> ", & 
+  Write(us,*)"${GMT} pscoast -R -JJ -Di -B -W2/0 -A1000 -O -K >> ", & 
               trim(adjustl(ps_file))
-  Write(us,*)"pstext -N -R -JJ -B -G0 -O -K ", trim(adjustl(tmp_file)), " >> ", & 
+  Write(us,*)"${GMT} pstext -N -R -JJ -B -G0 -O -K ", trim(adjustl(tmp_file)), " >> ", & 
               trim(adjustl(ps_file))
   if(u==12.or.u==13) &   
   Write(us,*)"psscale -U/0.5/0.5/'SELEN 2.9' -E ", "-C"//trim(adjustl(table_name)), " -Bf1a4/:mm/yr: -D8/-1.5/10/1h -O >> ", & 
@@ -4998,10 +4998,10 @@ END
 !
   us=11 
   Open (us,file=script_name,status='unknown') 
-  Write(us,*)"gmtset PAPER_MEDIA A4+"
-  Write(us,*)"gmtset LABEL_FONT_SIZE 24p"
-  Write(us,*)"gmtset ANOT_FONT_SIZE 16p" 
-  Write(us,*)"gmtset FRAME_WIDTH 0.1c"
+  Write(us,*)"${GMT} gmtset PAPER_MEDIA A4+"
+  Write(us,*)"${GMT} gmtset LABEL_FONT_SIZE 24p"
+  Write(us,*)"${GMT} gmtset ANOT_FONT_SIZE 16p" 
+  Write(us,*)"${GMT} gmtset FRAME_WIDTH 0.1c"
   Write(us,*)" " 
 !
   do 700 u=12, 14 
@@ -5045,11 +5045,11 @@ END
   if(u==12.or.u==13) table_name=table_name_su
   if(u==14) 	     table_name=table_name_n
 !
-  Write(us,*)"pscontour -P -X4 -Y8 -I -JE0/-90/12 -R0/360/-90/-52 -K ", trim(adjustl(data_file)), & 
+  Write(us,*)"${GMT} pscontour -P -X4 -Y8 -I -JE0/-90/12 -R0/360/-90/-52 -K ", trim(adjustl(data_file)), & 
   	     " -C"//trim(adjustl(table_name)), " > ", trim(adjustl(ps_file)) 
-  Write(us,*)"pscontour -G15 -W1/255 -A -JE -R -O -K ", trim(adjustl(data_file)), " -C"//trim(adjustl(table_name)), " >> ", & 
+  Write(us,*)"${GMT} pscontour -G15 -W1/255 -A -JE -R -O -K ", trim(adjustl(data_file)), " -C"//trim(adjustl(table_name)), " >> ", & 
               trim(adjustl(ps_file))
-  Write(us,*)"pscoast -R -JE -Di -Ba30f30g30 -W2/255/0/0 -A0 -O -K >> ", & 
+  Write(us,*)"${GMT} pscoast -R -JE -Di -Ba30f30g30 -W2/255/0/0 -A0 -O -K >> ", & 
               trim(adjustl(ps_file))
   if(u==12.or.u==13) &   
   Write(us,*)"psscale -E -X-6 -Y-7 ", "-C"//trim(adjustl(table_name)), " -Bf1a2/:mm/yr: -D12/5/8/1h -O -K >> ", & 
@@ -5057,7 +5057,7 @@ END
   if(u==14) &   
   Write(us,*)"psscale -E -X-6 -Y-7 ", "-C"//trim(adjustl(table_name)), " -Bf0.5a1/:mm/yr: -D12/5/8/1h -O -K >> ", & 
               trim(adjustl(ps_file))
-  Write(us,*)"pstext -X6 -N -R -JE -G0 -O -U/4/20.5/'SELEN 2.9' ", trim(adjustl(tmp_file)), " >> ", & 
+  Write(us,*)"${GMT} pstext -X6 -N -R -JE -G0 -O -U/4/20.5/'SELEN 2.9' ", trim(adjustl(tmp_file)), " >> ", & 
               trim(adjustl(ps_file))	      	      	      	      
   Write(us,*)" "
 !
@@ -5368,10 +5368,10 @@ END
 !
 !
  open(9,file=file1_gmt,status='unknown')
- Write(9,*)"gmtset PAPER_MEDIA A4+"
- Write(9,*)"gmtset LABEL_FONT_SIZE 24p"
- Write(9,*)"gmtset ANOT_FONT_SIZE 16p"
- Write(9,*)"gmtset FRAME_WIDTH 0.1c"
+ Write(9,*)"${GMT} gmtset PAPER_MEDIA A4+"
+ Write(9,*)"${GMT} gmtset LABEL_FONT_SIZE 24p"
+ Write(9,*)"${GMT} gmtset ANOT_FONT_SIZE 16p"
+ Write(9,*)"${GMT} gmtset FRAME_WIDTH 0.1c"
 
  Write(9,*)" "
  Write(9,*)"# ---- Global maps of dot S, U, and N at present time  ----" 		      
@@ -5399,18 +5399,18 @@ do 1 k=1, 3
 T_OPTION="-T-1.0/1.0/0.2"         ! Range of the palette 
 !
 Write(9,*) " "
-Write(9,*) "makecpt -Cno_green ", trim(adjustl(T_OPTION)), " > pale.cpt" 
-Write(9,*) "psbasemap -X3 -Y5 -Ba180/a40WSEn -Jm0.018i ", & 
+Write(9,*) "${GMT} makecpt -Cno_green ", trim(adjustl(T_OPTION)), " > pale.cpt" 
+Write(9,*) "${GMT} psbasemap -X3 -Y5 -Ba180/a40WSEn -Jm0.018i ", & 
             trim(adjustl(R_OPTION)), " -K > ", " ", trim(adjustl(nameout))  
-Write(9,*) "pscontour -I -Jm -O -K ", trim(adjustl(R_OPTION)), & 
+Write(9,*) "${GMT} pscontour -I -Jm -O -K ", trim(adjustl(R_OPTION)), & 
            " ", trim(adjustl(namein)), " -Cpale.cpt  >> ", trim(adjustl(nameout)) 
 If(option_rof=='r')then 
-  Write(9,*) "pscoast -Jm -Dc -B -W2/0       -A1000 -O -K ", trim(adjustl(R_OPTION)), " >> ", trim(adjustl(nameout))  
+  Write(9,*) "${GMT} pscoast -Jm -Dc -B -W2/0       -A1000 -O -K ", trim(adjustl(R_OPTION)), " >> ", trim(adjustl(nameout))  
   else
-  Write(9,*) "pscoast -Jm -Dc -B -W1/240 -A1000 -O -K ", trim(adjustl(R_OPTION)), " >> ", trim(adjustl(nameout))  
+  Write(9,*) "${GMT} pscoast -Jm -Dc -B -W1/240 -A1000 -O -K ", trim(adjustl(R_OPTION)), " >> ", trim(adjustl(nameout))  
 Endif
 If(option_rof=='z')& 
-Write(9,*) "psxy -R -Jm ", trim(adjustl(filecap)), " -M -W4/0 -B -A -O -K >> ", trim(adjustl(nameout))  
+Write(9,*) "${GMT} psxy -R -Jm ", trim(adjustl(filecap)), " -M -W4/0 -B -A -O -K >> ", trim(adjustl(nameout))  
 !
 open (4,file=NAMEF,status='unknown')  
 
@@ -5427,7 +5427,7 @@ Write(4,*) "180 -87.5   13  0 0 BC ",&
 	    " -CODE=", trim(adjustl(CODE)),& 
 	    " -MODE=", trim(adjustl(MODE)),&   
 	    " -ITER=", trim(adjustl(ITER));  close(4) 
-Write(9,*) "pstext -N -R -Jm -B ", trim(adjustl(NAMEF)), " -G0 -O -K >> ", trim(adjustl(nameout)) 
+Write(9,*) "${GMT} pstext -N -R -Jm -B ", trim(adjustl(NAMEF)), " -G0 -O -K >> ", trim(adjustl(nameout)) 
 Write(9,*) "psscale -U/0.5/0.5/'SELEN 2.9' -E -Cpale.cpt -B1f0.25a0.5/:mm/yr: -D8.25/-1/10/1h -O >> ", trim(adjustl(nameout))
 ENDIF
 !
@@ -5454,9 +5454,9 @@ ENDIF
 !         Last modification - Giorgio Spada October 2007 
 !
  open(9,file=file1_gmt,status='unknown')
- Write(9,*) "gmtset PAPER_MEDIA A4+"
- Write(9,*) "gmtset ANOT_FONT_SIZE 16p"
- Write(9,*) "gmtset LABEL_FONT_SIZE 26p"
+ Write(9,*) "${GMT} gmtset PAPER_MEDIA A4+"
+ Write(9,*) "${GMT} gmtset ANOT_FONT_SIZE 16p"
+ Write(9,*) "${GMT} gmtset LABEL_FONT_SIZE 26p"
  Write(9,*) "#"
  Write(9,*) "# ---- Window function ----" 
  open(3,file='tmpw0.dat',status='unknown'); Write(3,'(a3)')degree; close(3) 
@@ -5473,25 +5473,25 @@ ENDIF
 !
  R_OPTION="-R3.5/"//trim(adjustl(JMAXC))//"/1e-4/1e2"
 !
- Write(9,*) "psbasemap -X6 -Y4 -U/0.5/12.75/'SELEN 2.9' ", R_OPTION, & 
+ Write(9,*) "${GMT} psbasemap -X6 -Y4 -U/0.5/12.75/'SELEN 2.9' ", R_OPTION, & 
             "  -Ba1f1p:'degree*(degree+1)/2+order+1':/f1a10:@~e@~,%::,%::.'Window function':WSne -JX-18l/14l -K > wnw.ps"
  open (4,file='tmpp4.dat',status='unknown') 
  Write(4,*) " 4 3e1 16 0 2 BR -RES=", trim(adjustl(RESOLUTION)), & 
             " -NP=", trim(adjustl(NPC)), " -LMAX= ", trim(adjustl(DEGREE)), "  " ; close(4)
- Write(9,*) "pstext tmpp4.dat -N -JX -R -G0 -O -K >> wnw.ps"	     
- Write(9,*) "psxy wnw.dat -B -R -JX -Sc0.1 -G0 -K -O >> wnw.ps"
+ Write(9,*) "${GMT} pstext tmpp4.dat -N -JX -R -G0 -O -K >> wnw.ps"	     
+ Write(9,*) "${GMT} psxy wnw.dat -B -R -JX -Sc0.1 -G0 -K -O >> wnw.ps"
  open (4,file='tmpp5.dat',status='unknown') 
  Write(4,*) JMAXP, " 1"
  Write(4,*)  " 1 1 " ; CLOSE(4) 
- Write(9,*) "psxy tmpp5.dat -B -R -JX -W4ta -G0 -K -O >> wnw.ps"
+ Write(9,*) "${GMT} psxy tmpp5.dat -B -R -JX -W4ta -G0 -K -O >> wnw.ps"
  open (4,file='tmpp6.dat',status='unknown') 
  Write(4,*) JMAXP, " 5"
  Write(4,*)  " 1 5 " ; CLOSE(4) 
- Write(9,*) "psxy tmpp6.dat -B -R -JX -W4to -G0 -K -O >> wnw.ps"
+ Write(9,*) "${GMT} psxy tmpp6.dat -B -R -JX -W4to -G0 -K -O >> wnw.ps"
  open (4,file='tmpp7.dat',status='unknown') 
  Write(4,*) JMAXP, " 10"
  Write(4,*)  " 1 10 " ; CLOSE(4) 
- Write(9,*) "psxy tmpp7.dat -B -R -JX -W2to -G0 -O >> wnw.ps"
+ Write(9,*) "${GMT} psxy tmpp7.dat -B -R -JX -W2to -G0 -O >> wnw.ps"
 !
  close(9) 
 !
@@ -5521,9 +5521,9 @@ ENDIF
 !
 open(9,file=file1_gmt,status='unknown')
 !	
-Write(9,*) "gmtset PAPER_MEDIA A4+"
-Write(9,*) "gmtset ANOT_FONT_SIZE 16p"
-Write(9,*) "gmtset LABEL_FONT_SIZE 18p"
+Write(9,*) "${GMT} gmtset PAPER_MEDIA A4+"
+Write(9,*) "${GMT} gmtset ANOT_FONT_SIZE 16p"
+Write(9,*) "${GMT} gmtset LABEL_FONT_SIZE 18p"
 Write(9,*) "#"
 !
 ! ---- The x-range varies according to the maximum degree but the y-range is fixed ... 
@@ -5559,85 +5559,85 @@ if(200<=LMAX.and.LMAX<=300) R_OPTION4="-R0.8/300/1e-7/1e1"
 !
 Write(9,*) "#"
 Write(9,*) "# ---------- Elastic LDCs vs degree (left frame of 'ela-flu.ps')"
-Write(9,*) "psbasemap -X5 -Y5 -U/8/-3/'SELEN 2.9' ", R_OPTION1, & 
+Write(9,*) "${GMT} psbasemap -X5 -Y5 -U/8/-3/'SELEN 2.9' ", R_OPTION1, & 
 	   " -Ba1f1p:'Harmonic degree, n':/f0.05a0.05:'Elastic LDC':WSen -JX9l/12 -K > ela-flu.ps" 
 open (4,file='tmpg1.dat',status='unknown') 
 Write(4,*) "1 0.09 18 0 2 BL Earth model: NV=", trim(adjustl(NV)), " CODE=", trim(adjustl(CODE))
 Write(4,*) "1 0.07 16 0 2 BL Viscosity profile: ", trim(adjustl(VSTRING)), "*1E21 Pa.s"; close(4) 
-Write(9,*) "pstext tmpg1.dat -N -JX -R -G0 -CM -O -K >> ela-flu.ps"
+Write(9,*) "${GMT} pstext tmpg1.dat -N -JX -R -G0 -CM -O -K >> ela-flu.ps"
 !
 Write(9,*) "awk '{print $1, $2/(2*$1+1)}' hh.dat > h.tmp" 
 Write(9,*) "awk '{print $1, $2         }' ll.dat > l.tmp"  
 Write(9,*) "awk '{print $1, $2         }' kk.dat > k.tmp" 
-Write(9,*) "psxy -H2 h.tmp -B -R -JX -Ss0.4  -G0  -K -O >> ela-flu.ps" 
-Write(9,*) "psxy -H2 l.tmp -B -R -JX -Sc0.35 -G0  -K -O >> ela-flu.ps" 
-Write(9,*) "psxy -H2 k.tmp -B -R -JX -Si0.4  -G0  -K -O >> ela-flu.ps" 
+Write(9,*) "${GMT} psxy -H2 h.tmp -B -R -JX -Ss0.4  -G0  -K -O >> ela-flu.ps" 
+Write(9,*) "${GMT} psxy -H2 l.tmp -B -R -JX -Sc0.35 -G0  -K -O >> ela-flu.ps" 
+Write(9,*) "${GMT} psxy -H2 k.tmp -B -R -JX -Si0.4  -G0  -K -O >> ela-flu.ps" 
 !
 open (4,file='tmpg2.dat',status='unknown') 
 Write(4,*) "20 -0.20 18 0 0 BL h/(2*n+1)"
 Write(4,*) "20 -0.23 18 0 0 BL l" 
 Write(4,*) "20 -0.26 18 0 0 BL k"; close(4) 
-Write(9,*) "pstext tmpg2.dat -N -JX -R -G0 -CM -O -K >> ela-flu.ps"
+Write(9,*) "${GMT} pstext tmpg2.dat -N -JX -R -G0 -CM -O -K >> ela-flu.ps"
 !
 open (4,file='tmpg3.dat',status='unknown') 
 Write(4,*) "15 -0.20"; close(4) 
-Write(9,*) "psxy -JX -R -G0 -Ss0.4  -O -K tmpg3.dat >> ela-flu.ps"
+Write(9,*) "${GMT} psxy -JX -R -G0 -Ss0.4  -O -K tmpg3.dat >> ela-flu.ps"
 open (4,file='tmpg4.dat',status='unknown') 
 Write(4,*) "15 -0.23"; close(4) 
-Write(9,*) "psxy -JX -R -G0 -Sc0.35 -O -K tmpg4.dat >> ela-flu.ps"
+Write(9,*) "${GMT} psxy -JX -R -G0 -Sc0.35 -O -K tmpg4.dat >> ela-flu.ps"
 open (4,file='tmpg5.dat',status='unknown') 
 Write(4,*) "15 -0.26"; close(4)
-Write(9,*) "psxy -JX -R -G0 -Si0.4  -O -K tmpg5.dat >> ela-flu.ps"
+Write(9,*) "${GMT} psxy -JX -R -G0 -Si0.4  -O -K tmpg5.dat >> ela-flu.ps"
 ! 
 Write(9,*) "#"
 Write(9,*) "# ---------- Fluid LDCs vs degree (right frame of 'ela-flu.ps')"
-Write(9,*) "psbasemap -X11 ", R_OPTION2, & 
+Write(9,*) "${GMT} psbasemap -X11 ", R_OPTION2, & 
 	    " -Ba1f1p:'Harmonic degree, n':/f0.25a0.25:'Fluid LDC':wSEn -JX -K -O >> ela-flu.ps" 
 Write(9,*) "awk '{print $1, $3/(2*$1+1)}' hh.dat > h.tmp" 
 Write(9,*) "awk '{print $1, $3         }' ll.dat > l.tmp"  
 Write(9,*) "awk '{print $1, $3         }' kk.dat > k.tmp" 
-Write(9,*) "psxy -H2 h.tmp -B -R -JX -Ss0.4  -G0  -K -O >> ela-flu.ps" 
-Write(9,*) "psxy -H2 l.tmp -B -R -JX -Sc0.35 -G0  -K -O >> ela-flu.ps"
-Write(9,*) "psxy -H2 k.tmp -B -R -JX -Si0.4  -G0     -O >> ela-flu.ps"
+Write(9,*) "${GMT} psxy -H2 h.tmp -B -R -JX -Ss0.4  -G0  -K -O >> ela-flu.ps" 
+Write(9,*) "${GMT} psxy -H2 l.tmp -B -R -JX -Sc0.35 -G0  -K -O >> ela-flu.ps"
+Write(9,*) "${GMT} psxy -H2 k.tmp -B -R -JX -Si0.4  -G0     -O >> ela-flu.ps"
 !
 Write(9,*) "#"
 Write(9,*) "# ----  Relaxation spectrum (i. e., relaxation times vs. degree), 'spectrum.ps'"
-Write(9,*) "psbasemap -X5 -Y5 -U/0.5/11/'SELEN 2.9' ", R_OPTION3, & 
+Write(9,*) "${GMT} psbasemap -X5 -Y5 -U/0.5/11/'SELEN 2.9' ", R_OPTION3, & 
 	   " -Ba1f1p:'Harmonic degree, n':/f1a1p:'Relaxation time (yrs)':WSen -JX9l/12l  -K >  spectrum.ps" 
 open (4,file='tmpg6.dat',status='unknown') 
 Write(4,*) "1 0.8e10 14 0 2 BL Earth model: NV=", trim(adjustl(NV)), " CODE=", trim(adjustl(CODE))
 Write(4,*) "1 0.3e10 12 0 2 BL Viscosity profile: ", trim(adjustl(VSTRING)), "*1E21 Pa.s"; close(4) 
-Write(9,*) "pstext -N -JX -R -G0 -CM -O -K tmpg6.dat >> spectrum.ps"
+Write(9,*) "${GMT} pstext -N -JX -R -G0 -CM -O -K tmpg6.dat >> spectrum.ps"
 Write(9,*) "awk '{print $1, $5}' ss.dat > spe.tmp" 
-Write(9,*) "psxy -M -H7 spe.tmp -B -R -JX -Sc0.15 -G0 -O >> spectrum.ps" 
+Write(9,*) "${GMT} psxy -M -H7 spe.tmp -B -R -JX -Sc0.15 -G0 -O >> spectrum.ps" 
 !
 Write(9,*) "#"
 Write(9,*) "# ---------- Normalized residues vs degree, all three in figure 'n-residues.ps'"
 Write(9,*) "# ---------- h"
-Write(9,*) "psbasemap  -X3 -Y4 -U/0.25/0.25/'SELEN 2.9' ", R_OPTION4, & 
+Write(9,*) "${GMT} psbasemap  -X3 -Y4 -U/0.25/0.25/'SELEN 2.9' ", R_OPTION4, & 
 	   " -Ba1f1p/f1a1p:'Normalized residue':WSen -JX7l/11l  -K > n-residues.ps" 
-Write(9,*) "psxy -M -H2 ihh.dat -B -R -JX -Ss0.25 -W4 -G0   -O -K >> n-residues.ps" 
+Write(9,*) "${GMT} psxy -M -H2 ihh.dat -B -R -JX -Ss0.25 -W4 -G0   -O -K >> n-residues.ps" 
 open (4,file='tmpg7.dat',status='unknown') 
 Write(4,*) "1.3 2e0 20 0 0 BL (h)"; close(4) 
-Write(9,*) "pstext -N tmpg7.dat -JX -R -G0 -CM -O -K >> n-residues.ps"
+Write(9,*) "${GMT} pstext -N tmpg7.dat -JX -R -G0 -CM -O -K >> n-residues.ps"
 Write(9,*) "#"
 open (4,file='tmpg8.dat',status='unknown') 
 Write(4,*) "1 0.8e2 18 0 2 BL Earth model: NV=", trim(adjustl(NV)), " CODE=", trim(adjustl(CODE))
 Write(4,*) "1 0.3e2 16 0 2 BL Viscosity profile: ", trim(adjustl(VSTRING)), "*1E21 Pa.s"; close(4) 
-Write(9,*) "pstext -N tmpg8.dat -JX -R -G0 -CM -O -K >> n-residues.ps"
+Write(9,*) "${GMT} pstext -N tmpg8.dat -JX -R -G0 -CM -O -K >> n-residues.ps"
 Write(9,*) "# ---------- l"
-Write(9,*) "psbasemap  -X8 -R -Ba1f1p:'Harmonic degree, n':/f1a1p:'Normalized residue':wSen -JX -K -O >> n-residues.ps"
-Write(9,*) "psxy -M -H2 ill.dat -B -R -JX -Sc0.2 -W4 -G0 -O -K >> n-residues.ps"
+Write(9,*) "${GMT} psbasemap  -X8 -R -Ba1f1p:'Harmonic degree, n':/f1a1p:'Normalized residue':wSen -JX -K -O >> n-residues.ps"
+Write(9,*) "${GMT} psxy -M -H2 ill.dat -B -R -JX -Sc0.2 -W4 -G0 -O -K >> n-residues.ps"
 open (4,file='tmpg9.dat',status='unknown') 
 Write(4,*) "1.3 2e0 20 0 0 BL (l)"; close(4)
-Write(9,*) "pstext -N tmpg9.dat -JX -R -G0 -CM -O -K >> n-residues.ps"
+Write(9,*) "${GMT} pstext -N tmpg9.dat -JX -R -G0 -CM -O -K >> n-residues.ps"
 Write(9,*) "#"
 Write(9,*) "# ---------- k"
-Write(9,*) "psbasemap -X8 -R -Ba1f1p/f1a1p:'Normalized residue':wSen -JX -O -K >> n-residues.ps" 
-Write(9,*) "psxy -M -H2 ikk.dat -B -R -JX -Si0.25 -W4 -G0   -O -K >> n-residues.ps" 
+Write(9,*) "${GMT} psbasemap -X8 -R -Ba1f1p/f1a1p:'Normalized residue':wSen -JX -O -K >> n-residues.ps" 
+Write(9,*) "${GMT} psxy -M -H2 ikk.dat -B -R -JX -Si0.25 -W4 -G0   -O -K >> n-residues.ps" 
 open (4,file='tmpg10.dat',status='unknown') 
 Write(4,*) "1.3 2e0 20 0 0 BL (k)"; close(4) 
-Write(9,*) "pstext -N tmpg10.dat -JX -R -G0 -CM -O >> n-residues.ps"
+Write(9,*) "${GMT} pstext -N tmpg10.dat -JX -R -G0 -CM -O >> n-residues.ps"
 !
  close(9)
 !
@@ -5693,8 +5693,8 @@ Write(9,*) "pstext -N tmpg10.dat -JX -R -G0 -CM -O >> n-residues.ps"
 !
  	open(19,file=file1_gmt,status='unknown')
 
-	Write(19,*) " gmtset PAPER_MEDIA A4+" 
-	Write(19,*) " gmtset FRAME_WIDTH 0.1c"
+	Write(19,*) " ${GMT} gmtset PAPER_MEDIA A4+" 
+	Write(19,*) " ${GMT} gmtset FRAME_WIDTH 0.1c"
 	Write(19,*) " " 
 !Write(19,*) "echo '     - ", trim(adjustl(file1_gmt))//":", " Creating ps images of RSL zones - one image per frame....'"
 Write(19,*) " " 
@@ -5707,23 +5707,23 @@ Write(19,*) " "
 !
 ! --- xy plot of RSL 
 !
-        Write(19,*) " psbasemap -U'SELEN 2.9' -X3 -Y10.5 -Ba2f1:'time (ka)':/a50f50WSen:'RSL (m)': ", & 
+        Write(19,*) " ${GMT} psbasemap -U'SELEN 2.9' -X3 -Y10.5 -Ba2f1:'time (ka)':/a50f50WSen:'RSL (m)': ", & 
 	              r_option(i), "-JX14/9  -K >  plot.ps" 
- 	Write(19,*) " psxy rslzones-"//label(i)//".dat", " -M -H -B -R -JX -W0.05/0 -O -K >> plot.ps"
-	Write(19,*) " psxy rslzones-"//label(i)//"-ave.dat", " -M -H -B -R -JX ", W_OPTION(I), " -O -K >> plot.ps"	
+ 	Write(19,*) " ${GMT} psxy rslzones-"//label(i)//".dat", " -M -H -B -R -JX -W0.05/0 -O -K >> plot.ps"
+	Write(19,*) " ${GMT} psxy rslzones-"//label(i)//"-ave.dat", " -M -H -B -R -JX ", W_OPTION(I), " -O -K >> plot.ps"	
 !
 ! --- first sphere 
- 	Write (19,*) " psbasemap -Y0 -X15 -Ba90/a85f90WSEN -R0/360/-90/90  -JG-20/70/9 -O -K  >> plot.ps"
- 	Write (19,*) " psxy lonlat-"//label(i)//".dat", " -B -R -JG -Sh0.32 ", g_option(i), " -O -K >> plot.ps"
- 	Write (19,*) " pscoast -G255 -B -R -JG -Dc -W2 -A10000 -O -K >> plot.ps"
+ 	Write (19,*) " ${GMT} psbasemap -Y0 -X15 -Ba90/a85f90WSEN -R0/360/-90/90  -JG-20/70/9 -O -K  >> plot.ps"
+ 	Write (19,*) " ${GMT} psxy lonlat-"//label(i)//".dat", " -B -R -JG -Sh0.32 ", g_option(i), " -O -K >> plot.ps"
+ 	Write (19,*) " ${GMT} pscoast -G255 -B -R -JG -Dc -W2 -A10000 -O -K >> plot.ps"
 !
 ! --- sechond sphere 
- 	Write (19,*) " psbasemap -Y-10 -X0 -B -R -JG-20/-70/9 -O -K  >> plot.ps"
- 	Write (19,*) " psxy lonlat-"//label(i)//".dat", " -B -R -JG -Sh0.32 ", g_option(i), " -O -K >> plot.ps"
- 	Write (19,*) " pscoast -G255 -B -R -JG -Dc -W2 -A10000 -O -K >> plot.ps"
+ 	Write (19,*) " ${GMT} psbasemap -Y-10 -X0 -B -R -JG-20/-70/9 -O -K  >> plot.ps"
+ 	Write (19,*) " ${GMT} psxy lonlat-"//label(i)//".dat", " -B -R -JG -Sh0.32 ", g_option(i), " -O -K >> plot.ps"
+ 	Write (19,*) " ${GMT} pscoast -G255 -B -R -JG -Dc -W2 -A10000 -O -K >> plot.ps"
 !
 ! --- a new basemap for titles... 
-	Write (19,*) " psbasemap -X-15 -Y10 -Bf1000wesn   -R0/10/0/10     -JX14/9  -O -K >>  plot.ps"
+	Write (19,*) " ${GMT} psbasemap -X-15 -Y10 -Bf1000wesn   -R0/10/0/10     -JX14/9  -O -K >>  plot.ps"
 !
 	If(cd=='-1')then 
 	   CONTINUE
@@ -5742,7 +5742,7 @@ Write(19,*) " "
  	close(8) 	
 	Endif 		
 !		
-	Write (19,*) " pstext -N ", 'tmpz'//"."//label(i), " -JX -R -O >> plot.ps"
+	Write (19,*) " ${GMT} pstext -N ", 'tmpz'//"."//label(i), " -JX -R -O >> plot.ps"
 !
 	Write (19,*) " ps2pdf plot.ps"	
 !
@@ -5761,10 +5761,10 @@ Write(19,*) " "
 !
  	open(19,file=file2_gmt,status='unknown')
 
-	Write(19,*) " gmtset PAPER_MEDIA A4+" 
-	Write(19,*) " gmtset FRAME_WIDTH 0.1c"
-	Write(19,*) " gmtset ANOT_FONT_SIZE 12p"
-	Write(19,*) " gmtset LABEL_FONT_SIZE 18p"
+	Write(19,*) " ${GMT} gmtset PAPER_MEDIA A4+" 
+	Write(19,*) " ${GMT} gmtset FRAME_WIDTH 0.1c"
+	Write(19,*) " ${GMT} gmtset ANOT_FONT_SIZE 12p"
+	Write(19,*) " ${GMT} gmtset LABEL_FONT_SIZE 18p"
 	Write(19,*) " " 
 !Write(19,*) & 
 !"echo '     - ", trim(adjustl(file2_gmt))//":", " Creating ps images of RSL zones - one images in one frame....'"
@@ -5772,60 +5772,60 @@ Write(19,*) " "
 !
 ! --- xy plots of RSL zones  
 !
-        Write(19,*) " psbasemap -X3 -Y14 -Ba2f1:'time (ka)':/a50f50Wsen:'RSL (m)':  ", r_option(1), "-JX6.5/5  -K >  plot.ps" 
- 	Write(19,*) " psxy rslzones-"//label(1)//".dat", " -M -H -B -R -JX -Sc0.01 -G0/0/255 -O -K >> plot.ps"	
-	Write(19,*) " psxy rslzones-"//label(1)//"-ave.dat", " -M -H -B -R -JX ", W_OPTION(1), " -O -K >> plot.ps"
+        Write(19,*) " ${GMT} psbasemap -X3 -Y14 -Ba2f1:'time (ka)':/a50f50Wsen:'RSL (m)':  ", r_option(1), "-JX6.5/5  -K >  plot.ps" 
+ 	Write(19,*) " ${GMT} psxy rslzones-"//label(1)//".dat", " -M -H -B -R -JX -Sc0.01 -G0/0/255 -O -K >> plot.ps"	
+	Write(19,*) " ${GMT} psxy rslzones-"//label(1)//"-ave.dat", " -M -H -B -R -JX ", W_OPTION(1), " -O -K >> plot.ps"
  	open (8,file='tmpzu1.dat',status='unknown')	
 		Write(8,*) "1 -180 18 0 2 BL  zone 10"  	         
  	close(8) 
-	Write (19,*) " pstext -N tmpzu1.dat -JX -R -O -K >> plot.ps"
+	Write (19,*) " ${GMT} pstext -N tmpzu1.dat -JX -R -O -K >> plot.ps"
 !
-        Write(19,*) " psbasemap -X8.25 -Y0 -Ba2f1:'time (ka)':/a50f50Wsen  ", r_option(2), "-JX6.5/5  -O -K >>  plot.ps" 
- 	Write(19,*) " psxy rslzones-"//label(2)//".dat", " -M -H -B -R -JX -Sc0.01 -G107/199/231 -O -K >> plot.ps"
-	Write(19,*) " psxy rslzones-"//label(2)//"-ave.dat", " -M -H -B -R -JX ", W_OPTION(2), " -O -K >> plot.ps"
+        Write(19,*) " ${GMT} psbasemap -X8.25 -Y0 -Ba2f1:'time (ka)':/a50f50Wsen  ", r_option(2), "-JX6.5/5  -O -K >>  plot.ps" 
+ 	Write(19,*) " ${GMT} psxy rslzones-"//label(2)//".dat", " -M -H -B -R -JX -Sc0.01 -G107/199/231 -O -K >> plot.ps"
+	Write(19,*) " ${GMT} psxy rslzones-"//label(2)//"-ave.dat", " -M -H -B -R -JX ", W_OPTION(2), " -O -K >> plot.ps"
  	open (8,file='tmpzu2.dat',status='unknown')	
 		Write(8,*) "1 -180 18 0 2 BL  11"  	         
  	close(8) 
-	Write (19,*) " pstext -N tmpzu2.dat -JX -R -O -K >> plot.ps"	
+	Write (19,*) " ${GMT} pstext -N tmpzu2.dat -JX -R -O -K >> plot.ps"	
 !
-        Write(19,*) " psbasemap -U'SELEN 2.9' -X-8.25 -Y-6  -Ba2f1:'time (ka)':/a100f100WSen:'RSL (m)':  ", & 
+        Write(19,*) " ${GMT} psbasemap -U'SELEN 2.9' -X-8.25 -Y-6  -Ba2f1:'time (ka)':/a100f100WSen:'RSL (m)':  ", & 
 	              r_option(3), "-JX6.5/5  -O -K >>  plot.ps" 
- 	Write(19,*) " psxy rslzones-"//label(3)//".dat", " -M -H -B -R -JX -Sc0.01 -G226/0/122 -O -K >> plot.ps"
-	Write(19,*) " psxy rslzones-"//label(3)//"-ave.dat", " -M -H -B -R -JX ", W_OPTION(3), " -O -K >> plot.ps"
+ 	Write(19,*) " ${GMT} psxy rslzones-"//label(3)//".dat", " -M -H -B -R -JX -Sc0.01 -G226/0/122 -O -K >> plot.ps"
+	Write(19,*) " ${GMT} psxy rslzones-"//label(3)//"-ave.dat", " -M -H -B -R -JX ", W_OPTION(3), " -O -K >> plot.ps"
  	open (8,file='tmpzu3.dat',status='unknown')	
 		Write(8,*) "1 400 18 0 2 BL  20"  	         
  	close(8) 
-	Write (19,*) " pstext -N tmpzu3.dat -JX -R -O -K >> plot.ps"		
+	Write (19,*) " ${GMT} pstext -N tmpzu3.dat -JX -R -O -K >> plot.ps"		
 !
-        Write(19,*) " psbasemap -X8.25 -Y0    -Ba2f1:'time (ka)':/a50f50WSen  ", r_option(4), "-JX6.5/5  -O -K >>  plot.ps" 
- 	Write(19,*) " psxy rslzones-"//label(4)//".dat", " -M -H -B -R -JX -Sc0.01 -G105/62/142  -O -K  >> plot.ps"
-	Write(19,*) " psxy rslzones-"//label(4)//"-ave.dat", " -M -H -B -R -JX ", W_OPTION(4), " -O -K  >> plot.ps"
+        Write(19,*) " ${GMT} psbasemap -X8.25 -Y0    -Ba2f1:'time (ka)':/a50f50WSen  ", r_option(4), "-JX6.5/5  -O -K >>  plot.ps" 
+ 	Write(19,*) " ${GMT} psxy rslzones-"//label(4)//".dat", " -M -H -B -R -JX -Sc0.01 -G105/62/142  -O -K  >> plot.ps"
+	Write(19,*) " ${GMT} psxy rslzones-"//label(4)//"-ave.dat", " -M -H -B -R -JX ", W_OPTION(4), " -O -K  >> plot.ps"
  	open (8,file='tmpzu4.dat',status='unknown')	
 		Write(8,*) "1 115 18 0 2 BL  21"  	         
  	close(8) 
-	Write (19,*) " pstext -N tmpzu4.dat -JX -R -O -K >> plot.ps"		
+	Write (19,*) " ${GMT} pstext -N tmpzu4.dat -JX -R -O -K >> plot.ps"		
 !
 ! --- first sphere 
- 	Write (19,*) " psbasemap -X7.5 -Y3 -Ba90/a85f90WSEN -R0/360/-90/90  -JG-20/70/9 -O -K  >> plot.ps"
- 	Write (19,*) " psxy lonlat-"//label(1)//".dat", " -B -R -JG -Sh0.32 ", g_option(1), " -O -K >> plot.ps"
- 	Write (19,*) " psxy lonlat-"//label(2)//".dat", " -B -R -JG -Sh0.32 ", g_option(2), " -O -K >> plot.ps"
- 	Write (19,*) " psxy lonlat-"//label(3)//".dat", " -B -R -JG -Sh0.32 ", g_option(3), " -O -K >> plot.ps"
- 	Write (19,*) " psxy lonlat-"//label(4)//".dat", " -B -R -JG -Sh0.32 ", g_option(4), " -O -K >> plot.ps"
- 	Write (19,*) " pscoast -G255 -B -R -JG -Dc -W2 -A10000 -O -K >> plot.ps"
+ 	Write (19,*) " ${GMT} psbasemap -X7.5 -Y3 -Ba90/a85f90WSEN -R0/360/-90/90  -JG-20/70/9 -O -K  >> plot.ps"
+ 	Write (19,*) " ${GMT} psxy lonlat-"//label(1)//".dat", " -B -R -JG -Sh0.32 ", g_option(1), " -O -K >> plot.ps"
+ 	Write (19,*) " ${GMT} psxy lonlat-"//label(2)//".dat", " -B -R -JG -Sh0.32 ", g_option(2), " -O -K >> plot.ps"
+ 	Write (19,*) " ${GMT} psxy lonlat-"//label(3)//".dat", " -B -R -JG -Sh0.32 ", g_option(3), " -O -K >> plot.ps"
+ 	Write (19,*) " ${GMT} psxy lonlat-"//label(4)//".dat", " -B -R -JG -Sh0.32 ", g_option(4), " -O -K >> plot.ps"
+ 	Write (19,*) " ${GMT} pscoast -G255 -B -R -JG -Dc -W2 -A10000 -O -K >> plot.ps"
 !
 ! --- sechond sphere 
- 	Write (19,*) " psbasemap -Y-10 -X0 -B -R -JG-20/-70/9 -O -K  >> plot.ps"
- 	Write (19,*) " psxy lonlat-"//label(1)//".dat", " -B -R -JG -Sh0.32 ", g_option(1), " -O -K >> plot.ps"
- 	Write (19,*) " psxy lonlat-"//label(2)//".dat", " -B -R -JG -Sh0.32 ", g_option(2), " -O -K >> plot.ps"
- 	Write (19,*) " psxy lonlat-"//label(3)//".dat", " -B -R -JG -Sh0.32 ", g_option(3), " -O -K >> plot.ps"
- 	Write (19,*) " psxy lonlat-"//label(4)//".dat", " -B -R -JG -Sh0.32 ", g_option(4), " -O -K >> plot.ps"
- 	Write (19,*) " pscoast -G255 -B -R -JG -Dc -W2 -A10000 -O -K >> plot.ps"
+ 	Write (19,*) " ${GMT} psbasemap -Y-10 -X0 -B -R -JG-20/-70/9 -O -K  >> plot.ps"
+ 	Write (19,*) " ${GMT} psxy lonlat-"//label(1)//".dat", " -B -R -JG -Sh0.32 ", g_option(1), " -O -K >> plot.ps"
+ 	Write (19,*) " ${GMT} psxy lonlat-"//label(2)//".dat", " -B -R -JG -Sh0.32 ", g_option(2), " -O -K >> plot.ps"
+ 	Write (19,*) " ${GMT} psxy lonlat-"//label(3)//".dat", " -B -R -JG -Sh0.32 ", g_option(3), " -O -K >> plot.ps"
+ 	Write (19,*) " ${GMT} psxy lonlat-"//label(4)//".dat", " -B -R -JG -Sh0.32 ", g_option(4), " -O -K >> plot.ps"
+ 	Write (19,*) " ${GMT} pscoast -G255 -B -R -JG -Dc -W2 -A10000 -O -K >> plot.ps"
 !
 ! --- a new basemap for titles... 
 	If(cd=='-1')then 
 	   CONTINUE
 	Else 
-	Write (19,*) " psbasemap -X-7.5 -Y7 -Bf1000wesn   -R0/10/0/10     -JX6.5/5  -O -K >>  plot.ps"
+	Write (19,*) " ${GMT} psbasemap -X-7.5 -Y7 -Bf1000wesn   -R0/10/0/10     -JX6.5/5  -O -K >>  plot.ps"
  	open (8,file='tmpzu.dat',status='unknown')	
 
 		Write(8,*) "-9 -7  18 0  0 BL  RSL zones "
@@ -5842,7 +5842,7 @@ Write(19,*) " "
 	Endif 		
 !
 !
-	Write (19,*) " pstext -N tmpzu.dat -JX -R -O >> plot.ps"
+	Write (19,*) " ${GMT} pstext -N tmpzu.dat -JX -R -O >> plot.ps"
 !	
 	Write (19,*) " ps2pdf plot.ps"	
 !
@@ -5883,11 +5883,11 @@ Write(19,*) " "
 !
  	open(19,file=file_gmt,status='unknown')
 
-	Write(19,*) "gmtset PAPER_MEDIA A4+" 
-	Write(19,*) "gmtset FRAME_WIDTH 0.1c"
+	Write(19,*) "${GMT} gmtset PAPER_MEDIA A4+" 
+	Write(19,*) "${GMT} gmtset FRAME_WIDTH 0.1c"
 !	Write(19,*) "echo       - Creating a postscript image of the misfit histogram..."	
 !
-  	Write(19,*) "psbasemap -X3 -Y3 -U'SELEN 2.9' -JX16/10  -G255 -R0/100/0/50 -K > rsl-misfit.ps" 
+  	Write(19,*) "${GMT} psbasemap -X3 -Y3 -U'SELEN 2.9' -JX16/10  -G255 -R0/100/0/50 -K > rsl-misfit.ps" 
 	Write(19,*) "awk '{print $1, $2}' mis.dat > mis.tmp"
    	Write(19,*) "pshistogram mis.tmp -JX -R -B100a20:misfit:/a10:frequency:WSen -G140 -W2 -O -K >> rsl-misfit.ps" 
 	Write(19,*) "/bin/rm mis.tmp"
@@ -5912,7 +5912,7 @@ Write(19,*) " "
 !	
 	Endif
 !
-	Write(19,*) "pstext tmph.dat -O -JX -R >> rsl-misfit.ps"	
+	Write(19,*) "${GMT} pstext tmph.dat -O -JX -R >> rsl-misfit.ps"	
 	close(19) 
 !	
  END SUBROUTINE MAKE_RSLMIS
@@ -6020,10 +6020,10 @@ Write(19,*) " "
 !
  	open(29,file=file_gmt,status='unknown')
 !
-	Write(29,*) "gmtset PAPER_MEDIA A4+" 
-	Write(29,*) "gmtset HEADER_FONT_SIZE 24p"
-	Write(29,*) "gmtset FRAME_WIDTH 0.1c"
-        Write(29,*) "gmtset ANOT_FONT_SIZE 12p"
+	Write(29,*) "${GMT} gmtset PAPER_MEDIA A4+" 
+	Write(29,*) "${GMT} gmtset HEADER_FONT_SIZE 24p"
+	Write(29,*) "${GMT} gmtset FRAME_WIDTH 0.1c"
+        Write(29,*) "${GMT} gmtset ANOT_FONT_SIZE 12p"
 	Write(29,*) ""
 	Write(29,*) ""
 
@@ -6034,24 +6034,24 @@ Write(19,*) " "
 !
 ! ------ Main frame (Mercator projection) 
 !
-	Write(29,*) "psbasemap -X4 -Y5 -Ba180/a85f90WSEn -R0/360/-85/85  -JM12 -K > maprsl.ps" 	
-	Write(29,*) "pscoast -G120 -S0/0/220 -B -R -O -K  -JM -Dc  -A10000 >> maprsl.ps" 	
-	Write(29,*) "psxy -H1 lon-lat-rsl.dat -B -R -JM -Sc0.1 -G220 -O -K >> maprsl.ps"  
-	Write(29,*) "pstext -N tmptitle", " -G0 -O -K -JM -R >> maprsl.ps"
+	Write(29,*) "${GMT} psbasemap -X4 -Y5 -Ba180/a85f90WSEn -R0/360/-85/85  -JM12 -K > maprsl.ps" 	
+	Write(29,*) "${GMT} pscoast -G120 -S0/0/220 -B -R -O -K  -JM -Dc  -A10000 >> maprsl.ps" 	
+	Write(29,*) "${GMT} psxy -H1 lon-lat-rsl.dat -B -R -JM -Sc0.1 -G220 -O -K >> maprsl.ps"  
+	Write(29,*) "${GMT} pstext -N tmptitle", " -G0 -O -K -JM -R >> maprsl.ps"
 	Write(29,*) ""
 !
 ! ------ Northern emisphere 
 !	     	
- 	Write(29,*) "psbasemap -Y6 -X14 -Ba90/a85f90WSEN -R0/360/0/90  -JG-45/90/8 -O -K  >> maprsl.ps"  
-	Write(29,*) "pscoast -G120 -S0/0/220 -B -R -O -K -JG -Dc  -A10000 >> maprsl.ps" 	
-	Write(29,*) "psxy -H1 lon-lat-rsl.dat -B -R -JG -Sc0.1 -G220 -O -K >> maprsl.ps"  
+ 	Write(29,*) "${GMT} psbasemap -Y6 -X14 -Ba90/a85f90WSEN -R0/360/0/90  -JG-45/90/8 -O -K  >> maprsl.ps"  
+	Write(29,*) "${GMT} pscoast -G120 -S0/0/220 -B -R -O -K -JG -Dc  -A10000 >> maprsl.ps" 	
+	Write(29,*) "${GMT} psxy -H1 lon-lat-rsl.dat -B -R -JG -Sc0.1 -G220 -O -K >> maprsl.ps"  
 	Write(29,*) ""
 !
 ! ------Southern emisphere 
 !	     	
- 	Write(29,*) "psbasemap -Y-9 -X0 -Ba90/a85f90WSEN -R0/360/-90/0  -JG-90/-90/8 -U/-10/1/'SELEN 2.9' -O -K  >> maprsl.ps"  
-	Write(29,*) "pscoast -G120 -S0/0/220 -B -R -O -K -JG -Dc  -A10000 >> maprsl.ps" 	
-	Write(29,*) "psxy -H1 lon-lat-rsl.dat -B -R -JG -Sc0.1 -G220 -O >> maprsl.ps"  
+ 	Write(29,*) "${GMT} psbasemap -Y-9 -X0 -Ba90/a85f90WSEN -R0/360/-90/0  -JG-90/-90/8 -U/-10/1/'SELEN 2.9' -O -K  >> maprsl.ps"  
+	Write(29,*) "${GMT} pscoast -G120 -S0/0/220 -B -R -O -K -JG -Dc  -A10000 >> maprsl.ps" 	
+	Write(29,*) "${GMT} psxy -H1 lon-lat-rsl.dat -B -R -JG -Sc0.1 -G220 -O >> maprsl.ps"  
 	Write(29,*) ""
 !
 	close(29) 	
@@ -6193,8 +6193,8 @@ Write(19,*) " "
 !
  	open(19,file=file_gmt,status='unknown')
 
-	Write(19,*) "gmtset PAPER_MEDIA A4+" 
-	Write(19,*) "gmtset FRAME_WIDTH 0.1c"
+	Write(19,*) "${GMT} gmtset PAPER_MEDIA A4+" 
+	Write(19,*) "${GMT} gmtset FRAME_WIDTH 0.1c"
 !
 !Write(19,*) & 
 !"echo '--- ", trim(adjustl(file_gmt))//":", " Creating ps images of RSL data and predictions'"
@@ -6242,13 +6242,13 @@ Write(19,*) " "
 !	
 !If(mod(i,25)==0)Write(19,*) "echo  - RSL Code ", CODEC(i)
 !	
-	Write(19,*) "psbasemap -U'SELEN 2.9' -X4 -Y14 ", b_option, r_option," -P -JX12.8/8  -K >  plot.ps" 
-	Write(19,*) "psxy -H2 ", "rslp"//"-"//trim(adjustl(CODEC(i)))//".dat", " -B -R -JX -W4 -O -K >> plot.ps" 
-	Write(19,*) "psxy -H2 ", "rsld"//"-"//trim(adjustl(CODEC(i)))//".dat", " -B -R -JX -Ss0.25 -G0 -O -K >> plot.ps" 
-	Write(19,*) "psxy -H2 ", "rsld"//"-"//trim(adjustl(CODEC(i)))//".dat", " -Ey0.25/4 -B -R -JX -O -K >> plot.ps" 
+	Write(19,*) "${GMT} psbasemap -U'SELEN 2.9' -X4 -Y14 ", b_option, r_option," -P -JX12.8/8  -K >  plot.ps" 
+	Write(19,*) "${GMT} psxy -H2 ", "rslp"//"-"//trim(adjustl(CODEC(i)))//".dat", " -B -R -JX -W4 -O -K >> plot.ps" 
+	Write(19,*) "${GMT} psxy -H2 ", "rsld"//"-"//trim(adjustl(CODEC(i)))//".dat", " -B -R -JX -Ss0.25 -G0 -O -K >> plot.ps" 
+	Write(19,*) "${GMT} psxy -H2 ", "rsld"//"-"//trim(adjustl(CODEC(i)))//".dat", " -Ey0.25/4 -B -R -JX -O -K >> plot.ps" 
 !
 ! --- A new basemap for titles... 
-	Write(19,*) "psbasemap -X0 -Y0 -Ba1000wesn -R0/18/0/10 -P -JX12.8/8 -O -K >>  plot.ps" 
+	Write(19,*) "${GMT} psbasemap -X0 -Y0 -Ba1000wesn -R0/18/0/10 -P -JX12.8/8 -O -K >>  plot.ps" 
 !
 	If(cd=='-1') then 
 	   CONTINUE	
@@ -6267,7 +6267,7 @@ Write(19,*) " "
  	close(8) 		
 	Endif
 !		
-	Write(19,*) "pstext ", 'tmpb'//"."//trim(adjustl(CODEC(i))), " -O -JX -R >> plot.ps"	
+	Write(19,*) "${GMT} pstext ", 'tmpb'//"."//trim(adjustl(CODEC(i))), " -O -JX -R >> plot.ps"	
 !
 	Write(19,*) "ps2pdf plot.ps"
 !
@@ -6314,20 +6314,20 @@ Write(19,*) " "
 !
 ! # Some settings ... 
 !
- Write(17,*) "gmtset PAPER_MEDIA A4+"
- Write(17,*) "gmtset HEADER_FONT_SIZE 24p" 
- Write(17,*) "gmtset FRAME_WIDTH 0.1c" 
+ Write(17,*) "${GMT} gmtset PAPER_MEDIA A4+"
+ Write(17,*) "${GMT} gmtset HEADER_FONT_SIZE 24p" 
+ Write(17,*) "${GMT} gmtset FRAME_WIDTH 0.1c" 
 !
 !
 ! ------ 
  C_TABLE="pice.cpt"
  C_OPTION=" -C"//trim(adjustl(C_TABLE))
  If(titlice=="IJ05MOD")then 
-   Write(17,*) "makecpt -Crainbow  -T-100/1000/100 -D > ", trim(adjustl(C_TABLE)) 
+   Write(17,*) "${GMT} makecpt -Crainbow  -T-100/1000/100 -D > ", trim(adjustl(C_TABLE)) 
    B_OPTION = " -Bf1000a100g100/:: "			      
  endif 
  If(titlice/="IJ05MOD")then 
-   Write(17,*) "makecpt -Crainbow  -T-500/4500/500 -D > ", trim(adjustl(C_TABLE)) 
+   Write(17,*) "${GMT} makecpt -Crainbow  -T-500/4500/500 -D > ", trim(adjustl(C_TABLE)) 
    B_OPTION = " -Bf4500a1000g500/:: "
  endif
 !
@@ -6369,12 +6369,12 @@ Write(19,*) " "
 !
 ! ------ Main frame (Mercator projection) 
 !
-	Write(17,*) "psbasemap -X4 -Y6 -Ba180/a85f90WSEn -R0/360/-85/85  -JM12 -U/4/13.5/'SELEN 2.9' -K > map.ps" 	
-	Write(17,*) "psxy ", trim(adjustl(C_OPTION)), " -A -L -M ", trim(adjustl(filename)), " -O -K -JM -R >> map.ps" 
+	Write(17,*) "${GMT} psbasemap -X4 -Y6 -Ba180/a85f90WSEn -R0/360/-85/85  -JM12 -U/4/13.5/'SELEN 2.9' -K > map.ps" 	
+	Write(17,*) "${GMT} psxy ", trim(adjustl(C_OPTION)), " -A -L -M ", trim(adjustl(filename)), " -O -K -JM -R >> map.ps" 
 	If(option_rof=='r')then
-		           Write(17,*) "pscoast -R -JM -Dc  -B -W1/0   -A10000 -O -K >> map.ps" 
+		           Write(17,*) "${GMT} pscoast -R -JM -Dc  -B -W1/0   -A10000 -O -K >> map.ps" 
 		           else
-		           Write(17,*) "pscoast -R -JM -Dc  -B -W1/240 -A10000 -O -K >> map.ps" 
+		           Write(17,*) "${GMT} pscoast -R -JM -Dc  -B -W1/240 -A10000 -O -K >> map.ps" 
 	Endif			   
 	Write(17,*) "psscale -E ", trim(adjustl(C_OPTION)), " ", trim(adjustl(B_OPTION)), " -D6/-1/11/1h -O  -K >> map.ps"
 !
@@ -6393,32 +6393,32 @@ Write(19,*) " "
 	endif
 	Write(8,*) "180 -89.2 14 0 2 BC ", adjustl(trim(titlice)), " thickness (m)"		
 	close(8) 
-	Write(17,*) "pstext -N ", "rtmp0"//labchar//".dat", " -O -K -JM -R -G0 >> map.ps"
+	Write(17,*) "${GMT} pstext -N ", "rtmp0"//labchar//".dat", " -O -K -JM -R -G0 >> map.ps"
 
         if(option_rof=='z')& 
-	Write(17,*) "psxy -R -JM ", trim(adjustl(filecap)), " -M -W1/0 -B -A -O >> map.ps"
+	Write(17,*) "${GMT} psxy -R -JM ", trim(adjustl(filecap)), " -M -W1/0 -B -A -O >> map.ps"
 !
 !
 	if(option_rof=='r') then 
 !
 ! ------ Northern emisphere 
 !	     	
- 	Write(17,*) "psbasemap -Y6 -X14.5 -Ba90/a85f90WSEN -R0/360/0/90 -JG-45/90/8 -O -K >> map.ps"  
-	Write(17,*) "psxy ", trim(adjustl(C_OPTION)), " -A -L -M ", trim(adjustl(filename)), " -O  -K -JG -R >> map.ps"
+ 	Write(17,*) "${GMT} psbasemap -Y6 -X14.5 -Ba90/a85f90WSEN -R0/360/0/90 -JG-45/90/8 -O -K >> map.ps"  
+	Write(17,*) "${GMT} psxy ", trim(adjustl(C_OPTION)), " -A -L -M ", trim(adjustl(filename)), " -O  -K -JG -R >> map.ps"
 	If(option_rof=='r')then
-		           Write(17,*) "pscoast -R -JG -Dc  -B -W1/0   -A10000 -O -K >> map.ps" 
+		           Write(17,*) "${GMT} pscoast -R -JG -Dc  -B -W1/0   -A10000 -O -K >> map.ps" 
 		           else
-		           Write(17,*) "pscoast -R -JG -Dc  -B -W1/240 -A10000 -O -K >> map.ps" 
+		           Write(17,*) "${GMT} pscoast -R -JG -Dc  -B -W1/240 -A10000 -O -K >> map.ps" 
 	Endif	
 !
 ! ------ Southern emisphere 
 !
- 	Write(17,*) "psbasemap -Y-9 -X0 -Ba90/a85f90WSEN -R0/360/-90/0  -JG-90/-90/8 -O -K  >> map.ps"  
-	Write(17,*) "psxy ", trim(adjustl(C_OPTION)), " -A -L -M ", trim(adjustl(filename)), " -O  -K -JG -R >> map.ps"
+ 	Write(17,*) "${GMT} psbasemap -Y-9 -X0 -Ba90/a85f90WSEN -R0/360/-90/0  -JG-90/-90/8 -O -K  >> map.ps"  
+	Write(17,*) "${GMT} psxy ", trim(adjustl(C_OPTION)), " -A -L -M ", trim(adjustl(filename)), " -O  -K -JG -R >> map.ps"
 	If(option_rof=='r')then
-		           Write(17,*) "pscoast -R -JG -Dc  -B -W1/0   -A10000 -O >> map.ps" 
+		           Write(17,*) "${GMT} pscoast -R -JG -Dc  -B -W1/0   -A10000 -O >> map.ps" 
 		           else
-		           Write(17,*) "pscoast -R -JG -Dc  -B -W1/240 -A10000 -O >> map.ps" 
+		           Write(17,*) "${GMT} pscoast -R -JG -Dc  -B -W1/240 -A10000 -O >> map.ps" 
 	Endif	
 !
 	Endif
@@ -6464,9 +6464,9 @@ enddo
 !
 ! # Some settings ... 
 !
- Write(1,*) "gmtset PAPER_MEDIA A4+"
- Write(1,*) "gmtset HEADER_FONT_SIZE 24p" 
- Write(1,*) "gmtset FRAME_WIDTH 0.1c" 
+ Write(1,*) "${GMT} gmtset PAPER_MEDIA A4+"
+ Write(1,*) "${GMT} gmtset HEADER_FONT_SIZE 24p" 
+ Write(1,*) "${GMT} gmtset FRAME_WIDTH 0.1c" 
 !
  Write(1,*) ""
 !
@@ -6500,29 +6500,29 @@ enddo
  C_TABLE="pice.cpt"
  C_OPTION=" -C"//trim(adjustl(C_TABLE))
  If(titlice=="IJ05MOD")then 
-   Write(1,*) "makecpt -Crainbow  -T-100/1000/100 -D > ", trim(adjustl(C_TABLE)) 
+   Write(1,*) "${GMT} makecpt -Crainbow  -T-100/1000/100 -D > ", trim(adjustl(C_TABLE)) 
    B_OPTION = " -Bf1000a100g100/:: "			      
  endif 
  If(titlice/="IJ05MOD")then 
-   Write(1,*) "makecpt -Crainbow  -T-500/4500/500 -D > ", trim(adjustl(C_TABLE))  
+   Write(1,*) "${GMT} makecpt -Crainbow  -T-500/4500/500 -D > ", trim(adjustl(C_TABLE))  
    B_OPTION = " -Bf4500a1000g500/:: "
  endif
 !
-        Write(1,*) "pscontour -X3 -Y5  -I -JM12 -Ba180/a85f90WSEn -R0/360/-85/85 ", filename, " ", & 
+        Write(1,*) "${GMT} pscontour -X3 -Y5  -I -JM12 -Ba180/a85f90WSEn -R0/360/-85/85 ", filename, " ", & 
 	            trim(adjustl(C_OPTION)), " -K > map.ps"
 !
 	If(option_rof=='r')then
-		   Write(1,*) "pscoast -U/4/13.5/'SELEN 2.9' -B -R -O -K -W2/255 -JM -Dc -A10000 >> map.ps" 
+		   Write(1,*) "${GMT} pscoast -U/4/13.5/'SELEN 2.9' -B -R -O -K -W2/255 -JM -Dc -A10000 >> map.ps" 
 		           else
-		   Write(1,*) "pscoast -U/4/13.5/'SELEN 2.9' -B -R -O -K -W2/0/0/255 -JM -Dc -A10000 >> map.ps" 		   
+		   Write(1,*) "${GMT} pscoast -U/4/13.5/'SELEN 2.9' -B -R -O -K -W2/0/0/255 -JM -Dc -A10000 >> map.ps" 		   
 	Endif
 !
         if(option_rof=='z')& 
-	Write(1,*) "psxy -R -JM ", trim(adjustl(filecap)), " -M -W1/0 -B -A -O -K >> map.ps"
+	Write(1,*) "${GMT} psxy -R -JM ", trim(adjustl(filecap)), " -M -W1/0 -B -A -O -K >> map.ps"
 !        
         Write(1,*) "psscale -E ", trim(adjustl(C_OPTION)), " ", trim(adjustl(B_OPTION)), & 
 	           " -D6/-1/11/1h -O -K >> map.ps"
-        Write(1,*) "pstext -N ", " tmp0"//labchar//".dat",  " -JM -R -G0 -O -K >> map.ps"
+        Write(1,*) "${GMT} pstext -N ", " tmp0"//labchar//".dat",  " -JM -R -G0 -O -K >> map.ps"
 !
 ! ------ Prepares a small title 
 !
@@ -6545,13 +6545,13 @@ enddo
 !
 !--- Southern emisphere 
 !
- 	Write(1,*) "pscontour -I -Y1 -X14.5 -JA0/-90/10 -R0/360/-90/-50 ", filename, " ", & 
+ 	Write(1,*) "${GMT} pscontour -I -Y1 -X14.5 -JA0/-90/10 -R0/360/-90/-50 ", filename, " ", & 
 	            trim(adjustl(C_OPTION)), " -O -K >> map.ps"
 ! 	
 	If(option_rof=='r')then
-		   Write(1,*) "pscoast -R -JA -Di -Ba45f45 -W2/255     -A0 -O >> map.ps"
+		   Write(1,*) "${GMT} pscoast -R -JA -Di -Ba45f45 -W2/255     -A0 -O >> map.ps"
 		           else
-		   Write(1,*) "pscoast -R -JA -Di -Ba45f45 -W2/0/0/255 -A0 -O >> map.ps"		   
+		   Write(1,*) "${GMT} pscoast -R -JA -Di -Ba45f45 -W2/0/0/255 -A0 -O >> map.ps"		   
 	Endif
 !
 !
@@ -6591,25 +6591,25 @@ enddo
 !
 ! --- Realistic OF 
 !
-   Write(1,*)"gmtset PAPER_MEDIA A4+"
-   Write(1,*)"gmtset HEADER_FONT_SIZE 24p"
-   Write(1,*)"gmtset FRAME_WIDTH 0.1c"
-   Write(1,*)"gmtset ANOT_FONT_SIZE 12p"
+   Write(1,*)"${GMT} gmtset PAPER_MEDIA A4+"
+   Write(1,*)"${GMT} gmtset HEADER_FONT_SIZE 24p"
+   Write(1,*)"${GMT} gmtset FRAME_WIDTH 0.1c"
+   Write(1,*)"${GMT} gmtset ANOT_FONT_SIZE 12p"
    Write(1,*)" "
 !
    Write(1,*)"# Map of the original ocean function"
-   Write(1,*)"psbasemap -X3 -Y18 -P -Bf180a90/f90a60WSEN -R0/360/-85/85 -JQ180/16 -K > of.ps"
-   Write(1,*)"pscoast -R -JQ -Di -B -W1/255/255/255 -A1000 -S255/0/0 -G0/0/255 -O -K >> of.ps"
-   Write(1,*)"echo '180 120 18 0 2 CM OCEAN FUNCTION 0 ka' | pstext -U/0.5/0.5/'SELEN 2.9' -N -R -JQ -O -K >> of.ps"
+   Write(1,*)"${GMT} psbasemap -X3 -Y18 -P -Bf180a90/f90a60WSEN -R0/360/-85/85 -JQ180/16 -K > of.ps"
+   Write(1,*)"${GMT} pscoast -R -JQ -Di -B -W1/255/255/255 -A1000 -S255/0/0 -G0/0/255 -O -K >> of.ps"
+   Write(1,*)"echo '180 120 18 0 2 CM OCEAN FUNCTION 0 ka' | ${GMT} pstext -U/0.5/0.5/'SELEN 2.9' -N -R -JQ -O -K >> of.ps"
    Write(1,*)" "
 !
    Write(1,*)"# Map of rechonstructed ocean function"
-   Write(1,*)"makecpt  -Cno_green -T-0.1/1.1/0.1 > pale.cpt"
-   Write(1,*)"psbasemap -X0 -Y-11 -P -B -R -JQ -K -O >> of.ps"
-   Write(1,*)"pscontour -I -JQ -R recof.dat -Cpale.cpt -O -K >> of.ps"
-   Write(1,*)"pscoast -R -JQ -Di -W1/255/255/255 -B -A1000 -O -K >> of.ps"
+   Write(1,*)"${GMT} makecpt  -Cno_green -T-0.1/1.1/0.1 > pale.cpt"
+   Write(1,*)"${GMT} psbasemap -X0 -Y-11 -P -B -R -JQ -K -O >> of.ps"
+   Write(1,*)"${GMT} pscontour -I -JQ -R recof.dat -Cpale.cpt -O -K >> of.ps"
+   Write(1,*)"${GMT} pscoast -R -JQ -Di -W1/255/255/255 -B -A1000 -O -K >> of.ps"
    Write(1,*)"echo '180 120 18 0 2 CM OCEAN FUNCTION 0 ka to degree ", trim(adjustl(deg)),"'", & 
-   " | pstext -U/0.5/0.5/'SELEN 2.9' -N -R -JQ -O -K >> of.ps"
+   " | ${GMT} pstext -U/0.5/0.5/'SELEN 2.9' -N -R -JQ -O -K >> of.ps"
    Write(1,*)" "
 !
    Write(1,*)"# A color table"
@@ -6619,25 +6619,25 @@ enddo
 !
 ! --- "Zonal" OF 
 !
-   Write(1,*)"gmtset PAPER_MEDIA A4+"
-   Write(1,*)"gmtset HEADER_FONT_SIZE 24p"
-   Write(1,*)"gmtset FRAME_WIDTH 0.1c"
-   Write(1,*)"gmtset ANOT_FONT_SIZE 12p"
+   Write(1,*)"${GMT} gmtset PAPER_MEDIA A4+"
+   Write(1,*)"${GMT} gmtset HEADER_FONT_SIZE 24p"
+   Write(1,*)"${GMT} gmtset FRAME_WIDTH 0.1c"
+   Write(1,*)"${GMT} gmtset ANOT_FONT_SIZE 12p"
    Write(1,*)" "
 !
    Write(1,*)"# Map of the original ocean function"
-   Write(1,*)"psbasemap -X3 -Y18 -P -Bf180a90/f90a60WSEN -Gred -R0/360/-85/85 -JQ180/16 -K > of.ps"
-   Write(1,*)"psxy -R -JQ ", trim(adjustl(FILECAP)), " -M -W1/255 -Gblue -L -B -A -O -K >> of.ps"
-   Write(1,*)"echo '180 120 18 0 2 CM OCEAN FUNCTION' | pstext -U/0.5/0.5/'SELEN 2.9' -N -R -JQ -O -K >> of.ps"
+   Write(1,*)"${GMT} psbasemap -X3 -Y18 -P -Bf180a90/f90a60WSEN -Gred -R0/360/-85/85 -JQ180/16 -K > of.ps"
+   Write(1,*)"${GMT} psxy -R -JQ ", trim(adjustl(FILECAP)), " -M -W1/255 -Gblue -L -B -A -O -K >> of.ps"
+   Write(1,*)"echo '180 120 18 0 2 CM OCEAN FUNCTION' | ${GMT} pstext -U/0.5/0.5/'SELEN 2.9' -N -R -JQ -O -K >> of.ps"
    Write(1,*)" "
 !
    Write(1,*)"# Map of rechonstructed ocean function"
-   Write(1,*)"makecpt  -Cno_green -T0/1/0.1 > pale.cpt"
-   Write(1,*)"psbasemap -X0 -Y-11 -P -B -R -JQ -K -O >> of.ps"
-   Write(1,*)"pscontour -I -JQ -R recof.dat -Cpale.cpt -O -K >> of.ps" 
-   Write(1,*)"psxy -R -JQ ", trim(adjustl(FILECAP)), " -M -W1/255 -B -A -O -K >> of.ps"
+   Write(1,*)"${GMT} makecpt  -Cno_green -T0/1/0.1 > pale.cpt"
+   Write(1,*)"${GMT} psbasemap -X0 -Y-11 -P -B -R -JQ -K -O >> of.ps"
+   Write(1,*)"${GMT} pscontour -I -JQ -R recof.dat -Cpale.cpt -O -K >> of.ps" 
+   Write(1,*)"${GMT} psxy -R -JQ ", trim(adjustl(FILECAP)), " -M -W1/255 -B -A -O -K >> of.ps"
    Write(1,*)"echo '180 120 18 0 2 CM OCEAN FUNCTION to degree ", trim(adjustl(deg)),"'", & 
-   " | pstext -U/0.5/0.5/'SELEN 2.9' -N -R -JQ -O -K >> of.ps"
+   " | ${GMT} pstext -U/0.5/0.5/'SELEN 2.9' -N -R -JQ -O -K >> of.ps"
    Write(1,*)" "
 !
    Write(1,*)"# A color table"
@@ -6672,43 +6672,43 @@ enddo
 !
 Open(11,file=file,status='unknown') 
 
-Write(11,*)"gmtset PAPER_MEDIA A4+" 
-Write(11,*)"gmtset HEADER_FONT_SIZE 24p"
-Write(11,*)"gmtset FRAME_WIDTH 0.1c"
-Write(11,*)"gmtset ANOT_FONT_SIZE 12p"
+Write(11,*)"${GMT} gmtset PAPER_MEDIA A4+" 
+Write(11,*)"${GMT} gmtset HEADER_FONT_SIZE 24p"
+Write(11,*)"${GMT} gmtset FRAME_WIDTH 0.1c"
+Write(11,*)"${GMT} gmtset ANOT_FONT_SIZE 12p"
 !
 Write(11,*)"echo '     - wet pixels'"
 Write(11,*)""
 Write(11,*)"# Map of wet pixels distribution"	
 Write(11,*)""	
-Write(11,*)"psbasemap -Y18 -P -Bf180a90/f90a60WSEN -R0/360/-85/85 -JQ180/16 -K > px.ps"
-Write(11,*)"pscoast -B -R -O -K -W1/255/0/0 -JQ -Df -A1000 >> px.ps"
-Write(11,*)"psxy -G255/0/0 -H4 weta.dat -O ", trim(adjustl(size_of_pixels)), " -JQ -R -K >> px.ps"
-Write(11,*)"echo '180 120 18 0 0 CM WET pixels' | pstext -N -R -JQ -O -K >> px.ps"
+Write(11,*)"${GMT} psbasemap -Y18 -P -Bf180a90/f90a60WSEN -R0/360/-85/85 -JQ180/16 -K > px.ps"
+Write(11,*)"${GMT} pscoast -B -R -O -K -W1/255/0/0 -JQ -Df -A1000 >> px.ps"
+Write(11,*)"${GMT} psxy -G255/0/0 -H4 weta.dat -O ", trim(adjustl(size_of_pixels)), " -JQ -R -K >> px.ps"
+Write(11,*)"echo '180 120 18 0 0 CM WET pixels' | ${GMT} pstext -N -R -JQ -O -K >> px.ps"
 Write(11,'(a27,i3,a4,i6,a1,a52)') "echo '10 -70 14 0 2 LM RES=", nres, ", N=", NP, "'", & 
-" | pstext -N -R -JQ -O -K -G255/0/0 -W255 >> px.ps"
+" | ${GMT} pstext -N -R -JQ -O -K -G255/0/0 -W255 >> px.ps"
 !
 Write(11,*)"echo '     - dry pixels'"
 Write(11,*)""
 Write(11,*)"# Map of dry pixels distribution"	
 Write(11,*)""	
-Write(11,*)"psbasemap -X0 -Y-11 -P -Bf180a90/f90a60WSEN -R0/360/-85/85 -JQ180/16 -K -O >>  px.ps"
-Write(11,*)"pscoast -B -R -O -K -W1/0/0/255 -JQ -Df -A1000 >> px.ps"
-Write(11,*)"psxy -G0/0/255 -H4 drya.dat -O ", trim(adjustl(size_of_pixels)), " -JQ -R -K >> px.ps"
-Write(11,*)"psbasemap -U/6/-2/'SELEN 2.9' -B -R -P -JQ -K -O >> px.ps"
-Write(11,*)"echo '180 120 18 0 0 CM DRY pixels' | pstext -N -R -JQ -O -K >> px.ps"
+Write(11,*)"${GMT} psbasemap -X0 -Y-11 -P -Bf180a90/f90a60WSEN -R0/360/-85/85 -JQ180/16 -K -O >>  px.ps"
+Write(11,*)"${GMT} pscoast -B -R -O -K -W1/0/0/255 -JQ -Df -A1000 >> px.ps"
+Write(11,*)"${GMT} psxy -G0/0/255 -H4 drya.dat -O ", trim(adjustl(size_of_pixels)), " -JQ -R -K >> px.ps"
+Write(11,*)"${GMT} psbasemap -U/6/-2/'SELEN 2.9' -B -R -P -JQ -K -O >> px.ps"
+Write(11,*)"echo '180 120 18 0 0 CM DRY pixels' | ${GMT} pstext -N -R -JQ -O -K >> px.ps"
 Write(11,'(a27,i3,a4,i6,a1,a52)') "echo '10 -70 14 0 2 LM RES=", nres, ", N=", NP, "'", & 
-" | pstext -N -R -JQ -O -G0/0/255 -W255 >> px.ps"
+" | ${GMT} pstext -N -R -JQ -O -G0/0/255 -W255 >> px.ps"
 !
 Write(11,*)"echo '     - Spherical map of wet and dry pixels'"
 Write(11,*)""
 Write(11,*)"# Spherical map of dry & wet pixels distribution"	
 Write(11,*)""
-Write(11,*)"psbasemap -X4 -Y12 -U/0/-3/'SELEN 2.9' -Bg60f60/g60f60 -R0/360/-80/80 -P -JG-20/-44/14 -K > px-sphere.ps"
-Write(11,*)"pscoast -B -R -O -K -W1/220/220/220 -JG -Df -S0/60/255 -G100/250/100 -A1000 >> px-sphere.ps"
-Write(11,*)"psxy  -G255 -H4 pxa.dat -O -K ", trim(adjustl(size_of_pixels)),  " -JG -R >> px-sphere.ps"
+Write(11,*)"${GMT} psbasemap -X4 -Y12 -U/0/-3/'SELEN 2.9' -Bg60f60/g60f60 -R0/360/-80/80 -P -JG-20/-44/14 -K > px-sphere.ps"
+Write(11,*)"${GMT} pscoast -B -R -O -K -W1/220/220/220 -JG -Df -S0/60/255 -G100/250/100 -A1000 >> px-sphere.ps"
+Write(11,*)"${GMT} psxy  -G255 -H4 pxa.dat -O -K ", trim(adjustl(size_of_pixels)),  " -JG -R >> px-sphere.ps"
 Write(11,'(a27,i3,a4,i6,a1,a49)') "echo '0 -110 14 0 2 LM RES=", nres, ", N=", NP, "'", & 
-" | pstext -N -R -JQ -O -G0 -W255 >> px-sphere.ps"
+" | ${GMT} pstext -N -R -JQ -O -G0 -W255 >> px-sphere.ps"
 !
  close(11)
 ! 
@@ -6788,11 +6788,11 @@ READ (10,'(a10)') tmaxc
 ! --- Target GMT file for scatterplot of RSL data 
 !   
  open (19,file=file_gmt,status='unknown')
- Write(19,*)"gmtset PAPER_MEDIA A4+"
- Write(19,*)"gmtset HEADER_FONT_SIZE 24p"
- Write(19,*)"gmtset FRAME_WIDTH 0.1c"
- Write(19,*)"gmtset ANOT_FONT_SIZE 16p"
- Write(19,*)"gmtset LABEL_FONT_SIZE 16p"
+ Write(19,*)"${GMT} gmtset PAPER_MEDIA A4+"
+ Write(19,*)"${GMT} gmtset HEADER_FONT_SIZE 24p"
+ Write(19,*)"${GMT} gmtset FRAME_WIDTH 0.1c"
+ Write(19,*)"${GMT} gmtset ANOT_FONT_SIZE 16p"
+ Write(19,*)"${GMT} gmtset LABEL_FONT_SIZE 16p"
 !
  r_option = & 
  "-R"//trim(adjustl(tminc))//"/"//trim(adjustl(tmaxc))//"/"//trim(adjustl(yminc))//"/"//trim(adjustl(ymaxc))
@@ -6804,7 +6804,7 @@ READ (10,'(a10)') tmaxc
  Write(19,*)"psxy scatter-data.dat ", " -B -R -JX -Ss0.1 -G0 -O -K >> plot.ps" 
  Write(19,*)"psxy scatter-data.dat ", "-Ey0.25/2 -B -R -JX -O -K >> plot.ps" 
  Write(19,*)"echo '", int(tmin)+(int(tmax)-int(tmin))/2., (11./10.)*int(dmax+delta/2.), " 22 0 0 BC RSL data from file: ", & 
- trim(adjustl(RSL_FILE)), "'", " | pstext -JX -R -O -K -N >> plot.ps "  
+ trim(adjustl(RSL_FILE)), "'", " | ${GMT} pstext -JX -R -O -K -N >> plot.ps "  
 !
  b_option = & 
  "-Ba2f1:'time (ka)':/a"//trim(adjustl(deltac))//"f"//trim(adjustl(deltac))//"WSen:'RSL (m)':"
@@ -6812,7 +6812,7 @@ READ (10,'(a10)') tmaxc
  Write(19,*)"psbasemap -U/-2/-3/'SELEN 2.9' -Y-11 ", b_option, r_option, " -P -JX -O -K >> plot.ps"
  Write(19,*)"psxy scatter-pred.dat -B -R -JX -Sc0.12 -G0 -O -K >> plot.ps"
  Write(19,*)"echo '", int(tmin)+(int(tmax)-int(tmin))/2., (13./10.)*int(dmax+delta/2.), " 22 0 2 BC RSL predictions for: ", & 
- trim(adjustl(TITLICE)), "'", " | pstext -JX -R -O -K -N >> plot.ps "   
+ trim(adjustl(TITLICE)), "'", " | ${GMT} pstext -JX -R -O -K -N >> plot.ps "   
 !
  open (8,file='title.tmp',status='unknown')  
  If(code=='-1')then 
@@ -6828,7 +6828,7 @@ READ (10,'(a10)') tmaxc
     "  -Visco: ", trim(adjustl(VSTRING))  
  close(8) 
  Endif 
- Write(19,*)"pstext title.tmp -N -JX -R -O >> plot.ps"
+ Write(19,*)"${GMT} pstext title.tmp -N -JX -R -O >> plot.ps"
  Write(19,*)"mv plot.ps scatter-plot.ps"
 !
  Close(19) 
@@ -6863,9 +6863,9 @@ READ (10,'(a10)') tmaxc
 !
  open(9,file=file_gmt,status='unknown')
 !
- Write(9,*) "gmtset PAPER_MEDIA A4+"
- Write(9,*) "gmtset ANOT_FONT_SIZE 16p"
- Write(9,*) "gmtset LABEL_FONT_SIZE 20p"
+ Write(9,*) "${GMT} gmtset PAPER_MEDIA A4+"
+ Write(9,*) "${GMT} gmtset ANOT_FONT_SIZE 16p"
+ Write(9,*) "${GMT} gmtset LABEL_FONT_SIZE 20p"
  Write(9,*) " "
  Write(9,*) "# ------ A plot of dot(c_lm,s_lm) vs degree (at present time)  ----" 		      
  Write(9,*) " "
@@ -6891,7 +6891,7 @@ READ (10,'(a10)') tmaxc
  open(4,file='title_stokes.tmp',status='unknown') 
    write(4,*) "24 2.4 22 0 1 CB Rate of change of the fully-normalized Stokes coefficients"
  close(4) 
- Write(9,*) "pstext title_stokes.tmp -N -JX -R -G0 -O -K >> stokes.ps"
+ Write(9,*) "${GMT} pstext title_stokes.tmp -N -JX -R -G0 -O -K >> stokes.ps"
 !
  Write(9,*) "" ; Write(9,*) "#--- Extracts cosine and sine coefficients"
  Write(9,*) "awk '{print $1, $4}' stokes.dat > cosine.tmp"
@@ -6909,7 +6909,7 @@ READ (10,'(a10)') tmaxc
 	Endif
 2 continue 
   close(4) 
- Write(9,*) "pstext stokes0.tmp -JX -R -G0 -O -W220 -K >> stokes.ps" 
+ Write(9,*) "${GMT} pstext stokes0.tmp -JX -R -G0 -O -W220 -K >> stokes.ps" 
 !
  Write(9,*) "" ; Write(9,*) "#--- Plots open squares for sine components"
  Write(9,*) "psxy  sine.tmp ", trim(adjustl(H_OPTION)), " -B -R -JX  -W4 -K -O >> stokes.ps"
@@ -6940,7 +6940,7 @@ READ (10,'(a10)') tmaxc
 !
 !
  Write(9,*) "" ; Write(9,*) "#--- A subtitle with some parameters"
- Write(9,*) "pstext stokes1.tmp -N -JX -R -G0 -O -K >> stokes.ps" 
+ Write(9,*) "${GMT} pstext stokes1.tmp -N -JX -R -G0 -O -K >> stokes.ps" 
 !
  open(4,file='stokes2.tmp',status='unknown') ; write(4,*) "32 -1.00" ; close(4) 
  open(4,file='stokes3.tmp',status='unknown') ; write(4,*) "32 -1.25" ; close(4)  
@@ -6953,7 +6953,7 @@ READ (10,'(a10)') tmaxc
  Write(9,*) "psxy stokes2.tmp -N -JX -R -G0 -Ss0.35 -K -O >> stokes.ps" 
  Write(9,*) "psxy stokes3.tmp -N -JX -R -G0 -Ss0.35 -K -O >> stokes.ps" 
  Write(9,*) "psxy stokes3.tmp -N -JX -R -G255 -Ss0.25 -K -O >> stokes.ps" 
- Write(9,*) "pstext stokes4.tmp -N -JX -R -G0 -O  >> stokes.ps"
+ Write(9,*) "${GMT} pstext stokes4.tmp -N -JX -R -G0 -O  >> stokes.ps"
 !
  CLOSE(9) 
 !

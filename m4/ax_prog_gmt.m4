@@ -14,7 +14,7 @@
 #   Example:
 #
 #     AX_PROG_GMT()
-#     AX_PROG_GMT([hla_avail="no"])
+#     AX_PROG_GMT([gmt_avail="no"])
 #
 # LICENSE
 #
