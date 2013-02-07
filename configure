@@ -2377,6 +2377,63 @@ ac_empty=""
 
 
 
+# Compiler must support at least 132 character columns
+ac_ext=${ac_fc_srcext-f}
+ac_compile='$FC -c $FCFLAGS $ac_fcflags_srcext conftest.$ac_ext >&5'
+ac_link='$FC -o conftest$ac_exeext $FCFLAGS $LDFLAGS $ac_fcflags_srcext conftest.$ac_ext $LIBS >&5'
+ac_compiler_gnu=$ac_cv_fc_compiler_gnu
+ac_fc_line_len=132
+		       ac_fc_line_length_test='
+      subroutine longer_than_80(arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9,'\
+'arg10)'
+: ${ac_fc_line_len_string=$ac_fc_line_len}
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for Fortran flag needed to accept $ac_fc_line_len_string column source lines" >&5
+$as_echo_n "checking for Fortran flag needed to accept $ac_fc_line_len_string column source lines... " >&6; }
+if ${ac_cv_fc_line_length+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  ac_cv_fc_line_length=unknown
+ac_fc_line_length_FCFLAGS_save=$FCFLAGS
+for ac_flag in none \
+	       -ffree-line-length-none -ffixed-line-length-none \
+	       -ffree-line-length-huge \
+	       -ffree-line-length-$ac_fc_line_len \
+	       -ffixed-line-length-$ac_fc_line_len \
+	       -qfixed=$ac_fc_line_len -Mextend \
+	       -$ac_fc_line_len -extend_source \
+	       -W$ac_fc_line_len -W +extend_source +es -wide --wide -w -e \
+               -f -Wf,-f -xline
+do
+  test "x$ac_flag" != xnone && FCFLAGS="$ac_fc_line_length_FCFLAGS_save $ac_flag"
+  cat > conftest.$ac_ext <<_ACEOF
+$ac_fc_line_length_test
+      end subroutine
+_ACEOF
+if ac_fn_fc_try_compile "$LINENO"; then :
+  ac_cv_fc_line_length=$ac_flag; break
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+done
+rm -f conftest.err conftest.$ac_objext conftest.$ac_ext
+FCFLAGS=$ac_fc_line_length_FCFLAGS_save
+
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_fc_line_length" >&5
+$as_echo "$ac_cv_fc_line_length" >&6; }
+if test "x$ac_cv_fc_line_length" = xunknown; then
+  as_fn_error 77 "Fortran does not accept long source lines" "$LINENO" 5
+else
+  if test "x$ac_cv_fc_line_length" != xnone; then
+    FCFLAGS="$FCFLAGS $ac_cv_fc_line_length"
+  fi
+
+fi
+ac_ext=${ac_fc_srcext-f}
+ac_compile='$FC -c $FCFLAGS $ac_fcflags_srcext conftest.$ac_ext >&5'
+ac_link='$FC -o conftest$ac_exeext $FCFLAGS $LDFLAGS $ac_fcflags_srcext conftest.$ac_ext $LIBS >&5'
+ac_compiler_gnu=$ac_cv_fc_compiler_gnu
+
+
 # Check for support programs
 
 for ac_prog in gmt GMT

@@ -13,6 +13,9 @@ AC_OPENMP
 # Check for Fortran specific flags, etc
 AC_FC_MODULE_OUTPUT_FLAG
 
+# Compiler must support at least 132 character columns
+AC_FC_LINE_LENGTH(132)
+
 # Check for support programs
 AX_PROG_GMT
 ACLTX_PROG_PS2PDF

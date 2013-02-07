@@ -23,7 +23,7 @@
 EXEEXT = .exe
 FC = @FC@
 GMT = @gmt@
-FCFLAGS = -I${SETUP} -I${B} -w $(FC_MODOUT)${SETUP} ${OPENMP_FCFLAGS}
+FCFLAGS = @FCFLAGS@ -I${SETUP} -I${B} -w @FC_MODOUT@${SETUP} ${OPENMP_FCFLAGS}
 FCCOMPILE = ${FC} ${FCFLAGS}
 
 ## compilation directories

@@ -23,7 +23,7 @@
 EXEEXT = .exe
 FC = g95
 GMT = gmt
-FCFLAGS = -I${SETUP} -I${B} -w ${OPENMP_FCFLAGS}
+FCFLAGS = -g -O2 -ffixed-line-length-132 -I${SETUP} -I${B} -w -fmod=${SETUP} ${OPENMP_FCFLAGS}
 FCCOMPILE = ${FC} ${FCFLAGS}
 
 ## compilation directories
@@ -219,7 +219,7 @@ default: $(DEFAULT)
 all: default
 
 run: default
-	(cd ${SETUP} && PATH=${PATH}:`pwd`/../${E} GMT=${GMT} source selen.sh)
+	(cd ${SETUP} && PATH=${PATH}:`pwd`/../${E} GMT=${GMT} ./selen.sh)
 
 req_dirs:
 	mkdir -p ${E}; mkdir -p ${O}; mkdir -p ${SETUP}
@@ -310,14 +310,14 @@ wnw$(EXEEXT): req_dirs $(WNW_OBJECTS)
 	${FCCOMPILE} -o ${E}/wnw$(EXEEXT) $(WNW_OBJECTS)
 
 clean:
-	rm -rf ${E} ${O} ${SETUP} *.mod
+	rm -rf ${E} ${O} ${SETUP}
 
 #######################################
 # Rule for creating the data.inc header file
 #######################################
 
 ${SETUP}/data.inc: config$(EXEEXT) config.dat
-	(cp config.dat tmp && cd tmp && ../${E}/config$(EXEEXT) && cd ..)
+	(cp config.dat tmp && cd tmp && ../${E}/config$(EXEEXT) && chmod u+x selen.sh && cd ..)
 
 #######################################
 # rules for object files
