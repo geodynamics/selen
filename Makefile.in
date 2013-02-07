@@ -310,7 +310,17 @@ wnw$(EXEEXT): req_dirs $(WNW_OBJECTS)
 	${FCCOMPILE} -o ${E}/wnw$(EXEEXT) $(WNW_OBJECTS)
 
 clean:
-	rm -rf ${E} ${O} ${SETUP}
+	rm -rf ${E} ${O} ${SETUP} Makefile
+
+distclean: clean
+	rm -rf config.status config.log
+
+#######################################
+# Rule for creating the distribution
+#######################################
+
+dist: distclean
+	tar -czf selen.tgz .
 
 #######################################
 # Rule for creating the data.inc header file
