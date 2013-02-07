@@ -1668,6 +1668,11 @@ ENDIF
 !
   open(2,file='selen.sh',status='unknown',recl=256)
 !
+!
+! Specify the bash shell, and set it to quit on any error
+  Write(2,*) "#!/bin/bash"
+  Write(2,*) "set -e"
+!
 ! 
 ! >>>>>> A time stamp on "selen.sh"
 !
@@ -1982,6 +1987,7 @@ Write(2,*) "    "
 Write(2,*) "echo '+++>  [existing data will be overwritten]'"
 Write(2,*) "    "
 Write(2,*) "fi"
+Write(2,*)
 !
 !
 ! ============================== 
@@ -1994,13 +2000,13 @@ if(option_purge=='y') then
   Write(2,*) " echo '---> Purging the working directory: '"  
   Write(2,*) "#echo --------------------------------------"
   Write(2,*) " echo"
-  Write(2,*) "/bin/rm *.grd"
-  Write(2,*) "/bin/rm *.jun"  
-  Write(2,*) "/bin/rm junk*"  
-  Write(2,*) "/bin/rm *.mod" 
-  Write(2,*) "/bin/rm *.obj" 
-  Write(2,*) "/bin/rm *.old"
-  Write(2,*) "/bin/rm *.bak"
+  Write(2,*) "/bin/rm -f *.grd"
+  Write(2,*) "/bin/rm -f *.jun"  
+  Write(2,*) "/bin/rm -f junk*"  
+  Write(2,*) "/bin/rm -f *.mod" 
+  Write(2,*) "/bin/rm -f *.obj" 
+  Write(2,*) "/bin/rm -f *.old"
+  Write(2,*) "/bin/rm -f *.bak"
 Endif
 !
 ! ==========================================================
@@ -2198,10 +2204,10 @@ If(option_wi=='y') then
 		 Write(2,*) "mv tmpp5.dat ", depot//"/wnw"
 		 Write(2,*) "mv tmpp6.dat ", depot//"/wnw"
 		 Write(2,*) "mv tmpp7.dat ", depot//"/wnw"
-		 Write(2,*) "/bin/rm tmpw0.dat"
-		 Write(2,*) "/bin/rm tmpw1.dat"
-		 Write(2,*) "/bin/rm tmpw2.dat"
-		 Write(2,*) "/bin/rm tmpw3.dat"
+		 Write(2,*) "/bin/rm -f tmpw0.dat"
+		 Write(2,*) "/bin/rm -f tmpw1.dat"
+		 Write(2,*) "/bin/rm -f tmpw2.dat"
+		 Write(2,*) "/bin/rm -f tmpw3.dat"
 !
 Endif
 !
@@ -2469,7 +2475,7 @@ Write(2,*) "echo '            / density structure of the input model, NOT using 
 Write(2,*) "echo '            / value as done in previous versions - GS & FC July 27 2009 - '"
 !
 !
-Write(2,*) "/bin/rm visco.tmp"
+Write(2,*) "/bin/rm -f visco.tmp"
 !
 Write(2,*) "cp ", trim(adjustl(visco_file)), " ", depot//"/TABOO/"
 Write(2,*) "cp ", trim(adjustl(visco_file)), " ", depot//"/Love-Numbers-by-TABOO/"  
@@ -2641,7 +2647,7 @@ ENDIF
 		Write(2,*) "mv tmpb* ", depot//"/rsl/rsl-curves/"
 	        if(option_gmt=='y') Write(2,*) "mv rslp*.ps ", depot//"/rsl/rsl-curves/ps"
 	        if(option_gmt=='y') Write(2,*) "mv rslp*.pdf ", depot//"/rsl/rsl-curves/pdf"
-!		Write(2,*) "/bin/rm junky*"
+!		Write(2,*) "/bin/rm -f junky*"
 		Endif
 !
 	        Write(2,*) "mv rsld*.dat ", depot//"/rsl/rsl-curves/"
@@ -2750,7 +2756,7 @@ ENDIF
 		Write(2,*) "mv lonlat_rslc.dat", " "//depot//"/rsl/rsl-contours/"	
 		Write(2,*) "mv rslc-cont.dat", " "//depot//"/rsl/rsl-contours/"
 		Write(2,*) "mv rslc.dat", " "//depot//"/rsl/rsl-contours/"
-		Write(2,*) "/bin/rm shrslc.bin"
+		Write(2,*) "/bin/rm -f shrslc.bin"
 		Write(2,*) "mv ", trim(adjustl(file_gmt)), " "//depot//"/rsl/rsl-contours/"	
 		if(option_gmt=='y') Write(2,*) "mv rslc-map.ps", " "//depot//"/rsl/rsl-contours/"
 		Write(2,*) "mv rslc*.tmp", " "//depot//"/rsl/rsl-contours/"							  
@@ -3038,15 +3044,15 @@ Endif
 !
 Write(2,*) "if [ -f  ./gmtdefaults4  ]" 
 Write(2,*) "then"
-Write(2,*) "/bin/rm -v ./gmtdefaults4"
+Write(2,*) "/bin/rm -f -v ./gmtdefaults4"
 Write(2,*) "fi"
 !
-Write(2,*) "/bin/rm -v *brok*.dat"
+Write(2,*) "/bin/rm -f -v *brok*.dat"
 !
 If(option_nm=='y') Write(2,*) "mv taboo.log ",    depot//"/log/"
 Write(2,*) "mv selen.log ",    depot//"/log/"
 Write(2,*) "cp config.dat ",   depot//"/log/"
-Write(2,*) "cp config.f90 ",   depot//"/log/"
+!Write(2,*) "cp config.f90 ",   depot//"/log/"
 Write(2,*) "cp data.inc ",     depot//"/log/"
 Write(2,*) "cp selen.sh ",     depot//"/log/"
 !
@@ -3080,20 +3086,20 @@ Endif
 ! ==============================
 if(option_purge=='y') then
   Write(2,*) " "
-  Write(2,*) "/bin/rm *.exe"
-  Write(2,*) "/bin/rm *.grd"
-  Write(2,*) "/bin/rm *.jun"  
-  Write(2,*) "/bin/rm *.log"
-  Write(2,*) "/bin/rm *.tmp" 
-  Write(2,*) "/bin/rm *.cpt"
-  Write(2,*) "/bin/rm *tmp*"
-  Write(2,*) "/bin/rm junk*"  
-  Write(2,*) "/bin/rm *.mod" 
-  Write(2,*) "/bin/rm *.obj" 
-  Write(2,*) "/bin/rm *.o"
-  Write(2,*) "/bin/rm *.old"
-  Write(2,*) "/bin/rm *.bak"
-  Write(2,*) "/bin/rm fort*"
+  Write(2,*) "/bin/rm -f *.exe"
+  Write(2,*) "/bin/rm -f *.grd"
+  Write(2,*) "/bin/rm -f *.jun"  
+  Write(2,*) "/bin/rm -f *.log"
+  Write(2,*) "/bin/rm -f *.tmp" 
+  Write(2,*) "/bin/rm -f *.cpt"
+  Write(2,*) "/bin/rm -f *tmp*"
+  Write(2,*) "/bin/rm -f junk*"  
+  Write(2,*) "/bin/rm -f *.mod" 
+  Write(2,*) "/bin/rm -f *.obj" 
+  Write(2,*) "/bin/rm -f *.o"
+  Write(2,*) "/bin/rm -f *.old"
+  Write(2,*) "/bin/rm -f *.bak"
+  Write(2,*) "/bin/rm -f fort*"
 Endif
 !
 Write(2,*) "echo ''"
@@ -3432,7 +3438,7 @@ END
 !
 !
 ! - Cleaning 
-  Write(9,*) "/bin/rm predof.dat"
+  Write(9,*) "/bin/rm -f predof.dat"
 !
  close(9)
 !
@@ -5910,7 +5916,7 @@ Write(19,*) " "
   	Write(19,*) "${GMT} psbasemap -X3 -Y3 -U'SELEN 2.9' -JX16/10  -G255 -R0/100/0/50 -K > rsl-misfit.ps" 
 	Write(19,*) "awk '{print $1, $2}' mis.dat > mis.tmp"
    	Write(19,*) "pshistogram mis.tmp -JX -R -B100a20:misfit:/a10:frequency:WSen -G140 -W2 -O -K >> rsl-misfit.ps" 
-	Write(19,*) "/bin/rm mis.tmp"
+	Write(19,*) "/bin/rm -f mis.tmp"
 !
  	open (8,file='tmph.dat',status='unknown')		  	         
 	If(cd=='-1')then 
