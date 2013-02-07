@@ -4215,10 +4215,10 @@ END
 	close(8) 
 	open (8,file='tmpctitle4',status='unknown')
 	Write(8,*) iears_max-iears_max/4, trend_max-1*delta/1,   " 12 0 1 BC ", trim(adjustl(string1)) ; close(8)
-	Write(19,*) "pstext -N tmpctitle4", " -JX -R -O -K >> plot.ps" 
+	Write(19,*) "${GMT} pstext -N tmpctitle4", " -JX -R -O -K >> plot.ps" 
 	open (8,file='tmpctitle5',status='unknown')
 	Write(8,*) iears_max-iears_max/4, trend_max-3*delta/2, " 14 0 2 BC ", trim(adjustl(string2)) ; close(8)	
-	Write(19,*) "pstext -N tmpctitle5", " -G0 -JX -R -O >> plot.ps" 	
+	Write(19,*) "${GMT} pstext -N tmpctitle5", " -G0 -JX -R -O >> plot.ps" 	
 	Write(19,*) "mv plot.ps tgauges-scpl.ps"
 !
 ! --- Closing 
