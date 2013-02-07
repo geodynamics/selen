@@ -23,7 +23,7 @@
 EXEEXT = .exe
 FC = @FC@
 GMT = @gmt@
-FCFLAGS = -I${SETUP} -I${B} -w ${OPENMP_FCFLAGS}
+FCFLAGS = -I${SETUP} -I${B} -w $(FC_MODOUT)${SETUP} ${OPENMP_FCFLAGS}
 FCCOMPILE = ${FC} ${FCFLAGS}
 
 ## compilation directories
@@ -310,7 +310,7 @@ wnw$(EXEEXT): req_dirs $(WNW_OBJECTS)
 	${FCCOMPILE} -o ${E}/wnw$(EXEEXT) $(WNW_OBJECTS)
 
 clean:
-	rm -rf ${E} ${O} ${SETUP} *.mod
+	rm -rf ${E} ${O} ${SETUP}
 
 #######################################
 # Rule for creating the data.inc header file

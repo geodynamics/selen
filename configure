@@ -588,6 +588,8 @@ ac_subst_vars='LTLIBOBJS
 LIBOBJS
 ps2pdf
 gmt
+ac_empty
+FC_MODOUT
 OPENMP_FCFLAGS
 OBJEXT
 EXEEXT
@@ -2302,6 +2304,79 @@ $as_echo "$ac_cv_prog_fc_openmp" >&6; }
 
 # Check for Fortran specific flags, etc
 
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking Fortran 90 module output flag" >&5
+$as_echo_n "checking Fortran 90 module output flag... " >&6; }
+if ${ac_cv_fc_module_output_flag+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  ac_ext=${ac_fc_srcext-f}
+ac_compile='$FC -c $FCFLAGS $ac_fcflags_srcext conftest.$ac_ext >&5'
+ac_link='$FC -o conftest$ac_exeext $FCFLAGS $LDFLAGS $ac_fcflags_srcext conftest.$ac_ext $LIBS >&5'
+ac_compiler_gnu=$ac_cv_fc_compiler_gnu
+
+mkdir conftest.dir conftest.dir/sub
+cd conftest.dir
+ac_cv_fc_module_output_flag=unknown
+ac_fc_module_output_flag_FCFLAGS_save=$FCFLAGS
+# Flag ordering is significant: put flags late which some compilers use
+# for the search path.
+for ac_flag in -J '-J ' -fmod= -moddir= +moddir= -qmoddir= '-mod ' \
+	      '-module ' -M '-Am -M' '-e m -J '; do
+  FCFLAGS="$ac_fc_module_output_flag_FCFLAGS_save ${ac_flag}sub"
+  cat > conftest.$ac_ext <<_ACEOF
+
+      module conftest_module
+      contains
+      subroutine conftest_routine
+      write(*,'(a)') 'gotcha!'
+      end subroutine
+      end module
+_ACEOF
+if ac_fn_fc_try_compile "$LINENO"; then :
+  cd sub
+     cat > conftest.$ac_ext <<_ACEOF
+
+      program main
+      use conftest_module
+      call conftest_routine
+      end program
+_ACEOF
+if ac_fn_fc_try_compile "$LINENO"; then :
+  ac_cv_fc_module_output_flag="$ac_flag"
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+     cd ..
+     if test "$ac_cv_fc_module_output_flag" != unknown; then
+       break
+     fi
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+done
+FCFLAGS=$ac_fc_module_output_flag_FCFLAGS_save
+cd ..
+rm -rf conftest.dir
+ac_ext=${ac_fc_srcext-f}
+ac_compile='$FC -c $FCFLAGS $ac_fcflags_srcext conftest.$ac_ext >&5'
+ac_link='$FC -o conftest$ac_exeext $FCFLAGS $LDFLAGS $ac_fcflags_srcext conftest.$ac_ext $LIBS >&5'
+ac_compiler_gnu=$ac_cv_fc_compiler_gnu
+
+
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_fc_module_output_flag" >&5
+$as_echo "$ac_cv_fc_module_output_flag" >&6; }
+if test "$ac_cv_fc_module_output_flag" != unknown; then
+  FC_MODOUT=$ac_cv_fc_module_output_flag
+
+else
+  FC_MODOUT=
+  as_fn_error $? "unable to find compiler flag to write module information to" "$LINENO" 5
+fi
+
+# Ensure trailing whitespace is preserved in a Makefile.
+ac_empty=""
+
+
+
 # Check for support programs
 
 for ac_prog in gmt GMT
@@ -2559,6 +2634,9 @@ LIBOBJS=$ac_libobjs
 LTLIBOBJS=$ac_ltlibobjs
 
 
+case $FC_MODOUT in #(
+  *\ ) FC_MODOUT=$FC_MODOUT'${ac_empty}' ;;
+esac
 
 : "${CONFIG_STATUS=./config.status}"
 ac_write_fail=0

@@ -11,6 +11,7 @@ AC_PROG_FC
 AC_OPENMP
 
 # Check for Fortran specific flags, etc
+AC_FC_MODULE_OUTPUT_FLAG
 
 # Check for support programs
 AX_PROG_GMT
