@@ -3586,12 +3586,12 @@ END
 		       " -O -K >> rslc-map.ps"		 
 !
 ! --- First contour ---
-	   Write(9,*) "grdcontour -Cpal_rslc.cpt ", & 
+	   Write(9,*) "${GMT} grdcontour -Cpal_rslc.cpt ", & 
 	               trim(adjustl(W1_OPTION)), & 
 		       " -R  -G4/10 g.grd -JM -B -O -K >> rslc-map.ps"		       
 !
 ! --- Sechond contour ---
-	   Write(9,*) "grdcontour -U/0.5/0.5/'SELEN 2.9' ", & 
+	   Write(9,*) "${GMT} grdcontour -U/0.5/0.5/'SELEN 2.9' ", & 
 	               trim(adjustl(C_OPTION)), " ", & 
 	               trim(adjustl(W2_OPTION)), & 
 		       " -R -G4/4 -A1f10 g.grd -JM -B -O -K >> rslc-map.ps"
@@ -4531,7 +4531,8 @@ END
               trim(adjustl(ps_file))
   Write(us,*)"${GMT} pstext -N -R -JJ -B -G0 -O -K ", trim(adjustl(tmp_file)), " >> ", & 
               trim(adjustl(ps_file))
-  Write(us,*)"psscale -E -U/0.5/0.5/'SELEN 2.9' ", "-C"//trim(adjustl(table_name)), " -Bf0.1a0.5/:mm/yr: -D7/-2/10/1h -O >> ", & 
+  Write(us,*)"${GMT} psscale -E -U/0.5/0.5/'SELEN 2.9' ", "-C"//trim(adjustl(table_name)), &
+              " -Bf0.1a0.5/:mm/yr: -D7/-2/10/1h -O >> ", & 
               trim(adjustl(ps_file))
   Write(us,*)" "
 !
@@ -4611,7 +4612,8 @@ END
               trim(adjustl(ps_file))
   Write(us,*)"${GMT} pstext -N -R -JJ -B -G0 -O -K ", trim(adjustl(tmp_file)), " >> ", & 
               trim(adjustl(ps_file))
-  Write(us,*)"psscale -E -U/0.5/0.5/'SELEN 2.9' ", "-C"//trim(adjustl(table_name)), " -Bf0.1a0.5/:mm/yr: -D12/-1.5/10/1h -O >> ", & 
+  Write(us,*)"${GMT} psscale -E -U/0.5/0.5/'SELEN 2.9' ", "-C"//trim(adjustl(table_name)), &
+			  " -Bf0.1a0.5/:mm/yr: -D12/-1.5/10/1h -O >> ", & 
               trim(adjustl(ps_file))
   Write(us,*)" "
 !
@@ -4693,7 +4695,8 @@ END
               trim(adjustl(ps_file))
   Write(us,*)"${GMT} pstext -N -R -JJ -B -G0 -O -K ", trim(adjustl(tmp_file)), " >> ", & 
               trim(adjustl(ps_file))
-  Write(us,*)"psscale -E -U/0.5/0.5/'SELEN 2.9' ", "-C"//trim(adjustl(table_name)), " -Bf1a4/:mm/yr: -D9/-1.5/10/1h -O >> ", & 
+  Write(us,*)"${GMT} psscale -E -U/0.5/0.5/'SELEN 2.9' ", "-C"//trim(adjustl(table_name)), &
+			  " -Bf1a4/:mm/yr: -D9/-1.5/10/1h -O >> ", & 
               trim(adjustl(ps_file))
   Write(us,*)" "
 !
@@ -4783,10 +4786,12 @@ END
   Write(us,*)"${GMT} pstext -N -R -JJ -B -G0 -O -K ", trim(adjustl(tmp_file)), " >> ", & 
               trim(adjustl(ps_file))
   if(u==12.or.u==13) &   
-  Write(us,*)"psscale -E -U/0.5/0.5/'SELEN 2.9' ", "-C"//trim(adjustl(table_name)), " -Bf1a5/:mm/yr: -D10/-1.5/10/1h -O >> ", & 
+  Write(us,*)"${GMT} psscale -E -U/0.5/0.5/'SELEN 2.9' ", "-C"//trim(adjustl(table_name)), &
+              " -Bf1a5/:mm/yr: -D10/-1.5/10/1h -O >> ", & 
               trim(adjustl(ps_file))
   if(u==14) &   
-  Write(us,*)"psscale -E -U/0.5/0.5/'SELEN 2.9' ", "-C"//trim(adjustl(table_name)), " -Bf2a1/:mm/yr: -D10/-1.5/10/1h -O >> ", & 
+  Write(us,*)"${GMT} psscale -E -U/0.5/0.5/'SELEN 2.9' ", "-C"//trim(adjustl(table_name)), &
+              " -Bf2a1/:mm/yr: -D10/-1.5/10/1h -O >> ", & 
               trim(adjustl(ps_file))	      	      	      	      
   Write(us,*)" "
 !
@@ -4874,10 +4879,12 @@ END
   Write(us,*)"${GMT} pstext -N -R -JJ -B -G0 -O -K ", trim(adjustl(tmp_file)), " >> ", & 
               trim(adjustl(ps_file))
   if(u==12.or.u==13) &   
-  Write(us,*)"psscale -U/0.5/13/'SELEN 2.9' -E ", "-C"//trim(adjustl(table_name)), " -Bf1a5/:mm/yr: -D8/-1.5/10/1h -O >> ", & 
+  Write(us,*)"${GMT} psscale -U/0.5/13/'SELEN 2.9' -E ", "-C"//trim(adjustl(table_name)), &
+              " -Bf1a5/:mm/yr: -D8/-1.5/10/1h -O >> ", & 
               trim(adjustl(ps_file))
   if(u==14) &   
-  Write(us,*)"psscale -U/0.5/13/'SELEN 2.9' -E ", "-C"//trim(adjustl(table_name)), " -Bf.1a.5/:mm/yr: -D8/-1.5/10/1h -O >> ", & 
+  Write(us,*)"${GMT} psscale -U/0.5/13/'SELEN 2.9' -E ", "-C"//trim(adjustl(table_name)), &
+              " -Bf.1a.5/:mm/yr: -D8/-1.5/10/1h -O >> ", & 
               trim(adjustl(ps_file))	      	      	      	      
   Write(us,*)" "
 !
@@ -4965,10 +4972,12 @@ END
   Write(us,*)"${GMT} pstext -N -R -JJ -B -G0 -O -K ", trim(adjustl(tmp_file)), " >> ", & 
               trim(adjustl(ps_file))
   if(u==12.or.u==13) &   
-  Write(us,*)"psscale -U/0.5/0.5/'SELEN 2.9' -E ", "-C"//trim(adjustl(table_name)), " -Bf1a4/:mm/yr: -D8/-1.5/10/1h -O >> ", & 
+  Write(us,*)"${GMT} psscale -U/0.5/0.5/'SELEN 2.9' -E ", "-C"//trim(adjustl(table_name)), &
+              " -Bf1a4/:mm/yr: -D8/-1.5/10/1h -O >> ", & 
               trim(adjustl(ps_file))
   if(u==14) &   
-  Write(us,*)"psscale -U/0.5/0.5/'SELEN 2.9' -E ", "-C"//trim(adjustl(table_name)), " -Bf1a2/:mm/yr: -D8/-1.5/10/1h -O >> ", & 
+  Write(us,*)"${GMT} psscale -U/0.5/0.5/'SELEN 2.9' -E ", "-C"//trim(adjustl(table_name)), &
+              " -Bf1a2/:mm/yr: -D8/-1.5/10/1h -O >> ", & 
               trim(adjustl(ps_file))	      	      	      	      
   Write(us,*)" "
 !
@@ -5052,10 +5061,12 @@ END
   Write(us,*)"${GMT} pscoast -R -JE -Di -Ba30f30g30 -W2/255/0/0 -A0 -O -K >> ", & 
               trim(adjustl(ps_file))
   if(u==12.or.u==13) &   
-  Write(us,*)"psscale -E -X-6 -Y-7 ", "-C"//trim(adjustl(table_name)), " -Bf1a2/:mm/yr: -D12/5/8/1h -O -K >> ", & 
+  Write(us,*)"${GMT} psscale -E -X-6 -Y-7 ", "-C"//trim(adjustl(table_name)), &
+              " -Bf1a2/:mm/yr: -D12/5/8/1h -O -K >> ", & 
               trim(adjustl(ps_file))
   if(u==14) &   
-  Write(us,*)"psscale -E -X-6 -Y-7 ", "-C"//trim(adjustl(table_name)), " -Bf0.5a1/:mm/yr: -D12/5/8/1h -O -K >> ", & 
+  Write(us,*)"${GMT} psscale -E -X-6 -Y-7 ", "-C"//trim(adjustl(table_name)), &
+              " -Bf0.5a1/:mm/yr: -D12/5/8/1h -O -K >> ", & 
               trim(adjustl(ps_file))
   Write(us,*)"${GMT} pstext -X6 -N -R -JE -G0 -O -U/4/20.5/'SELEN 2.9' ", trim(adjustl(tmp_file)), " >> ", & 
               trim(adjustl(ps_file))	      	      	      	      
@@ -5428,7 +5439,8 @@ Write(4,*) "180 -87.5   13  0 0 BC ",&
 	    " -MODE=", trim(adjustl(MODE)),&   
 	    " -ITER=", trim(adjustl(ITER));  close(4) 
 Write(9,*) "${GMT} pstext -N -R -Jm -B ", trim(adjustl(NAMEF)), " -G0 -O -K >> ", trim(adjustl(nameout)) 
-Write(9,*) "psscale -U/0.5/0.5/'SELEN 2.9' -E -Cpale.cpt -B1f0.25a0.5/:mm/yr: -D8.25/-1/10/1h -O >> ", trim(adjustl(nameout))
+Write(9,*) "${GMT} psscale -U/0.5/0.5/'SELEN 2.9' -E -Cpale.cpt -B1f0.25a0.5/:mm/yr: ", &
+           "-D8.25/-1/10/1h -O >> ", trim(adjustl(nameout))
 ENDIF
 !
 1 CONTINUE 
@@ -6376,7 +6388,7 @@ Write(19,*) " "
 		           else
 		           Write(17,*) "${GMT} pscoast -R -JM -Dc  -B -W1/240 -A10000 -O -K >> map.ps" 
 	Endif			   
-	Write(17,*) "psscale -E ", trim(adjustl(C_OPTION)), " ", trim(adjustl(B_OPTION)), " -D6/-1/11/1h -O  -K >> map.ps"
+	Write(17,*) "${GMT} psscale -E ", trim(adjustl(C_OPTION)), " ", trim(adjustl(B_OPTION)), " -D6/-1/11/1h -O  -K >> map.ps"
 !
 ! ------ Prepares a small title 
 !
@@ -6520,7 +6532,7 @@ enddo
         if(option_rof=='z')& 
 	Write(1,*) "${GMT} psxy -R -JM ", trim(adjustl(filecap)), " -M -W1/0 -B -A -O -K >> map.ps"
 !        
-        Write(1,*) "psscale -E ", trim(adjustl(C_OPTION)), " ", trim(adjustl(B_OPTION)), & 
+        Write(1,*) "${GMT} psscale -E ", trim(adjustl(C_OPTION)), " ", trim(adjustl(B_OPTION)), & 
 	           " -D6/-1/11/1h -O -K >> map.ps"
         Write(1,*) "${GMT} pstext -N ", " tmp0"//labchar//".dat",  " -JM -R -G0 -O -K >> map.ps"
 !
@@ -6613,7 +6625,7 @@ enddo
    Write(1,*)" "
 !
    Write(1,*)"# A color table"
-   Write(1,*)"psscale -E -Cpale.cpt -B1f0.1a0.5g0.5/:O.F.: -D8/-2/8/1h -O >> of.ps"
+   Write(1,*)"${GMT} psscale -E -Cpale.cpt -B1f0.1a0.5g0.5/:O.F.: -D8/-2/8/1h -O >> of.ps"
 !
  Else
 !
@@ -6641,7 +6653,7 @@ enddo
    Write(1,*)" "
 !
    Write(1,*)"# A color table"
-   Write(1,*)"psscale -E -Cpale.cpt -B1f0.1a0.5g0.5/:O.F.: -D8/-2/8/1h -O >> of.ps"
+   Write(1,*)"${GMT} psscale -E -Cpale.cpt -B1f0.1a0.5g0.5/:O.F.: -D8/-2/8/1h -O >> of.ps"
 !
  Endif
 !
@@ -6685,7 +6697,7 @@ Write(11,*)"${GMT} psbasemap -Y18 -P -Bf180a90/f90a60WSEN -R0/360/-85/85 -JQ180/
 Write(11,*)"${GMT} pscoast -B -R -O -K -W1/255/0/0 -JQ -Df -A1000 >> px.ps"
 Write(11,*)"${GMT} psxy -G255/0/0 -H4 weta.dat -O ", trim(adjustl(size_of_pixels)), " -JQ -R -K >> px.ps"
 Write(11,*)"echo '180 120 18 0 0 CM WET pixels' | ${GMT} pstext -N -R -JQ -O -K >> px.ps"
-Write(11,'(a27,i3,a4,i6,a1,a52)') "echo '10 -70 14 0 2 LM RES=", nres, ", N=", NP, "'", & 
+Write(11,'(a27,i3,a4,i6,a1,a59)') "echo '10 -70 14 0 2 LM RES=", nres, ", N=", NP, "'", & 
 " | ${GMT} pstext -N -R -JQ -O -K -G255/0/0 -W255 >> px.ps"
 !
 Write(11,*)"echo '     - dry pixels'"
@@ -6697,7 +6709,7 @@ Write(11,*)"${GMT} pscoast -B -R -O -K -W1/0/0/255 -JQ -Df -A1000 >> px.ps"
 Write(11,*)"${GMT} psxy -G0/0/255 -H4 drya.dat -O ", trim(adjustl(size_of_pixels)), " -JQ -R -K >> px.ps"
 Write(11,*)"${GMT} psbasemap -U/6/-2/'SELEN 2.9' -B -R -P -JQ -K -O >> px.ps"
 Write(11,*)"echo '180 120 18 0 0 CM DRY pixels' | ${GMT} pstext -N -R -JQ -O -K >> px.ps"
-Write(11,'(a27,i3,a4,i6,a1,a52)') "echo '10 -70 14 0 2 LM RES=", nres, ", N=", NP, "'", & 
+Write(11,'(a27,i3,a4,i6,a1,a59)') "echo '10 -70 14 0 2 LM RES=", nres, ", N=", NP, "'", & 
 " | ${GMT} pstext -N -R -JQ -O -G0/0/255 -W255 >> px.ps"
 !
 Write(11,*)"echo '     - Spherical map of wet and dry pixels'"
@@ -6707,7 +6719,7 @@ Write(11,*)""
 Write(11,*)"${GMT} psbasemap -X4 -Y12 -U/0/-3/'SELEN 2.9' -Bg60f60/g60f60 -R0/360/-80/80 -P -JG-20/-44/14 -K > px-sphere.ps"
 Write(11,*)"${GMT} pscoast -B -R -O -K -W1/220/220/220 -JG -Df -S0/60/255 -G100/250/100 -A1000 >> px-sphere.ps"
 Write(11,*)"${GMT} psxy  -G255 -H4 pxa.dat -O -K ", trim(adjustl(size_of_pixels)),  " -JG -R >> px-sphere.ps"
-Write(11,'(a27,i3,a4,i6,a1,a49)') "echo '0 -110 14 0 2 LM RES=", nres, ", N=", NP, "'", & 
+Write(11,'(a27,i3,a4,i6,a1,a56)') "echo '0 -110 14 0 2 LM RES=", nres, ", N=", NP, "'", & 
 " | ${GMT} pstext -N -R -JQ -O -G0 -W255 >> px-sphere.ps"
 !
  close(11)
@@ -6800,17 +6812,17 @@ READ (10,'(a10)') tmaxc
  b_option = & 
  "-Ba2f1/a"//trim(adjustl(deltac))//"f"//trim(adjustl(deltac))//"WSen:'RSL (m)':"
 !
- Write(19,*)"psbasemap -X4.5 -Y18 ", b_option, r_option," -P -JX12/7 -K > plot.ps" 
- Write(19,*)"psxy scatter-data.dat ", " -B -R -JX -Ss0.1 -G0 -O -K >> plot.ps" 
- Write(19,*)"psxy scatter-data.dat ", "-Ey0.25/2 -B -R -JX -O -K >> plot.ps" 
+ Write(19,*)"${GMT} psbasemap -X4.5 -Y18 ", b_option, r_option," -P -JX12/7 -K > plot.ps" 
+ Write(19,*)"${GMT} psxy scatter-data.dat ", " -B -R -JX -Ss0.1 -G0 -O -K >> plot.ps" 
+ Write(19,*)"${GMT} psxy scatter-data.dat ", "-Ey0.25/2 -B -R -JX -O -K >> plot.ps" 
  Write(19,*)"echo '", int(tmin)+(int(tmax)-int(tmin))/2., (11./10.)*int(dmax+delta/2.), " 22 0 0 BC RSL data from file: ", & 
  trim(adjustl(RSL_FILE)), "'", " | ${GMT} pstext -JX -R -O -K -N >> plot.ps "  
 !
  b_option = & 
  "-Ba2f1:'time (ka)':/a"//trim(adjustl(deltac))//"f"//trim(adjustl(deltac))//"WSen:'RSL (m)':"
 !
- Write(19,*)"psbasemap -U/-2/-3/'SELEN 2.9' -Y-11 ", b_option, r_option, " -P -JX -O -K >> plot.ps"
- Write(19,*)"psxy scatter-pred.dat -B -R -JX -Sc0.12 -G0 -O -K >> plot.ps"
+ Write(19,*)"${GMT} psbasemap -U/-2/-3/'SELEN 2.9' -Y-11 ", b_option, r_option, " -P -JX -O -K >> plot.ps"
+ Write(19,*)"${GMT} psxy scatter-pred.dat -B -R -JX -Sc0.12 -G0 -O -K >> plot.ps"
  Write(19,*)"echo '", int(tmin)+(int(tmax)-int(tmin))/2., (13./10.)*int(dmax+delta/2.), " 22 0 2 BC RSL predictions for: ", & 
  trim(adjustl(TITLICE)), "'", " | ${GMT} pstext -JX -R -O -K -N >> plot.ps "   
 !
@@ -6885,7 +6897,7 @@ READ (10,'(a10)') tmaxc
 !
 !
  Write(9,*) "" ; Write(9,*) "#--- Base of plot"
- Write(9,*) "psbasemap -X6 -Y4 -U'SELEN 3.2' "//trim(adjustl(R_OPTION))//" "//B_OPTION//"-JX18/14 -K > stokes.ps"
+ Write(9,*) "${GMT} psbasemap -X6 -Y4 -U'SELEN 3.2' "//trim(adjustl(R_OPTION))//" "//B_OPTION//"-JX18/14 -K > stokes.ps"
 !
 ! A title (revised) 
  open(4,file='title_stokes.tmp',status='unknown') 
@@ -6912,13 +6924,13 @@ READ (10,'(a10)') tmaxc
  Write(9,*) "${GMT} pstext stokes0.tmp -JX -R -G0 -O -W220 -K >> stokes.ps" 
 !
  Write(9,*) "" ; Write(9,*) "#--- Plots open squares for sine components"
- Write(9,*) "psxy  sine.tmp ", trim(adjustl(H_OPTION)), " -B -R -JX  -W4 -K -O >> stokes.ps"
- Write(9,*) "psxy  sine.tmp ", trim(adjustl(H_OPTION)), " -B -R -JX -Ss0.35 -G0 -K -O >> stokes.ps"
- Write(9,*) "psxy  sine.tmp ", trim(adjustl(H_OPTION)), " -B -R -JX -Ss0.25 -G255 -K -O >> stokes.ps"
+ Write(9,*) "${GMT} psxy  sine.tmp ", trim(adjustl(H_OPTION)), " -B -R -JX  -W4 -K -O >> stokes.ps"
+ Write(9,*) "${GMT} psxy  sine.tmp ", trim(adjustl(H_OPTION)), " -B -R -JX -Ss0.35 -G0 -K -O >> stokes.ps"
+ Write(9,*) "${GMT} psxy  sine.tmp ", trim(adjustl(H_OPTION)), " -B -R -JX -Ss0.25 -G255 -K -O >> stokes.ps"
 !
  Write(9,*) "" ; Write(9,*) "#--- Plots filled squares for cosine components"
- Write(9,*) "psxy cosine.tmp ", trim(adjustl(H_OPTION)), " -B -R -JX -Ss0.35 -G0 -K -O >> stokes.ps"
- Write(9,*) "psxy cosine.tmp ", trim(adjustl(H_OPTION)), " -B -R -JX  -W3 -K -O >> stokes.ps" 
+ Write(9,*) "${GMT} psxy cosine.tmp ", trim(adjustl(H_OPTION)), " -B -R -JX -Ss0.35 -G0 -K -O >> stokes.ps"
+ Write(9,*) "${GMT} psxy cosine.tmp ", trim(adjustl(H_OPTION)), " -B -R -JX  -W3 -K -O >> stokes.ps" 
 !
 
  If(code=='-1') then 
@@ -6950,9 +6962,9 @@ READ (10,'(a10)') tmaxc
  close(4) 
 ! 
  Write(9,*) "" ; Write(9,*) "#--- Plots a legend"
- Write(9,*) "psxy stokes2.tmp -N -JX -R -G0 -Ss0.35 -K -O >> stokes.ps" 
- Write(9,*) "psxy stokes3.tmp -N -JX -R -G0 -Ss0.35 -K -O >> stokes.ps" 
- Write(9,*) "psxy stokes3.tmp -N -JX -R -G255 -Ss0.25 -K -O >> stokes.ps" 
+ Write(9,*) "${GMT} psxy stokes2.tmp -N -JX -R -G0 -Ss0.35 -K -O >> stokes.ps" 
+ Write(9,*) "${GMT} psxy stokes3.tmp -N -JX -R -G0 -Ss0.35 -K -O >> stokes.ps" 
+ Write(9,*) "${GMT} psxy stokes3.tmp -N -JX -R -G255 -Ss0.25 -K -O >> stokes.ps" 
  Write(9,*) "${GMT} pstext stokes4.tmp -N -JX -R -G0 -O  >> stokes.ps"
 !
  CLOSE(9) 

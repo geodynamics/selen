@@ -186,6 +186,7 @@ WNW_OBJECTS = \
 # default targets
 DEFAULT = \
 	config$(EXEEXT) \
+	esl$(EXEEXT) \
 	gmaps$(EXEEXT) \
 	ms$(EXEEXT) \
 	ofdv$(EXEEXT) \
@@ -218,7 +219,7 @@ default: $(DEFAULT)
 all: default
 
 run: default
-	(cd ${SETUP} ; PATH=${PATH}:`pwd`/../${E} GMT=${GMT} source selen.sh)
+	(cd ${SETUP} && PATH=${PATH}:`pwd`/../${E} GMT=${GMT} source selen.sh)
 
 req_dirs:
 	mkdir -p ${E}; mkdir -p ${O}; mkdir -p ${SETUP}
@@ -316,7 +317,7 @@ clean:
 #######################################
 
 ${SETUP}/data.inc: config$(EXEEXT) config.dat
-	(cp config.dat tmp ; cd tmp ; ../${E}/config$(EXEEXT) ; cd ..)
+	(cp config.dat tmp && cd tmp && ../${E}/config$(EXEEXT) && cd ..)
 
 #######################################
 # rules for object files
