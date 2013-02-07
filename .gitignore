@@ -11,3 +11,7 @@ tmp/
 
 
 config.log
+
+Makefile
+
+*.status
