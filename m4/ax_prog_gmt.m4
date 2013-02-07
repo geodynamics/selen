@@ -21,7 +21,7 @@
 #   Copyright (c) 2013 Eric Heien <emheien@ucdavis.edu>
 
 AC_DEFUN([AX_PROG_GMT],[
-AC_CHECK_PROGS(gmt,[gmt],no)
+AC_CHECK_PROGS(gmt,[gmt GMT],no)
 if test "x$gmt" = "xno" ;
 then
 	ifelse($#,0,[AC_MSG_ERROR([GMT program not found])],
