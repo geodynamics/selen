@@ -219,7 +219,7 @@ default: $(DEFAULT)
 all: default
 
 run: default
-	(cd ${SETUP} && PATH=${PATH}:`pwd`/../${E} GMT=${GMT} source selen.sh)
+	(cd ${SETUP} && PATH=${PATH}:`pwd`/../${E} GMT=${GMT} ./selen.sh)
 
 req_dirs:
 	mkdir -p ${E}; mkdir -p ${O}; mkdir -p ${SETUP}
@@ -317,7 +317,7 @@ clean:
 #######################################
 
 ${SETUP}/data.inc: config$(EXEEXT) config.dat
-	(cp config.dat tmp && cd tmp && ../${E}/config$(EXEEXT) && cd ..)
+	(cp config.dat tmp && cd tmp && ../${E}/config$(EXEEXT) && chmod u+x selen.sh && cd ..)
 
 #######################################
 # rules for object files
