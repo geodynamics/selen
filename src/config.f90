@@ -4604,9 +4604,11 @@ END
 !  
   Write(us,*)"${GMT} psbasemap -X3 -Y6 -Ba8f4WSEn -R-8/48/30/50 -JJ18/24 -K > ", & 
   	      trim(adjustl(ps_file))
-  Write(us,*)"${GMT} pscontour -I -JJ -R -O -K ", trim(adjustl(data_file)), " -C"//trim(adjustl(table_name)), " >> ", & 
+  Write(us,*)"${GMT} pscontour -I -JJ -R -O -K ", trim(adjustl(data_file)), &
+              " -C"//trim(adjustl(table_name)), " >> ", & 
               trim(adjustl(ps_file)) 
-  Write(us,*)"${GMT} pscontour -G16 -W1/255 -A -JJ -R -O -K ", trim(adjustl(data_file)), " -C"//trim(adjustl(table_name)), " >> ", & 
+  Write(us,*)"${GMT} pscontour -G16 -W1/255 -A -JJ -R -O -K ", trim(adjustl(data_file)), &
+              " -C"//trim(adjustl(table_name)), " >> ", & 
               trim(adjustl(ps_file))	     	      
   Write(us,*)"${GMT} pscoast -R -JJ -Di -B -W2/0 -A1000 -O -K >> ", & 
               trim(adjustl(ps_file))
@@ -4689,7 +4691,8 @@ END
   	      trim(adjustl(ps_file))
   Write(us,*)"${GMT} pscontour -I -JJ -R -O -K ", trim(adjustl(data_file)), " -C"//trim(adjustl(table_name)), " >> ", & 
               trim(adjustl(ps_file)) 
-  Write(us,*)"${GMT} pscontour -G16 -W1/255 -A -JJ -R -O -K ", trim(adjustl(data_file)), " -C"//trim(adjustl(table_name)), " >> ", & 
+  Write(us,*)"${GMT} pscontour -G16 -W1/255 -A -JJ -R -O -K ", trim(adjustl(data_file)), &
+              " -C"//trim(adjustl(table_name)), " >> ", & 
               trim(adjustl(ps_file))
   Write(us,*)"${GMT} pscoast -R -JJ -Di -B -W2/0 -A1000 -O -K >> ", & 
               trim(adjustl(ps_file))
@@ -4779,7 +4782,8 @@ END
   	      trim(adjustl(ps_file))
   Write(us,*)"${GMT} pscontour -I -JJ -R -O -K ", trim(adjustl(data_file)), " -C"//trim(adjustl(table_name)), " >> ", & 
               trim(adjustl(ps_file)) 
-  Write(us,*)"${GMT} pscontour -G16 -W1/255 -A -JJ -R -O -K ", trim(adjustl(data_file)), " -C"//trim(adjustl(table_name)), " >> ", & 
+  Write(us,*)"${GMT} pscontour -G16 -W1/255 -A -JJ -R -O -K ", trim(adjustl(data_file)), &
+              " -C"//trim(adjustl(table_name)), " >> ", & 
               trim(adjustl(ps_file))
   Write(us,*)"${GMT} pscoast -R -JJ -Di -B -W2/0 -A1000 -O -K >> ", & 
               trim(adjustl(ps_file))
@@ -4872,7 +4876,8 @@ END
   	      trim(adjustl(ps_file))
   Write(us,*)"${GMT} pscontour -I -JJ -R -O -K ", trim(adjustl(data_file)), " -C"//trim(adjustl(table_name)), " >> ", & 
               trim(adjustl(ps_file)) 
-  Write(us,*)"${GMT} pscontour -G16 -W1/255 -A -JJ -R -O -K ", trim(adjustl(data_file)), " -C"//trim(adjustl(table_name)), " >> ", & 
+  Write(us,*)"${GMT} pscontour -G16 -W1/255 -A -JJ -R -O -K ", trim(adjustl(data_file)), &
+              " -C"//trim(adjustl(table_name)), " >> ", & 
               trim(adjustl(ps_file))
   Write(us,*)"${GMT} pscoast -R -JJ -Di -B -W2/0 -A1000 -O -K >> ", & 
               trim(adjustl(ps_file))
@@ -4965,7 +4970,8 @@ END
   	      trim(adjustl(ps_file))
   Write(us,*)"${GMT} pscontour -I -JJ -R -O -K ", trim(adjustl(data_file)), " -C"//trim(adjustl(table_name)), " >> ", & 
               trim(adjustl(ps_file)) 
-  Write(us,*)"${GMT} pscontour -G16 -W1/255 -A -JJ -R -O -K ", trim(adjustl(data_file)), " -C"//trim(adjustl(table_name)), " >> ", & 
+  Write(us,*)"${GMT} pscontour -G16 -W1/255 -A -JJ -R -O -K ", trim(adjustl(data_file)), &
+              " -C"//trim(adjustl(table_name)), " >> ", & 
               trim(adjustl(ps_file))
   Write(us,*)"${GMT} pscoast -R -JJ -Di -B -W2/0 -A1000 -O -K >> ", & 
               trim(adjustl(ps_file))
@@ -5056,7 +5062,8 @@ END
 !
   Write(us,*)"${GMT} pscontour -P -X4 -Y8 -I -JE0/-90/12 -R0/360/-90/-52 -K ", trim(adjustl(data_file)), & 
   	     " -C"//trim(adjustl(table_name)), " > ", trim(adjustl(ps_file)) 
-  Write(us,*)"${GMT} pscontour -G15 -W1/255 -A -JE -R -O -K ", trim(adjustl(data_file)), " -C"//trim(adjustl(table_name)), " >> ", & 
+  Write(us,*)"${GMT} pscontour -G15 -W1/255 -A -JE -R -O -K ", trim(adjustl(data_file)), &
+              " -C"//trim(adjustl(table_name)), " >> ", & 
               trim(adjustl(ps_file))
   Write(us,*)"${GMT} pscoast -R -JE -Di -Ba30f30g30 -W2/255/0/0 -A0 -O -K >> ", & 
               trim(adjustl(ps_file))
@@ -5784,7 +5791,8 @@ Write(19,*) " "
 !
 ! --- xy plots of RSL zones  
 !
-        Write(19,*) " ${GMT} psbasemap -X3 -Y14 -Ba2f1:'time (ka)':/a50f50Wsen:'RSL (m)':  ", r_option(1), "-JX6.5/5  -K >  plot.ps" 
+    Write(19,*) " ${GMT} psbasemap -X3 -Y14 -Ba2f1:'time (ka)':/a50f50Wsen:'RSL (m)':  ", &
+        r_option(1), "-JX6.5/5  -K >  plot.ps" 
  	Write(19,*) " ${GMT} psxy rslzones-"//label(1)//".dat", " -M -H -B -R -JX -Sc0.01 -G0/0/255 -O -K >> plot.ps"	
 	Write(19,*) " ${GMT} psxy rslzones-"//label(1)//"-ave.dat", " -M -H -B -R -JX ", W_OPTION(1), " -O -K >> plot.ps"
  	open (8,file='tmpzu1.dat',status='unknown')	
