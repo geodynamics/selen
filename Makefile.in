@@ -228,6 +228,8 @@ clean:
 distclean: clean
 	rm -rf config.status config.log
 
+.PHONY: clean distclean dist req_dirs all run
+
 #######################################
 # Rule for creating the distribution
 #######################################

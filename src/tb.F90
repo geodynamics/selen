@@ -492,10 +492,13 @@
  Integer, parameter  :: i4b   = selected_int_kind(9)
  Integer, parameter  :: sp    = kind(1.0)
  Integer, parameter  :: dp    = kind(1.0d0)
-#ifdef GNU
+#ifdef SUPPORTS_QUAD_16
+ Integer, parameter  :: qp    = kind(1.0q0)
+#elif SUPPORTS_QUAD_10
  Integer, parameter  :: qp    = 10
 #else
- Integer, parameter  :: qp    = kind(1.0q0)
+#error TABOO requires quad precision floating point.
+#error Please use a compiler that supports this.
 #endif
  Real(qp), parameter :: pi    = 3.141592653589793238462643383279502884197_qp
  END MODULE STRATA 

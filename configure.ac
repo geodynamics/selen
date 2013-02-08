@@ -16,6 +16,9 @@ AC_FC_MODULE_OUTPUT_FLAG
 # Compiler must support at least 132 character columns
 AC_FC_LINE_LENGTH(132)
 
+# Compiler must support 16-bit or 10-bit quad precision
+AX_FORTRAN_QUAD_REAL
+
 # Check for support programs
 AX_PROG_GMT
 ACLTX_PROG_PS2PDF

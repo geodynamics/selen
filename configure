@@ -2434,6 +2434,44 @@ ac_link='$FC -o conftest$ac_exeext $FCFLAGS $LDFLAGS $ac_fcflags_srcext conftest
 ac_compiler_gnu=$ac_cv_fc_compiler_gnu
 
 
+# Compiler must support 16-bit or 10-bit quad precision
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether Fortran supports quad precision reals" >&5
+$as_echo_n "checking whether Fortran supports quad precision reals... " >&6; }
+cat > conftest.$ac_ext <<_ACEOF
+
+				      program main
+       integer, parameter :: qp = kind(1.0q0)
+       REAL(qp) :: test = 1.0_qp
+       test = log10 (test)
+      end
+_ACEOF
+if ac_fn_fc_try_link "$LINENO"; then :
+  FCFLAGS="$FCFLAGS -DSUPPORTS_QUAD_16"; { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+else
+  cat > conftest.$ac_ext <<_ACEOF
+
+								      program main
+       integer, parameter :: qp = 10
+				       REAL(qp) :: test = 1.0_qp
+				       test = log10 (test)
+      end
+_ACEOF
+if ac_fn_fc_try_link "$LINENO"; then :
+  FCFLAGS="$FCFLAGS -DSUPPORTS_QUAD_10"; { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+else
+  as_fn_error $? "no" "$LINENO" 5
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
+
+
+
 # Check for support programs
 
 for ac_prog in gmt GMT

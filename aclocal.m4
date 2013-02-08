@@ -13,4 +13,5 @@
 
 m4_ifndef([AC_CONFIG_MACRO_DIRS], [m4_defun([_AM_CONFIG_MACRO_DIRS], [])m4_defun([AC_CONFIG_MACRO_DIRS], [_AM_CONFIG_MACRO_DIRS($@)])])
 m4_include([m4/acltx_prog_ps2pdf.m4])
+m4_include([m4/ax_fortran_quad_real.m4])
 m4_include([m4/ax_prog_gmt.m4])
