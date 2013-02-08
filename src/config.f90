@@ -20,6 +20,7 @@
 ! Modified DM August 2011 - Stokes coefficients (29.8-1)
 ! Modified DM August 2011 - Some optimizations in the compilation process (29.8-2)
 ! Modified DM Jan 2012 - Alaska ice model
+! Modified EMH Feb 2013 - Updated for autoconf system, CIG release
 !
 ! +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ! Copyright (C) 2008 Giorgio Spada, Florence Colleoni, and Paolo Stocchi 
@@ -147,7 +148,7 @@ IMPLICIT NONE
       SHOF_FILE,      FILE_GMT,                      & 
       FILE1_GMT,      FILE2_GMT,           FILE_CAP, & 
       RSLC_LONLAT_FILE, &       
-      FILE_TOPO,        FILE_PXTOPO
+      FILE_TOPO,        FILE_PXTOPO,       FILE_PXTABLE
       CHARACTER*30 RSL_FILE,     RSL_DATABASE,       & 
       		   FILE_REGION,  FILE_REGION_LONLAT, & 
                    TGAUGES_FILE, TGAUGES_DATABASE,   & 
@@ -187,7 +188,8 @@ IMPLICIT NONE
       OPTION_RM(0:NRG),OPTION_ROF,    OPTION_3D,      OPTION_3D_REGIONS,   OPTION_TOPO,  & 
       OPTION_PXTOPO,   OPTION_NM,     OPTION_PW,      OPTION_LOVE_NUMBERS, OPTION_PTMAP, & 
       OPTION_PWA,      OPTION_DEG1,   OPTION_GMT,     OPTION_SYS,   &
-      OPTION_MPI,      OPTION_OMP,    OPTION_PURGE,   OPTION_NLS
+      OPTION_MPI,      OPTION_OMP,    OPTION_PURGE,   OPTION_NLS,   &
+      OPTION_NEWPX
 !
 ! -More options   
       CHARACTER*2      OPTION_RFRAME            
@@ -851,6 +853,31 @@ IF(line(1:3)=="150") THEN
  	Write(88,*) " (not enough pixels for this harmonic degree) "
  	endif 
 ENDIF 
+!
+!
+!
+!
+!
+! ###### Pixel table ######
+!
+IF(line(1:3)=="151") THEN
+        call scan_string (line, 2, ss, nout)
+        option_newpx = ss(1)
+        file_pxtable = ss(2)
+!
+        if(option_newpx=='y') then
+                 Write(88,*) "SELEN will prepare the new pixel table file: ", file_pxtable
+        else
+                 INQUIRE(FILE=file_pxtable,EXIST=lex)
+                 If(lex) then
+                     Write(88,*) "SELEN will use the pre-built pixel table file: ", trim(adjustl(file_pxtable))
+                 Else
+                     Write(88,*) "The pixel table file ", trim(adjustl(file_pxtable)), " has NOT been found"
+                     Write(* ,*) "The pixel table file ", trim(adjustl(file_pxtable)), " has NOT been found"
+                     call Stop_Config
+                 Endif
+        Endif
+ENDIF
 !
 !
 !
