@@ -1733,11 +1733,11 @@ Write(2,*) "echo '                  or edit file COPYING                   '"
 Write(2,*) "echo '- - - - - - - - - - - - - - - - - - - - - - - - - - - - -'"
 Write(2,*) "echo ''"
 !
-Write(2,*) " "
-Write(2,*) " "
-Write(2,*) "echo '---------------------------------------'"
-Write(2,*) "echo ' >>> 0. Compiling the SELEN programs...'"
-Write(2,*) "echo '---------------------------------------'"
+! Write(2,*) " "
+! Write(2,*) " "
+! Write(2,*) "echo '---------------------------------------'"
+! Write(2,*) "echo ' >>> 0. Compiling the SELEN programs...'"
+! Write(2,*) "echo '---------------------------------------'"
 !
 !
 !

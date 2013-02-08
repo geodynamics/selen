@@ -212,8 +212,6 @@ DEFAULT = \
 	tgauges$(EXEEXT) \
 	wnw$(EXEEXT)
 
-#	geo$(EXEEXT) \
-
 default: $(DEFAULT)
 
 all: default
@@ -223,6 +221,19 @@ run: default
 
 req_dirs:
 	mkdir -p ${E}; mkdir -p ${O}; mkdir -p ${SETUP}
+
+clean:
+	rm -rf ${E} ${O} ${SETUP} Makefile
+
+distclean: clean
+	rm -rf config.status config.log
+
+#######################################
+# Rule for creating the distribution
+#######################################
+
+dist: distclean
+	tar -czf selen.tgz .
 
 #######################################
 #### rules for executables
@@ -308,19 +319,6 @@ tgauges$(EXEEXT): req_dirs $(TGAUGES_OBJECTS)
 
 wnw$(EXEEXT): req_dirs $(WNW_OBJECTS)
 	${FCCOMPILE} -o ${E}/wnw$(EXEEXT) $(WNW_OBJECTS)
-
-clean:
-	rm -rf ${E} ${O} ${SETUP} Makefile
-
-distclean: clean
-	rm -rf config.status config.log
-
-#######################################
-# Rule for creating the distribution
-#######################################
-
-dist: distclean
-	tar -czf selen.tgz .
 
 #######################################
 # Rule for creating the data.inc header file
