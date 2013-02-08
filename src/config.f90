@@ -1800,6 +1800,8 @@ elseif(option_pwa=='y') then
 !
 endif 
 !
+if (option_newpx=='y') then
+!
 ! --- Compilation: Pixelization (i) 
 ! Write(2,*) "echo '--- px.f90'"      
 ! Write(2,*) trim(CompileSeq), " px.f90 harmonics.o -o px.exe" 
@@ -1807,6 +1809,23 @@ endif
 ! --- Compilation: Pixelization (ii) 
 ! Write(2,*) "echo '--- px_rec.f90'"      
 ! Write(2,*) trim(CompileSeq), " px_rec.f90 harmonics.o  -o pxrec.exe" 
+!
+! --- Compilation: Parallel wet/dry pixel separation
+! if (option_mpi=='y') then
+!   Write(2,*) "echo '--- px_select.f90'"      
+!   Write(2,*) trim(CompileMpi),  " px_select.f90 harmonics.o -o pxselect.exe" 
+! endif
+!
+!
+! else
+!
+! --- Compilation: Retrieve pixelization info from existing table
+! Write(2,*) "echo '--- px_rebuild.f90'"
+! Write(2,*) trim(CompileSeq), " px_rebuild.f90 harmonics.o -o pxrebuild.exe"
+!
+!
+endif
+!
 !
 ! --- Compilation: Pixelization partitioning
 if (option_mpi=='y') then
@@ -2079,6 +2098,9 @@ if( (option_sys=='6') .and. (option_mpi=='y') )then
 Endif
 !
 !
+if (option_newpx=='y') then          ! A new pixelization
+!
+!
 !
 ! ====================================
 ! EXE 01 --- Pixelizing the sphere --- 
@@ -2133,14 +2155,37 @@ Write(2,*) "cp px-lat.dat ", depot//"/px"
  Write(2,*) "cp weta.dat ", depot//"/px" 
  Write(2,*) "cp drya.dat ", depot//"/px" 
 ! 
- Write(2,*) " "
+Write(2,*) " "
  Write(2,*) "#echo ---------------------------------------"
  Write(2,*) "echo" 
  Write(2,*) " echo '---> PX_REC.F90: Merging the wet & dry pixels tables'"
  Write(2,*) "#echo ---------------------------------------" 
- Write(2,*) "pxrec.exe"
+ Write(2,*) "./pxrec.exe"
  Write(2,*) "cp px-table.dat ", depot//"/px" 
-! 
+ Write(2,*) "cp px-table.dat ", trim(file_pxtable)
+!
+!
+ else                                ! Re-use an OLD pixelization
+!
+!
+ Write(2,*) " "
+ Write(2,*) "#echo --------------------------------------------------------"
+ Write(2,*) "echo                                                          "
+ Write(2,*) " echo '---> PX_REBUILD.F90: Retrieving information from pixel table file  '"
+ Write(2,*) "#echo --------------------------------------------------------"
+ Write(2,*) "cp ",trim(file_pxtable)," px-table.dat"
+ Write(2,*) "./pxrebuild.exe"
+ Write(2,*) "cp px.dat ", depot//"/px"
+ Write(2,*) "cp pxa.dat ", depot//"/px"
+ Write(2,*) "cp px-lat.dat ", depot//"/px"
+ Write(2,*) "cp weta.dat ", depot//"/px"
+ Write(2,*) "cp drya.dat ", depot//"/px"
+!
+!
+ endif
+!
+!
+!
  If(option_mpi=='y') then
     Write(2,*) " "
     Write(2,*) "#echo ---------------------------------------"

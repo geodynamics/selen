@@ -57,6 +57,7 @@ Modes:  1= Gravitationally self-consistent (GSC)
 
 ====> TEGMARK RESOLUTION ------------------------------------------------------
 150    R                  				             '44'
+151    Prepare a new pixel table (y/n, filename)         'y' 'px-table-r44.dat'
 
 ====> RHEOLOGICAL MODEL -------------------------------------------------------
 160    Rheological profile info:                         '3' '2' 'vsc_VM2a.dat'  
