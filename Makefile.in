@@ -23,6 +23,7 @@
 EXEEXT = .exe
 FC = @FC@
 GMT = @gmt@
+PACKAGE_VERSION = @PACKAGE_VERSION@
 FCFLAGS = @FCFLAGS@ -I${SETUP} -I${B} -w @FC_MODOUT@${SETUP} ${OPENMP_FCFLAGS}
 FCCOMPILE = ${FC} ${FCFLAGS}
 
@@ -222,20 +223,24 @@ run: default
 req_dirs:
 	mkdir -p ${E}; mkdir -p ${O}; mkdir -p ${SETUP}
 
+.PHONY: clean distclean dist req_dirs all run default config.dat
+
+#######################################
+# Rules for cleanup
+#######################################
+
 clean:
 	rm -rf ${E} ${O} ${SETUP} Makefile
 
 distclean: clean
 	rm -rf config.status config.log
 
-.PHONY: clean distclean dist req_dirs all run
-
 #######################################
 # Rule for creating the distribution
 #######################################
 
 dist: distclean
-	tar -czf selen.tgz .
+	tar -czf selen_${PACKAGE_VERSION}.tgz .
 
 #######################################
 #### rules for executables
