@@ -2577,7 +2577,7 @@ test -n "$ps2pdf" || ps2pdf="no"
 fi
 if test $ps2pdf = "no" ;
 then
-        as_fn_error $? "Unable to find the ps2pdf application" "$LINENO" 5
+        echo "WARNING: GMT scripts will fail"
 fi
 
 

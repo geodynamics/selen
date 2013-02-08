@@ -21,7 +21,7 @@ AX_FORTRAN_QUAD_REAL
 
 # Check for support programs
 AX_PROG_GMT
-ACLTX_PROG_PS2PDF
+ACLTX_PROG_PS2PDF([echo "WARNING: GMT scripts will fail"])
 
 AC_CONFIG_FILES([Makefile])
 
