@@ -2441,14 +2441,14 @@ $as_echo_n "checking whether Fortran supports quad precision reals... " >&6; }
 cat > conftest.$ac_ext <<_ACEOF
 
 				      program main
-       integer, parameter :: qp = kind(1.0q0)
+       integer, parameter :: qp = 16
        REAL(qp) :: test = 1.0_qp
        test = log10 (test)
       end
 _ACEOF
 if ac_fn_fc_try_link "$LINENO"; then :
-  FCFLAGS="$FCFLAGS -DSUPPORTS_QUAD_16"; { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
-$as_echo "yes" >&6; }
+  FCFLAGS="$FCFLAGS -DSUPPORTS_QUAD_16"; { $as_echo "$as_me:${as_lineno-$LINENO}: result: 128 bit REAL(16)" >&5
+$as_echo "128 bit REAL(16)" >&6; }
 else
   cat > conftest.$ac_ext <<_ACEOF
 
@@ -2459,8 +2459,8 @@ else
       end
 _ACEOF
 if ac_fn_fc_try_link "$LINENO"; then :
-  FCFLAGS="$FCFLAGS -DSUPPORTS_QUAD_10"; { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
-$as_echo "yes" >&6; }
+  FCFLAGS="$FCFLAGS -DSUPPORTS_QUAD_10"; { $as_echo "$as_me:${as_lineno-$LINENO}: result: 80 bit REAL(10)" >&5
+$as_echo "80 bit REAL(10)" >&6; }
 else
   as_fn_error $? "no" "$LINENO" 5
 fi

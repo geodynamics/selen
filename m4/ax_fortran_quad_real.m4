@@ -19,16 +19,16 @@ AC_DEFUN([AX_FORTRAN_QUAD_REAL],[
 AC_MSG_CHECKING(whether Fortran supports quad precision reals)
 AC_LINK_IFELSE([
 				AC_LANG_PROGRAM([],
-					[       [integer, parameter :: qp = kind(1.0q0)]
+					[       [integer, parameter :: qp = 16]
        [REAL(qp) :: test = 1.0_qp]
        [test = log10 (test)]])],
-				FCFLAGS="$FCFLAGS -DSUPPORTS_QUAD_16"; AC_MSG_RESULT(yes),
+				FCFLAGS="$FCFLAGS -DSUPPORTS_QUAD_16"; AC_MSG_RESULT(128 bit REAL(16)),
 				AC_LINK_IFELSE([
 								AC_LANG_PROGRAM([],
 									[       [integer, parameter :: qp = 10]
 				       [REAL(qp) :: test = 1.0_qp]
 				       [test = log10 (test)]])],
-								FCFLAGS="$FCFLAGS -DSUPPORTS_QUAD_10"; AC_MSG_RESULT(yes),
+								FCFLAGS="$FCFLAGS -DSUPPORTS_QUAD_10"; AC_MSG_RESULT(80 bit REAL(10)),
 								AC_MSG_ERROR(no)))
 
 ])
