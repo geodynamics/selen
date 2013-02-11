@@ -588,6 +588,7 @@ ac_subst_vars='LTLIBOBJS
 LIBOBJS
 ps2pdf
 gmt
+FLAGS_PLATFORM
 ac_empty
 FC_MODOUT
 OPENMP_FCFLAGS
@@ -647,6 +648,7 @@ FC
 FCFLAGS
 LDFLAGS
 LIBS
+FLAGS_PLATFORM
 ps2pdf'
 
 
@@ -1265,6 +1267,8 @@ Some influential environment variables:
   LDFLAGS     linker flags, e.g. -L<lib dir> if you have libraries in a
               nonstandard directory <lib dir>
   LIBS        libraries to pass to the linker, e.g. -l<library>
+  FLAGS_PLATFORM
+              Fortran compiler flags
   ps2pdf      specify default ps2pdf application
 
 Use these variables to override the choices made by `configure' or to help
@@ -2470,6 +2474,15 @@ fi
 rm -f core conftest.err conftest.$ac_objext \
     conftest$ac_exeext conftest.$ac_ext
 
+
+
+# Run script to guess compiler flags
+flags_guess="$SHELL flags.guess"
+{ $as_echo "$as_me:${as_lineno-$LINENO}: running $flags_guess" >&5
+$as_echo "$as_me: running $flags_guess" >&6;}
+flags=`$flags_guess` ||
+    as_fn_error $? "$flags_guess failed" "$LINENO" 5
+eval $flags
 
 
 # Check for support programs

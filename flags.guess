@@ -1,0 +1,91 @@
+#!/bin/sh
+
+# Attempt to guess suitable flags for the Fortran compiler.
+
+if test x"$UNAME_MS" = x; then
+    UNAME_MACHINE=`(uname -m) 2>/dev/null` || UNAME_MACHINE=unknown
+    UNAME_SYSTEM=`(uname -s) 2>/dev/null`  || UNAME_SYSTEM=unknown
+    UNAME_MS="${UNAME_MACHINE}:${UNAME_SYSTEM}"
+fi
+
+case $FC in
+    ftn|*/ftn|crayftn|*/crayftn)
+        #
+        # Cray Fortran
+        #
+        if test x"$FLAGS_PLATFORM" = x; then
+            FLAGS_PLATFORM=""
+        fi
+        ;;
+    pgf95|*/pgf95|pgf90|*/pgf90)
+        #
+        # Portland PGI
+        #
+        if test x"$FLAGS_PLATFORM" = x; then
+            FLAGS_PLATFORM=""
+        fi
+        ;;
+    ifort|*/ifort)
+        #
+        # Intel ifort Fortran90 for Linux
+        #
+        if test x"$FLAGS_PLATFORM" = x; then
+            FLAGS_PLATFORM="-Wl,-stack_size,0x10000000"
+        fi
+        # for debugging change to      -check all -debug -g -O0 -fp-stack-check -traceback -ftrapuv
+        #
+        ;;
+    gfortran|*/gfortran|f95|*/f95)
+        #
+        # GNU gfortran
+        #
+        if test x"$FLAGS_PLATFORM" = x; then
+            FLAGS_PLATFORM="-Wl,-stack_size,0x10000000"
+        fi
+        ;;
+    g95|*/g95)
+        #
+        # g95 (free f95 compiler from http://www.g95.org)
+        #
+        if test x"$FLAGS_PLATFORM" = x; then
+            FLAGS_PLATFORM=""
+        fi
+        ;;
+    f90|*/f90)
+	    if test x"$FLAGS_PLATFORM" = x; then
+	        FLAGS_PLATFORM=""
+	    fi
+        ;;
+    lf95|*/lf95)
+        #
+        # Lahey f90
+        #
+        if test x"$FLAGS_PLATFORM" = x; then
+            FLAGS_PLATFORM=""
+        fi
+        ;;
+    ######## IBM ######
+    *xlf*|*/*xlf*)
+        #
+        # on some (but not all) IBM machines one might need to add -qsave otherwise the IBM compiler allocates the
+        # arrays in the stack and the code crashes if the stack size is too
+        # small (which is sometimes the case, but less often these days on large machines)
+        #
+        if test x"$FLAGS_PLATFORM" = x; then
+            FLAGS_PLATFORM="-qtune=pwr6 -qarch=pwr6 -WF,-DXLF"
+        fi
+        ;;
+    pathf90|*/pathf90)
+        #
+        # pathscale
+        #
+        if test x"$FLAGS_PLATFORM" = x; then
+            FLAGS_PLATFORM=""
+        fi
+        ;;
+
+esac
+
+echo FLAGS_PLATFORM=\"$FLAGS_PLATFORM\" | sed 's/\$/\\\$/g'
+
+# end of file

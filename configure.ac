@@ -19,6 +19,14 @@ AC_FC_LINE_LENGTH(132)
 # Compiler must support 16-bit or 10-bit quad precision
 AX_FORTRAN_QUAD_REAL
 
+# Run script to guess compiler flags
+flags_guess="$SHELL flags.guess"
+AC_MSG_NOTICE([running $flags_guess])
+flags=`$flags_guess` ||
+    AC_MSG_ERROR([$flags_guess failed])
+eval $flags
+AC_ARG_VAR(FLAGS_PLATFORM, [Fortran compiler flags])
+
 # Check for support programs
 AX_PROG_GMT
 ACLTX_PROG_PS2PDF([echo "WARNING: GMT scripts will fail"])
