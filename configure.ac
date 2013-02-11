@@ -20,6 +20,7 @@ AC_FC_LINE_LENGTH(132)
 AX_FORTRAN_QUAD_REAL
 
 # Run script to guess compiler flags
+export FC
 flags_guess="$SHELL flags.guess"
 AC_MSG_NOTICE([running $flags_guess])
 flags=`$flags_guess` ||

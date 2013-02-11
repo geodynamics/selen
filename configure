@@ -2477,6 +2477,7 @@ rm -f core conftest.err conftest.$ac_objext \
 
 
 # Run script to guess compiler flags
+export FC
 flags_guess="$SHELL flags.guess"
 { $as_echo "$as_me:${as_lineno-$LINENO}: running $flags_guess" >&5
 $as_echo "$as_me: running $flags_guess" >&6;}
