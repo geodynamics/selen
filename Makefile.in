@@ -25,7 +25,9 @@ FC = @FC@
 GMT = @gmt@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 FCFLAGS = @FCFLAGS@ @FLAGS_PLATFORM@ -I${SETUP} -I${B} -w @FC_MODOUT@${SETUP} ${OPENMP_FCFLAGS}
+LDFLAGS = -w ${OPENMP_FCFLAGS}
 FCCOMPILE = ${FC} ${FCFLAGS}
+FCLINK = ${FC} ${LDFLAGS}
 
 ## compilation directories
 # B : build directory
@@ -247,85 +249,85 @@ dist: distclean
 #######################################
 
 config$(EXEEXT): req_dirs $(CONFIG_OBJECTS)
-	${FCCOMPILE} -o ${E}/config$(EXEEXT) $(CONFIG_OBJECTS)
+	${FCLINK} -o ${E}/config$(EXEEXT) $(CONFIG_OBJECTS)
 
 esl$(EXEEXT): req_dirs $(ESL_OBJECTS)
-	${FCCOMPILE} -o ${E}/esl$(EXEEXT) $(ESL_OBJECTS)
+	${FCLINK} -o ${E}/esl$(EXEEXT) $(ESL_OBJECTS)
 
 geo$(EXEEXT): req_dirs $(GEO_OBJECTS)
-	${FCCOMPILE} -o ${E}/geo$(EXEEXT) $(GEO_OBJECTS)
+	${FCLINK} -o ${E}/geo$(EXEEXT) $(GEO_OBJECTS)
 
 gmaps$(EXEEXT): req_dirs $(GMAPS_OBJECTS)
-	${FCCOMPILE} -o ${E}/gmaps$(EXEEXT) $(GMAPS_OBJECTS)
+	${FCLINK} -o ${E}/gmaps$(EXEEXT) $(GMAPS_OBJECTS)
 
 ms$(EXEEXT): req_dirs $(MS_OBJECTS)
-	${FCCOMPILE} -o ${E}/ms$(EXEEXT) $(MS_OBJECTS)
+	${FCLINK} -o ${E}/ms$(EXEEXT) $(MS_OBJECTS)
 
 ofdv$(EXEEXT): req_dirs $(OFDV_OBJECTS)
-	${FCCOMPILE} -o ${E}/ofdv$(EXEEXT) $(OFDV_OBJECTS)
+	${FCLINK} -o ${E}/ofdv$(EXEEXT) $(OFDV_OBJECTS)
 
 px$(EXEEXT): req_dirs $(PX_OBJECTS)
-	${FCCOMPILE} -o ${E}/px$(EXEEXT) $(PX_OBJECTS)
+	${FCLINK} -o ${E}/px$(EXEEXT) $(PX_OBJECTS)
 
 pxrebuild$(EXEEXT): req_dirs $(PXREBUILD_OBJECTS)
-	${FCCOMPILE} -o ${E}/pxrebuild$(EXEEXT) $(PXREBUILD_OBJECTS)
+	${FCLINK} -o ${E}/pxrebuild$(EXEEXT) $(PXREBUILD_OBJECTS)
 
 pxrec$(EXEEXT): req_dirs $(PXREC_OBJECTS)
-	${FCCOMPILE} -o ${E}/pxrec$(EXEEXT) $(PXREC_OBJECTS)
+	${FCLINK} -o ${E}/pxrec$(EXEEXT) $(PXREC_OBJECTS)
 
 recice$(EXEEXT): req_dirs $(RECICE_OBJECTS)
-	${FCCOMPILE} -o ${E}/recice$(EXEEXT) $(RECICE_OBJECTS)
+	${FCLINK} -o ${E}/recice$(EXEEXT) $(RECICE_OBJECTS)
 
 recof$(EXEEXT): req_dirs $(RECOF_OBJECTS)
-	${FCCOMPILE} -o ${E}/recof$(EXEEXT) $(RECOF_OBJECTS)
+	${FCLINK} -o ${E}/recof$(EXEEXT) $(RECOF_OBJECTS)
 
 rmaps$(EXEEXT): req_dirs $(RMAPS_OBJECTS)
-	${FCCOMPILE} -o ${E}/rmaps$(EXEEXT) $(RMAPS_OBJECTS)
+	${FCLINK} -o ${E}/rmaps$(EXEEXT) $(RMAPS_OBJECTS)
 
 rsl$(EXEEXT): req_dirs $(RSL_OBJECTS)
-	${FCCOMPILE} -o ${E}/rsl$(EXEEXT) $(RSL_OBJECTS)
+	${FCLINK} -o ${E}/rsl$(EXEEXT) $(RSL_OBJECTS)
 
 rslc$(EXEEXT): req_dirs $(RSLC_OBJECTS)
-	${FCCOMPILE} -o ${E}/rslc$(EXEEXT) $(RSLC_OBJECTS)
+	${FCLINK} -o ${E}/rslc$(EXEEXT) $(RSLC_OBJECTS)
 
 rslzones$(EXEEXT): req_dirs $(RSLZONES_OBJECTS)
-	${FCCOMPILE} -o ${E}/rslzones$(EXEEXT) $(RSLZONES_OBJECTS)
+	${FCLINK} -o ${E}/rslzones$(EXEEXT) $(RSLZONES_OBJECTS)
 
 sh$(EXEEXT): req_dirs $(SH_OBJECTS)
-	${FCCOMPILE} -o ${E}/sh$(EXEEXT) $(SH_OBJECTS)
+	${FCLINK} -o ${E}/sh$(EXEEXT) $(SH_OBJECTS)
 
 shof$(EXEEXT): req_dirs $(SHOF_OBJECTS)
-	${FCCOMPILE} -o ${E}/shof$(EXEEXT) $(SHOF_OBJECTS)
+	${FCLINK} -o ${E}/shof$(EXEEXT) $(SHOF_OBJECTS)
 
 shapefactors$(EXEEXT): req_dirs $(SHAPE_FACTORS_OBJECTS)
-	${FCCOMPILE} -o ${E}/shapefactors$(EXEEXT) $(SHAPE_FACTORS_OBJECTS)
+	${FCLINK} -o ${E}/shapefactors$(EXEEXT) $(SHAPE_FACTORS_OBJECTS)
 
 shice$(EXEEXT): req_dirs $(SHICE_OBJECTS)
-	${FCCOMPILE} -o ${E}/shice$(EXEEXT) $(SHICE_OBJECTS)
+	${FCLINK} -o ${E}/shice$(EXEEXT) $(SHICE_OBJECTS)
 
 shrsl$(EXEEXT): req_dirs $(SHRSL_OBJECTS)
-	${FCCOMPILE} -o ${E}/shrsl$(EXEEXT) $(SHRSL_OBJECTS)
+	${FCLINK} -o ${E}/shrsl$(EXEEXT) $(SHRSL_OBJECTS)
 
 shrslc$(EXEEXT): req_dirs $(SHRSLC_OBJECTS)
-	${FCCOMPILE} -o ${E}/shrslc$(EXEEXT) $(SHRSLC_OBJECTS)
+	${FCLINK} -o ${E}/shrslc$(EXEEXT) $(SHRSLC_OBJECTS)
 
 shtgauges$(EXEEXT): req_dirs $(SHTGAUGES_OBJECTS)
-	${FCCOMPILE} -o ${E}/shtgauges$(EXEEXT) $(SHTGAUGES_OBJECTS)
+	${FCLINK} -o ${E}/shtgauges$(EXEEXT) $(SHTGAUGES_OBJECTS)
 
 sle$(EXEEXT): req_dirs $(SLE_OBJECTS)
-	${FCCOMPILE} -o ${E}/sle$(EXEEXT) $(SLE_OBJECTS)
+	${FCLINK} -o ${E}/sle$(EXEEXT) $(SLE_OBJECTS)
 
 stokes$(EXEEXT): req_dirs $(STOKES_OBJECTS)
-	${FCCOMPILE} -o ${E}/stokes$(EXEEXT) $(STOKES_OBJECTS)
+	${FCLINK} -o ${E}/stokes$(EXEEXT) $(STOKES_OBJECTS)
 
 tb$(EXEEXT): req_dirs $(TB_OBJECTS)
-	${FCCOMPILE} -o ${E}/tb$(EXEEXT) $(TB_OBJECTS)
+	${FCLINK} -o ${E}/tb$(EXEEXT) $(TB_OBJECTS)
 
 tgauges$(EXEEXT): req_dirs $(TGAUGES_OBJECTS)
-	${FCCOMPILE} -o ${E}/tgauges$(EXEEXT) $(TGAUGES_OBJECTS)
+	${FCLINK} -o ${E}/tgauges$(EXEEXT) $(TGAUGES_OBJECTS)
 
 wnw$(EXEEXT): req_dirs $(WNW_OBJECTS)
-	${FCCOMPILE} -o ${E}/wnw$(EXEEXT) $(WNW_OBJECTS)
+	${FCLINK} -o ${E}/wnw$(EXEEXT) $(WNW_OBJECTS)
 
 #######################################
 # Rule for creating the data.inc header file
