@@ -13,24 +13,37 @@ case $FC in
         #
         # Cray Fortran
         #
-        if test x"$FLAGS_PLATFORM" = x; then
-            FLAGS_PLATFORM=""
+        if test x"$FCFLAGS_PLATFORM" = x; then
+            FCFLAGS_PLATFORM=""
+        fi
+        if test x"$LDFLAGS_PLATFORM" = x; then
+            LDFLAGS_PLATFORM=""
         fi
         ;;
     pgf95|*/pgf95|pgf90|*/pgf90)
         #
         # Portland PGI
         #
-        if test x"$FLAGS_PLATFORM" = x; then
-            FLAGS_PLATFORM=""
+        if test x"$FCFLAGS_PLATFORM" = x; then
+            FCFLAGS_PLATFORM=""
+        fi
+        if test x"$LDFLAGS_PLATFORM" = x; then
+            LDFLAGS_PLATFORM=""
         fi
         ;;
     ifort|*/ifort)
         #
         # Intel ifort Fortran90 for Linux
         #
-        if test x"$FLAGS_PLATFORM" = x; then
-            FLAGS_PLATFORM="-Wl,-stack_size,0x10000000"
+        if test x"$FCFLAGS_PLATFORM" = x; then
+            FCFLAGS_PLATFORM=""
+        fi
+        if test x"$LDFLAGS_PLATFORM" = x; then
+			if test x"$UNAME_SYSTEM" = xDarwin; then
+            	LDFLAGS_PLATFORM="-Wl,-stack_size,0x10000000"
+			else
+				LDFLAGS_PLATFORM=""
+            fi
         fi
         # for debugging change to      -check all -debug -g -O0 -fp-stack-check -traceback -ftrapuv
         #
@@ -39,29 +52,49 @@ case $FC in
         #
         # GNU gfortran
         #
-        if test x"$FLAGS_PLATFORM" = x; then
-            FLAGS_PLATFORM="-Wl,-stack_size,0x10000000"
+        if test x"$FCFLAGS_PLATFORM" = x; then
+			if test x"$UNAME_SYSTEM" = xDarwin; then
+	            FCFLAGS_PLATFORM="-m64"
+			else
+				FCFLAGS_PLATFORM=""
+	        fi
+        fi
+        if test x"$LDFLAGS_PLATFORM" = x; then
+			if test x"$UNAME_SYSTEM" = xDarwin; then
+            	LDFLAGS_PLATFORM="-m64 -Wl,-stack_size,0x10000000"
+			else
+				LDFLAGS_PLATFORM=""
+            fi
         fi
         ;;
     g95|*/g95)
         #
         # g95 (free f95 compiler from http://www.g95.org)
         #
-        if test x"$FLAGS_PLATFORM" = x; then
-            FLAGS_PLATFORM=""
+        if test x"$FCFLAGS_PLATFORM" = x; then
+            FCFLAGS_PLATFORM=""
+        fi
+        if test x"$LDFLAGS_PLATFORM" = x; then
+            LDFLAGS_PLATFORM=""
         fi
         ;;
     f90|*/f90)
-	    if test x"$FLAGS_PLATFORM" = x; then
-	        FLAGS_PLATFORM=""
+	    if test x"$FCFLAGS_PLATFORM" = x; then
+	        FCFLAGS_PLATFORM=""
+	    fi
+	    if test x"$LDFLAGS_PLATFORM" = x; then
+	        LDFLAGS_PLATFORM=""
 	    fi
         ;;
     lf95|*/lf95)
         #
         # Lahey f90
         #
-        if test x"$FLAGS_PLATFORM" = x; then
-            FLAGS_PLATFORM=""
+        if test x"$FCFLAGS_PLATFORM" = x; then
+            FCFLAGS_PLATFORM=""
+        fi
+        if test x"$LDFLAGS_PLATFORM" = x; then
+            LDFLAGS_PLATFORM=""
         fi
         ;;
     ######## IBM ######
@@ -71,21 +104,28 @@ case $FC in
         # arrays in the stack and the code crashes if the stack size is too
         # small (which is sometimes the case, but less often these days on large machines)
         #
-        if test x"$FLAGS_PLATFORM" = x; then
-            FLAGS_PLATFORM="-qtune=pwr6 -qarch=pwr6 -WF,-DXLF"
+        if test x"$FCFLAGS_PLATFORM" = x; then
+            FCFLAGS_PLATFORM="-qtune=pwr6 -qarch=pwr6 -WF,-DXLF"
+        fi
+        if test x"$LDFLAGS_PLATFORM" = x; then
+            LDFLAGS_PLATFORM="-qtune=pwr6 -qarch=pwr6 -WF,-DXLF"
         fi
         ;;
     pathf90|*/pathf90)
         #
         # pathscale
         #
-        if test x"$FLAGS_PLATFORM" = x; then
-            FLAGS_PLATFORM=""
+        if test x"$FCFLAGS_PLATFORM" = x; then
+            FCFLAGS_PLATFORM=""
+        fi
+        if test x"$LDFLAGS_PLATFORM" = x; then
+            LDFLAGS_PLATFORM=""
         fi
         ;;
 
 esac
 
-echo FLAGS_PLATFORM=\"$FLAGS_PLATFORM\" | sed 's/\$/\\\$/g'
+echo FCFLAGS_PLATFORM=\"$FCFLAGS_PLATFORM\" | sed 's/\$/\\\$/g'
+echo LDFLAGS_PLATFORM=\"$LDFLAGS_PLATFORM\" | sed 's/\$/\\\$/g'
 
 # end of file

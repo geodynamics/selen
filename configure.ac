@@ -26,7 +26,8 @@ AC_MSG_NOTICE([running $flags_guess])
 flags=`$flags_guess` ||
     AC_MSG_ERROR([$flags_guess failed])
 eval $flags
-AC_ARG_VAR(FLAGS_PLATFORM, [Fortran compiler flags])
+AC_ARG_VAR(FCFLAGS_PLATFORM, [Fortran platform specific compiler flags])
+AC_ARG_VAR(LDFLAGS_PLATFORM, [Fortran platform specific linker flags])
 
 # Check for support programs
 AX_PROG_GMT
