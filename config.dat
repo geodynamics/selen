@@ -26,23 +26,9 @@ Contact: Giorgio Spada <giorgio DOT spada AT gmail DOT com>
  This is SECTION (1) of "config.dat": SELEN settings
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-====> PATH of working directory 
-100     $SELEN_DIR= '/Users/giorgiospada/Desktop/PAPERS/AAA-SELEN-for-CIG/SELEN29'    
-
 ====> PURGING option ----------------------------------------------------------
 110  Purging the wdir before & after execution                      'y'
      [see config.f90 for purged filenames extensions ]
-
-====> PARALLEL ENVIRONMENT ----------------------------------------------------
-120    Use OpenMP  (y/n, number of threads)                        'y' '2'
-121    Platform                                                 '1'
-[Supported platforms: 1=gfortran on MacOS 
-                        2=ifort on MacOS
-                          3=gfortran on Linux
-                            4=ifort on Linux
-                              6=XLF on IBM SP6
-                                7=gfortran on CYGWIN 
-                                  8=g95 on MacOS/PPC ]
 
 ====> SOLUTION of the SLE -----------------------------------------------------
 130    Iterations & mode of solution                              '3'    '1' 	    			 	
@@ -81,7 +67,7 @@ Modes:  1= Gravitationally self-consistent (GSC)
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 ====> EXECUTION of the GMT SCRIPTS -------------------------------------------- 
-200    Execution of GMT scripts during the SELEN run (y/n)     'y'
+200    Execution of GMT scripts during the SELEN run (y/n)     'n'
 
 ====> PIXELIZATION & WINDOW ---------------------------------------------------
 205    Pixelization maps (y/n)                                  'y'
