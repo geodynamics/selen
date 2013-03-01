@@ -104,7 +104,7 @@ IMPLICIT NONE
       CHARACTER*65 :: CompileSmp, CompileMpi
 !
 ! -MPI execution prefix
-      CHARACTER*100 :: RunCmd
+      CHARACTER*100 :: RunCmd = ""
 !
 !      CHARACTER*55, PARAMETER :: &
 !      SeqCompile = "gfortran -m64 -w    "
@@ -195,7 +195,7 @@ IMPLICIT NONE
       CHARACTER*2      OPTION_RFRAME            
 !
 ! -Repository name 
-      CHARACTER*12 depot 
+      CHARACTER*20 depot 
 !
 ! -Other character constants 
       CHARACTER*40 for_argument
@@ -271,14 +271,14 @@ IMPLICIT NONE
 !
 ! ###### WORKING DIRECTORY ######  
 !
-  IF(line(1:3)=='100') THEN 
-	call scan_string (line, 1, ss, nout)
-	wdir=ss(1) 
-	Write(88,*) "The working directory is ", wdir 
-	Open (55,file='working-directory.txt',status='unknown') 
-	Write(55,'(a100)') wdir 
-	close(55) 
-  ENDIF
+!  IF(line(1:3)=='100') THEN 
+!	call scan_string (line, 1, ss, nout)
+!	wdir=ss(1) 
+!	Write(88,*) "The working directory is ", wdir 
+!	Open (55,file='working-directory.txt',status='unknown') 
+!	Write(55,'(a100)') wdir 
+!	close(55) 
+!  ENDIF
 !
 ! ###### PURGING OPTION ######  
 !
@@ -292,185 +292,185 @@ IMPLICIT NONE
 !
 ! ###### MPI / OpenMP setup ######  
 !  
-  IF(line(1:3)=='120') THEN 
-	call scan_string (line, 2, ss, nout)
-	option_omp=ss(1) 
-	nthread   =ss(2)
-        Call CHAR3_2_INT(nthread, nnthread)
-	if(option_omp=='y') Write(88,*) "OpenMP is enabled with ",nthread," threads/task"
-	If(option_omp/='y'.and.option_omp/='n') then 
-		Write(* ,*) "For the OpenMP switch, only y/n are valid options"
-		Write(88,*) "For the OpenMP switch, only y/n are valid options"
-		Call stop_config 
-		Stop	
-	Endif
-  ENDIF  
+!  IF(line(1:3)=='120') THEN 
+!	call scan_string (line, 2, ss, nout)
+!	option_omp=ss(1) 
+!	nthread   =ss(2)
+!        Call CHAR3_2_INT(nthread, nnthread)
+!	if(option_omp=='y') Write(88,*) "OpenMP is enabled with ",nthread," threads/task"
+!	If(option_omp/='y'.and.option_omp/='n') then 
+!		Write(* ,*) "For the OpenMP switch, only y/n are valid options"
+!		Write(88,*) "For the OpenMP switch, only y/n are valid options"
+!		Call stop_config 
+!		Stop	
+!	Endif
+!  ENDIF  
 !
 !
 ! ###### Compiler setup ###### 
 !
-if(line(1:3)=="121") THEN
-    option_mpi='n'
-    call scan_string (line, 1, ss, nout)
-    option_sys=ss(1)
-    ! --------------------------------------------------------------------------
-    If( option_sys == "1" ) then
-       Write(88,*) "Configuring SELEN for gfortran on Mac OS X"
-       CompileSeq = "gfortran -w -m64 -DGNU "                    
-       if( ( option_mpi=='n' ) .and. ( option_omp=='y' ) ) then
-         CompileSmp = "gfortran -m64 -w -fopenmp -DGNU -Wl,-stack_size,0x10000000 "   
-         CompileMpi = CompileSmp
-       endif
-       if( ( option_mpi=='y' ) .and. ( option_omp=='n' ) ) then
-         CompileMpi = "mpif90 -m64 -w -fopenmp -DGNU -DMPI "   
-         CompileSmp = CompileSeq
-       endif
-       if( ( option_mpi=='y' ) .and. ( option_omp=='y' ) ) then
-         CompileMpi = "mpif90 -m64 -w -fopenmp -DGNU -DMPI -Wl,-stack_size,0x10000000 " 
-         CompileSmp = "gfortran -m64 -w -fopenmp -DGNU -Wl,-stack_size,0x10000000 "          
-       endif       
-    ElseIf( option_sys == "2" ) then
-       Write(88,*) "Configuring SELEN for Intel ifort on Mac OS X"
-       CompileSeq = "ifort "
-       if( ( option_mpi=='n' ) .and. ( option_omp=='y' ) ) then
-         CompileSmp = "ifort -openmp -Wl,-stack_size,0x10000000 "
-         CompileMpi = CompileSmp
-       endif
-       if( ( option_mpi=='y' ) .and. ( option_omp=='n' ) ) then
-         CompileMpi = "mpif90 -DMPI "    
-         CompileSmp = CompileSeq
-       endif
-       if( ( option_mpi=='y' ) .and. ( option_omp=='y' ) ) then
-         CompileMpi = "mpif90 -DMPI -openmp -Wl,-stack_size,0x10000000 "   
-         CompileSmp = "ifort -openmp -Wl,-stack_size,0x10000000 "
-       endif       
-    ElseIf( option_sys == "3" ) then
-       Write(88,*) "Configuring SELEN for gfortran on Linux"
-       CompileSeq = "gfortran -w -DGNU "
-       if( ( option_mpi=='n' ) .and. ( option_omp=='y' ) ) then
-         CompileSmp = "gfortran -w -fopenmp -DGNU "   
-	 CompileMpi = CompileSmp 
-       endif
-       if( ( option_mpi=='y' ) .and. ( option_omp=='n' ) ) then
-         CompileMpi = "mpif90 -w -DMPI -DGNU "  
-	 CompileSmp = CompileSeq
-       endif
-       if( ( option_mpi=='y' ) .and. ( option_omp=='y' ) ) then
-         CompileMpi = "mpif90 -w -DMPI -DGNU -fopenmp "     
-         CompileSmp = "gfortran -w -fopenmp -DGNU "   	 
-       endif       
-    ElseIf( option_sys == "4" ) then
-       Write(88,*) "Configuring SELEN for Intel ifort on Linux"
-       CompileSeq = "ifort "
-       if( ( option_mpi=='n' ) .and. ( option_omp=='y' ) ) then
-         CompileSmp = "ifort -openmp "    	   
-	 CompileMpi = CompileSmp
-       endif
-       if( ( option_mpi=='y' ) .and. ( option_omp=='n' ) ) then
-         CompileMpi = "mpif90 -DMPI "
-	 CompileSmp = CompileSeq
-       endif
-       if( ( option_mpi=='y' ) .and. ( option_omp=='y' ) ) then
-         CompileMpi = "mpif90 -openmp -DMPI "    
-         CompileSmp = "ifort -openmp "    	   	   
-       endif   
-    ElseIf( option_sys == "5" ) then
-       Write(88,*) "Configuring SELEN for Intel ifort on Linux"
-       CompileSeq = "ifort "
-       if( ( option_mpi=='n' ) .and. ( option_omp=='y' ) ) then
-         CompileSmp = "ifort -openmp "   
-	 CompileMpi = CompileSmp  	   
-       endif
-       if( ( option_mpi=='y' ) .and. ( option_omp=='n' ) ) then
-         CompileMpi = "mpiifort -DMPI "
-	 CompileSmp = CompileSeq      
-       endif
-       if( ( option_mpi=='y' ) .and. ( option_omp=='y' ) ) then
-         CompileMpi = "mpiifort -openmp -DMPI "
-         CompileSmp = "ifort -openmp "   	       
-       endif   
-    ElseIf( option_sys == "6" ) then
-       Write(88,*) "Configuring SELEN for IBM XLF on SP6"
-       CompileSeq = "xlf90_r -WF,-DXLF "      
-       if( ( option_mpi=='n' ) .and. ( option_omp=='y' ) ) then
-          CompileSmp = "xlf90_r -qsmp=omp -qtune=pwr6 -qarch=pwr6 -WF,-DXLF "
-          CompileMpi = CompileSmp       
-       endif
-       if( ( option_mpi=='y' ) .and. ( option_omp=='n' ) ) then
-          CompileMpi = "mpxlf90_r -qtune=pwr6 -qarch=pwr6 -WF,-DXLF,-DMPI "
-          CompileSmp = CompileSeq
-       endif
-       if( ( option_mpi=='y' ) .and. ( option_omp=='y' ) ) then
-          CompileMpi = "mpxlf90_r -qsmp=omp -qtune=pwr6 -qarch=pwr6 -WF,-DXLF,-DMPI "
-          CompileSmp = "xlf90_r -qsmp=omp -qtune=pwr6 -qarch=pwr6 -WF,-DXLF "          
-       endif  
-    ElseIf( option_sys == "7" ) then
-       Write(88,*) "Configuring SELEN for gfortran on CYGWIN"
-       CompileSeq = "gfortran -w -DGNU "
-       if( ( option_mpi=='n' ) .and. ( option_omp=='y' ) ) then
-         CompileSmp = "gfortran -w -fopenmp -DGNU "   
-	 CompileMpi = CompileSmp 
-       endif
-       if( ( option_mpi=='y' ) .and. ( option_omp=='n' ) ) then
-         CompileMpi = "mpif90 -w -DMPI -DGNU "  
-	 CompileSmp = CompileSeq
-       endif
-       if( ( option_mpi=='y' ) .and. ( option_omp=='y' ) ) then
-         CompileMpi = "mpif90 -w -DMPI -DGNU -fopenmp "     
-         CompileSmp = "gfortran -w -fopenmp -DGNU "   	 
-       endif              
-    ElseIf( option_sys == "8" ) then
-       Write(88,*) "Configuring SELEN for g95"
-       CompileSeq = "g95 -w "
-       if( ( option_mpi=='n' ) .and. ( option_omp=='y' ) ) then
- 	 Write(* ,*) "Error: OpenMP is not supported by the g95 compiler !"
-	 Write(88,*) "Error: OpenMP is not supported by the g95 compiler !"
-	 Call stop_config 
-	 Stop	       
-       endif
-       if( ( option_mpi=='y' ) .and. ( option_omp=='n' ) ) then
-         CompileMpi = "mpif90 -w -DMPI "  
-	 CompileSmp = CompileSeq
-       endif
-       if( ( option_mpi=='y' ) .and. ( option_omp=='y' ) ) then
- 	 Write(* ,*) "Error: OpenMP is not supported by the g95 compiler !"
-	 Write(88,*) "Error: OpenMP is not supported by the g95 compiler !"
-	 Call stop_config 
-	 Stop	       
-       endif       
-    Else   
-	Write(* ,*) "Error: unknown platform"
-	Write(88,*) "Error: unknown platform"
-	Call stop_config 
-	Stop	       
-    EndIf
-    if( option_mpi == "y" ) then
-       if( option_sys == "6" ) then
-!           RunCmd = "poe "
-            RunCmd = ""
-       elseif( option_sys == "5" ) then
-           if( option_omp == "n" ) then
-               RunCmd = "mpirun -np "//ntask
-           else
-               RunCmd = "mpirun -ppn 1 -np "//ntask//" -env OMP_NUM_THREADS "//trim(nthread)//" "
-           endif
-       elseif( option_sys == "7" ) then
-           RunCmd = "mpirun -np "//ntask
-       else
-           if( option_omp == "n" ) then
-               RunCmd = "mpirun -np "//ntask
-           else
-               RunCmd = "mpirun -bynode -np "//ntask//" -x OMP_NUM_THREADS="//trim(nthread)//" "
-	       endif
-       endif
-    else
-       RunCmd=""
-    endif
-    if( (option_mpi == "n") .and. (option_omp == "n" ) ) then
-          CompileMpi = CompileSeq
-	  CompileSmp = CompileSeq    
-    endif
-endif
+!if(line(1:3)=="121") THEN
+!    option_mpi='n'
+!    call scan_string (line, 1, ss, nout)
+!    option_sys=ss(1)
+!    ! --------------------------------------------------------------------------
+!    If( option_sys == "1" ) then
+!       Write(88,*) "Configuring SELEN for gfortran on Mac OS X"
+!       CompileSeq = "gfortran -w -m64 -DGNU "                    
+!       if( ( option_mpi=='n' ) .and. ( option_omp=='y' ) ) then
+!         CompileSmp = "gfortran -m64 -w -fopenmp -DGNU -Wl,-stack_size,0x10000000 "   
+!         CompileMpi = CompileSmp
+!       endif
+!       if( ( option_mpi=='y' ) .and. ( option_omp=='n' ) ) then
+!         CompileMpi = "mpif90 -m64 -w -fopenmp -DGNU -DMPI "   
+!         CompileSmp = CompileSeq
+!       endif
+!       if( ( option_mpi=='y' ) .and. ( option_omp=='y' ) ) then
+!         CompileMpi = "mpif90 -m64 -w -fopenmp -DGNU -DMPI -Wl,-stack_size,0x10000000 " 
+!         CompileSmp = "gfortran -m64 -w -fopenmp -DGNU -Wl,-stack_size,0x10000000 "          
+!       endif       
+!    ElseIf( option_sys == "2" ) then
+!       Write(88,*) "Configuring SELEN for Intel ifort on Mac OS X"
+!       CompileSeq = "ifort "
+!       if( ( option_mpi=='n' ) .and. ( option_omp=='y' ) ) then
+!         CompileSmp = "ifort -openmp -Wl,-stack_size,0x10000000 "
+!         CompileMpi = CompileSmp
+!       endif
+!       if( ( option_mpi=='y' ) .and. ( option_omp=='n' ) ) then
+!         CompileMpi = "mpif90 -DMPI "    
+!         CompileSmp = CompileSeq
+!       endif
+!       if( ( option_mpi=='y' ) .and. ( option_omp=='y' ) ) then
+!         CompileMpi = "mpif90 -DMPI -openmp -Wl,-stack_size,0x10000000 "   
+!         CompileSmp = "ifort -openmp -Wl,-stack_size,0x10000000 "
+!       endif       
+!    ElseIf( option_sys == "3" ) then
+!       Write(88,*) "Configuring SELEN for gfortran on Linux"
+!       CompileSeq = "gfortran -w -DGNU "
+!       if( ( option_mpi=='n' ) .and. ( option_omp=='y' ) ) then
+!         CompileSmp = "gfortran -w -fopenmp -DGNU "   
+!	 CompileMpi = CompileSmp 
+!       endif
+!       if( ( option_mpi=='y' ) .and. ( option_omp=='n' ) ) then
+!         CompileMpi = "mpif90 -w -DMPI -DGNU "  
+!	 CompileSmp = CompileSeq
+!       endif
+!       if( ( option_mpi=='y' ) .and. ( option_omp=='y' ) ) then
+!         CompileMpi = "mpif90 -w -DMPI -DGNU -fopenmp "     
+!         CompileSmp = "gfortran -w -fopenmp -DGNU "   	 
+!       endif       
+!    ElseIf( option_sys == "4" ) then
+!       Write(88,*) "Configuring SELEN for Intel ifort on Linux"
+!       CompileSeq = "ifort "
+!       if( ( option_mpi=='n' ) .and. ( option_omp=='y' ) ) then
+!         CompileSmp = "ifort -openmp "    	   
+!	 CompileMpi = CompileSmp
+!       endif
+!       if( ( option_mpi=='y' ) .and. ( option_omp=='n' ) ) then
+!         CompileMpi = "mpif90 -DMPI "
+!	 CompileSmp = CompileSeq
+!       endif
+!       if( ( option_mpi=='y' ) .and. ( option_omp=='y' ) ) then
+!         CompileMpi = "mpif90 -openmp -DMPI "    
+!         CompileSmp = "ifort -openmp "    	   	   
+!       endif   
+!    ElseIf( option_sys == "5" ) then
+!       Write(88,*) "Configuring SELEN for Intel ifort on Linux"
+!       CompileSeq = "ifort "
+!       if( ( option_mpi=='n' ) .and. ( option_omp=='y' ) ) then
+!         CompileSmp = "ifort -openmp "   
+! 	 CompileMpi = CompileSmp  	   
+!       endif
+!       if( ( option_mpi=='y' ) .and. ( option_omp=='n' ) ) then
+!         CompileMpi = "mpiifort -DMPI "
+!	 CompileSmp = CompileSeq      
+!       endif
+!       if( ( option_mpi=='y' ) .and. ( option_omp=='y' ) ) then
+!         CompileMpi = "mpiifort -openmp -DMPI "
+!         CompileSmp = "ifort -openmp "   	       
+!       endif   
+!    ElseIf( option_sys == "6" ) then
+!       Write(88,*) "Configuring SELEN for IBM XLF on SP6"
+!       CompileSeq = "xlf90_r -WF,-DXLF "      
+!       if( ( option_mpi=='n' ) .and. ( option_omp=='y' ) ) then
+!          CompileSmp = "xlf90_r -qsmp=omp -qtune=pwr6 -qarch=pwr6 -WF,-DXLF "
+!          CompileMpi = CompileSmp       
+!       endif
+!       if( ( option_mpi=='y' ) .and. ( option_omp=='n' ) ) then
+!          CompileMpi = "mpxlf90_r -qtune=pwr6 -qarch=pwr6 -WF,-DXLF,-DMPI "
+!          CompileSmp = CompileSeq
+!       endif
+!       if( ( option_mpi=='y' ) .and. ( option_omp=='y' ) ) then
+!          CompileMpi = "mpxlf90_r -qsmp=omp -qtune=pwr6 -qarch=pwr6 -WF,-DXLF,-DMPI "
+!          CompileSmp = "xlf90_r -qsmp=omp -qtune=pwr6 -qarch=pwr6 -WF,-DXLF "          
+!       endif  
+!    ElseIf( option_sys == "7" ) then
+!       Write(88,*) "Configuring SELEN for gfortran on CYGWIN"
+!       CompileSeq = "gfortran -w -DGNU "
+!       if( ( option_mpi=='n' ) .and. ( option_omp=='y' ) ) then
+!         CompileSmp = "gfortran -w -fopenmp -DGNU "   
+!	 CompileMpi = CompileSmp 
+!       endif
+!       if( ( option_mpi=='y' ) .and. ( option_omp=='n' ) ) then
+!         CompileMpi = "mpif90 -w -DMPI -DGNU "  
+!	 CompileSmp = CompileSeq
+!       endif
+!       if( ( option_mpi=='y' ) .and. ( option_omp=='y' ) ) then
+!         CompileMpi = "mpif90 -w -DMPI -DGNU -fopenmp "     
+!         CompileSmp = "gfortran -w -fopenmp -DGNU "   	 
+!       endif              
+!    ElseIf( option_sys == "8" ) then
+!       Write(88,*) "Configuring SELEN for g95"
+!       CompileSeq = "g95 -w "
+!       if( ( option_mpi=='n' ) .and. ( option_omp=='y' ) ) then
+! 	 Write(* ,*) "Error: OpenMP is not supported by the g95 compiler !"
+!	 Write(88,*) "Error: OpenMP is not supported by the g95 compiler !"
+!	 Call stop_config 
+!	 Stop	       
+!       endif
+!       if( ( option_mpi=='y' ) .and. ( option_omp=='n' ) ) then
+!         CompileMpi = "mpif90 -w -DMPI "  
+!	 CompileSmp = CompileSeq
+!       endif
+!       if( ( option_mpi=='y' ) .and. ( option_omp=='y' ) ) then
+! 	 Write(* ,*) "Error: OpenMP is not supported by the g95 compiler !"
+!	 Write(88,*) "Error: OpenMP is not supported by the g95 compiler !"
+!	 Call stop_config 
+!	 Stop	       
+!       endif       
+!    Else   
+!	Write(* ,*) "Error: unknown platform"
+!	Write(88,*) "Error: unknown platform"
+!	Call stop_config 
+!	Stop	       
+!    EndIf
+!    if( option_mpi == "y" ) then
+!       if( option_sys == "6" ) then
+!!           RunCmd = "poe "
+!            RunCmd = ""
+!       elseif( option_sys == "5" ) then
+!           if( option_omp == "n" ) then
+!               RunCmd = "mpirun -np "//ntask
+!           else
+!               RunCmd = "mpirun -ppn 1 -np "//ntask//" -env OMP_NUM_THREADS "//trim(nthread)//" "
+!           endif
+!       elseif( option_sys == "7" ) then
+!           RunCmd = "mpirun -np "//ntask
+!       else
+!           if( option_omp == "n" ) then
+!               RunCmd = "mpirun -np "//ntask
+!           else
+!               RunCmd = "mpirun -bynode -np "//ntask//" -x OMP_NUM_THREADS="//trim(nthread)//" "
+!	       endif
+!       endif
+!    else
+!       RunCmd=""
+!    endif
+!    if( (option_mpi == "n") .and. (option_omp == "n" ) ) then
+!          CompileMpi = CompileSeq
+!	  CompileSmp = CompileSeq    
+!    endif
+!endif
 !
 !
 !
@@ -868,7 +868,7 @@ IF(line(1:3)=="151") THEN
         if(option_newpx=='y') then
                  Write(88,*) "SELEN will prepare the new pixel table file: ", file_pxtable
         else
-                 INQUIRE(FILE=file_pxtable,EXIST=lex)
+                 INQUIRE(FILE='../INPUTS/'//file_pxtable,EXIST=lex)
                  If(lex) then
                      Write(88,*) "SELEN will use the pre-built pixel table file: ", trim(adjustl(file_pxtable))
                  Else
@@ -891,7 +891,7 @@ IF(line(1:3)=="180") THEN
 	if(option_sh=='y') then 
 		              Write(88,*) "SELEN will prepare the new SH file: ", sh_file
 		           else
-			      INQUIRE(FILE=sh_file,EXIST=lex)
+			      INQUIRE(FILE="../INPUTS/"//sh_file,EXIST=lex)
 			      If(lex) then 
 			           Write(88,*) "SELEN will use the pre-built SH file: ", trim(adjustl(sh_file))
 			      Else 
@@ -918,7 +918,7 @@ IF(line(1:3)=="190") THEN
 	if(option_oh=='y') then 
 		 Write(88,*) "SELEN will prepare the new SH OF file: ", shof_file
 		           else
-			      INQUIRE(FILE=shof_file,EXIST=lex)			   
+			      INQUIRE(FILE="../INPUTS/"//shof_file,EXIST=lex)			   
 			      If(lex) then 
 			           Write(88,*) "SELEN will use the pre-built SH OF file: ", trim(adjustl(shof_file))
 			      Else 
@@ -938,7 +938,7 @@ IF(line(1:3)=="195") THEN
 	call scan_string (line, 1, ss, nout)
 		run=ss(1)
 		write(88,*) 'The depot label is: ', run	
-		depot="./depot-"//trim(adjustl(run))
+		depot="../DEPOTS/depot-"//trim(adjustl(run))
 		runp="'"//trim(adjustl(run))//"'"
 ENDIF  
 !
@@ -1502,7 +1502,7 @@ ENDIF
 !
 ! >>>>>> Predictions at tide-gauges 
 !
-IF(line(1:3)=="262") THEN 
+IF(line(1:3)=="263") THEN 
 	call scan_string (line, 1, ss, nout)
 	option_tg = ss(1) 
 	If(option_tg=='y')& 
@@ -1715,15 +1715,15 @@ ENDIF
 !
 Write(2,*) "echo ''"
 Write(2,*) "echo '- - - - - - - - - - - - - - - - - - - - - - - - - - - - -'"
+Write(2,*) "echo '                                                         '"     
 Write(2,*) "echo '     SELEN, a Sea levEL EquatioN solver, Version 2.9     '"
-Write(2,*) "echo '                  gfortran VERSION                       '" 
-Write(2,*) "echo '      Web page: http://fcolleoni.free.fr/SELEN.html      '"	
-Write(2,*) "echo '   http://www.fis.uniurb.it/spada/SELEN_minipage.html    '"   
+Write(2,*) "echo '                                                         '"     
 Write(2,*) "echo '   Send comments, requests of help and suggestions to:   '" 
 Write(2,*) "echo '                <giorgio.spada@gmail.com>                '"
 Write(2,*) "echo '                            -                            '"
-Write(2,*) "echo '                    Copyright(C) 2008                    '"    
-Write(2,*) "echo '     Giorgio Spada, Florence Colleoni & Paolo Stocchi    '"
+Write(2,*) "echo '                  Copyright(C) 2008-2013                 '"    
+Write(2,*) "echo '              Giorgio Spada, Daniele Melini,             '"
+Write(2,*) "echo '            Florence Colleoni & Paolo Stocchi            '"
 Write(2,*) "echo '                          * * *                          '"
 Write(2,*) "echo '     This programs comes with  ABSOLUTELY NO WARRANTY    '"
 Write(2,*) "echo ' This is free software and you are welcome to distribute '"
@@ -1967,17 +1967,17 @@ Write(2,*) "echo '----------------------------'"
 ! ================================
 ! EXE 00 --- Working directory --- 
 ! ================================
-Write(2,*) " "
-Write(2,*) "#echo --------------------------------------------------------"
-Write(2,*) "echo                                                          "
-Write(2,*) " echo '---> Working directory: '", trim(adjustl(wdir)) 
-Write(2,*) "#echo --------------------------------------------------------"
+!Write(2,*) " "
+!Write(2,*) "#echo --------------------------------------------------------"
+!Write(2,*) "echo                                                          "
+!Write(2,*) " echo '---> Working directory: '", trim(adjustl(wdir)) 
+!Write(2,*) "#echo --------------------------------------------------------"
 
 
 Write(2,*) " "
 Write(2,*) "#echo ------------------------------------------------------"
 Write(2,*) "echo"
-Write(2,*) " echo '---> Output data will be stored into directory '", trim(adjustl(depot))
+Write(2,*) " echo '---> Output data will be stored into directory '", "DEPOTS/depot-"//trim(adjustl(run))
 Write(2,*) "#echo ------------------------------------------------------"
 Write(2,*) "if [ ! -d ", depot, " ]"
 Write(2,*) "then"
@@ -2028,7 +2028,7 @@ Write(2,*) "mkdir ",depot//"/rmaps/Antarctica"
 Write(2,*) "mkdir ",depot//"/stokes/"
 Write(2,*) "else"
 Write(2,*) "echo"
-Write(2,*) "echo '+++>  WARNING/ a repository already exists with name: '", depot 
+Write(2,*) "echo '+++>  WARNING/ a repository already exists with name: '", "DEPOTS/depot-"//trim(adjustl(run)) 
 Write(2,*) "    "
 Write(2,*) "echo '+++>  [existing data will be overwritten]'"
 Write(2,*) "    "
@@ -2059,43 +2059,43 @@ Endif
 ! --- Setting the number of threads for OpenMP execution ---
 ! ==========================================================
 !
-if( (option_omp=='y') ) then
-  Write(2,*) " "
-  Write(2,*) "#echo --------------------------------------------------------"
-  Write(2,*) "echo                                                          "
-  Write(2,*) " echo '---> Number of threads for OpenMP execution: '", nthread 
-  Write(2,*) "#echo --------------------------------------------------------"
-  Write(2,*) " echo"
-  Write(2,*) "export OMP_NUM_THREADS=",trim(nthread)
-Endif
+!if( (option_omp=='y') ) then
+!  Write(2,*) " "
+!  Write(2,*) "#echo --------------------------------------------------------"
+!  Write(2,*) "echo                                                          "
+!  Write(2,*) " echo '---> Number of threads for OpenMP execution: '", nthread 
+!  Write(2,*) "#echo --------------------------------------------------------"
+!  Write(2,*) " echo"
+!  Write(2,*) "export OMP_NUM_THREADS=",trim(nthread)
+!Endif
 !
 ! ==========================================================
 ! --- Adjusting the unformatted record length on IBM XLF ---
 ! ==========================================================
 !
-if(option_sys=='6') then
-  Write(2,*) " "
-  Write(2,*) "#echo --------------------------------------------------------"
-  Write(2,*) "echo                                                          "
-  Write(2,*) " echo '---> Setting XLFRTEOPTS '"
-  Write(2,*) "#echo --------------------------------------------------------"
-  Write(2,*) " echo"
-  Write(2,*) 'export XLFRTEOPTS="uwidth=64"'
-Endif
+!if(option_sys=='6') then
+!  Write(2,*) " "
+!  Write(2,*) "#echo --------------------------------------------------------"
+!  Write(2,*) "echo                                                          "
+!  Write(2,*) " echo '---> Setting XLFRTEOPTS '"
+!  Write(2,*) "#echo --------------------------------------------------------"
+!  Write(2,*) " echo"
+!  Write(2,*) 'export XLFRTEOPTS="uwidth=64"'
+!Endif
 !
 ! ==========================================================
 ! --- Setting the MP_PROCS variable for MPI jobs on IBM XLF ---
 ! ==========================================================
 !
-if( (option_sys=='6') .and. (option_mpi=='y') )then
-  Write(2,*) " "
-  Write(2,*) "#echo --------------------------------------------------------"
-  Write(2,*) "echo                                                          "
-  Write(2,*) " echo '---> Setting MP_PROCS to '", ntask
-  Write(2,*) "#echo --------------------------------------------------------"
-  Write(2,*) " echo"
-  Write(2,*) 'export MP_PROCS=',trim(ntask)
-Endif
+!if( (option_sys=='6') .and. (option_mpi=='y') )then
+!  Write(2,*) " "
+!  Write(2,*) "#echo --------------------------------------------------------"
+!  Write(2,*) "echo                                                          "
+!  Write(2,*) " echo '---> Setting MP_PROCS to '", ntask
+!  Write(2,*) "#echo --------------------------------------------------------"
+!  Write(2,*) " echo"
+!  Write(2,*) 'export MP_PROCS=',trim(ntask)
+!Endif
 !
 !
 if (option_newpx=='y') then          ! A new pixelization
@@ -2173,7 +2173,7 @@ Write(2,*) " "
  Write(2,*) "echo                                                          "
  Write(2,*) " echo '---> PX_REBUILD.F90: Retrieving information from pixel table file  '"
  Write(2,*) "#echo --------------------------------------------------------"
- Write(2,*) "cp ",trim(file_pxtable)," px-table.dat"
+ Write(2,*) "cp ","../INPUTS/"//trim(file_pxtable)," px-table.dat"
  Write(2,*) "pxrebuild.exe"
  Write(2,*) "cp px.dat ", depot//"/px"
  Write(2,*) "cp pxa.dat ", depot//"/px"
@@ -2205,7 +2205,7 @@ Write(2,*) " "
     Write(2,*) trim(RunCmd)," pxcopy.exe"
  Endif
 !
- Write(2,*) "mv px.gmt ", depot//"/px"
+ if (option_newpx=='y') Write(2,*) "mv px.gmt ", depot//"/px"
 !
 !
 	If(option_px=='y') then 
@@ -2247,7 +2247,7 @@ If(option_sh=='y') then
 	Write(2,*) "echo" 	
 	Write(2,*) " echo '+++> A SH file already exists with name:' ", trim(adjustl(sh_file)) 
 	Write(2,*) "#echo ------------------------------------------------------"	
-	Write(2,*) "cp ", trim(adjustl(sh_file)), " sh.bin"
+	Write(2,*) "cp ", "../INPUTS/"//trim(adjustl(sh_file)), " sh.bin"
 !
 endif	    
 !
@@ -2308,8 +2308,8 @@ If(option_oh=='y') then
 	Write(2,*) "echo" 	
 	Write(2,*) " echo '+++> An OF SH file already exists with name:' ", trim(adjustl(shof_file))
 	Write(2,*) "#echo -----------------------------------------------------------" 
-	Write(2,*) "cp ", trim(adjustl(shof_file)), " shof.dat"
-	Write(2,*) "cp ", trim(adjustl(shof_file)), " ", depot//"/of"
+	Write(2,*) "cp ", "../INPUTS/"//trim(adjustl(shof_file)), " shof.dat"
+	Write(2,*) "cp shof.dat ", depot//"/of/"//trim(adjustl(shof_file))
 Endif
 !
 !
@@ -2418,7 +2418,7 @@ IF(option_sf=='y') THEN
    Write(2,*) " echo '---> Ice harmonics are pre-computed in file: '", shape_file
    Write(2,*) "#echo ------------------------------------------------------------"  
 !
-   Write(2,*) "cp ", trim(adjustl(shape_file)), " shice.dat"
+   Write(2,*) "cp ", "../INPUTS/"//trim(adjustl(shape_file)), " shice.dat"
 !
   If(option_ri=='y') then 
    Write(2,*) "#echo ------------------------------------------------------------" 
@@ -3176,15 +3176,15 @@ Endif
 !
 Write(2,*) "echo ''"
 Write(2,*) "echo '- - - - - - - - - - - - - - - - - - - - - - - - - - - - -'"
+Write(2,*) "echo '                                                         '"     
 Write(2,*) "echo '     SELEN, a Sea levEL EquatioN solver, Version 2.9     '"
-Write(2,*) "echo '                      g95  VERSION                       '" 
-Write(2,*) "echo '      Web page: http://fcolleoni.free.fr/SELEN.html      '"	
-Write(2,*) "echo '   http://www.fis.uniurb.it/spada/SELEN_minipage.html    '"       
+Write(2,*) "echo '                                                         '"     
 Write(2,*) "echo '   Send comments, requests of help and suggestions to:   '" 
 Write(2,*) "echo '                <giorgio.spada@gmail.com>                '"
 Write(2,*) "echo '                            -                            '"
-Write(2,*) "echo '                    Copyright(C) 2008                    '"    
-Write(2,*) "echo '     Giorgio Spada, Florence Colleoni & Paolo Stocchi    '"
+Write(2,*) "echo '                  Copyright(C) 2008-2013                 '"    
+Write(2,*) "echo '              Giorgio Spada, Daniele Melini,             '"
+Write(2,*) "echo '            Florence Colleoni & Paolo Stocchi            '"
 Write(2,*) "echo '                          * * *                          '"
 Write(2,*) "echo '     This programs comes with  ABSOLUTELY NO WARRANTY    '"
 Write(2,*) "echo ' This is free software and you are welcome to distribute '"
@@ -3195,7 +3195,7 @@ Write(2,*) "echo '- - - - - - - - - - - - - - - - - - - - - - - - - - - - -'"
 Write(2,*) "echo ''"
 !
 Write(2,*) "echo ''"
-Write(2,*) "echo ' >>> Outputs for this run are available in directory: '", trim(adjustl(depot))
+Write(2,*) "echo ' >>> Outputs for this run are available in directory: '", "DEPOTS/depot-"//trim(adjustl(run))
 !
 ! --- Closing "selen.sh"
    close(2)

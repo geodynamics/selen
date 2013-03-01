@@ -1904,8 +1904,9 @@ end subroutine PlmBar_d1
 	pixperface = 2*resolution*(resolution-1)
 	call find_face(vector,R,face)
 	call getmatrix(face,R,A)
-	call vecmatmul2(A,vector,vec)	
-	x	= vec(1)/vec(3)
+	!call vecmatmul2(A,vector,vec)	
+	vec     = matmul(A,vector)
+        x	= vec(1)/vec(3)
 	y	= vec(2)/vec(3)
 	call adjust(x,y)
 	call tangentplanepixel(resolution,x,y,pix,ifail)
@@ -1913,8 +1914,9 @@ end subroutine PlmBar_d1
 	  ! Try the runner-up face:
 	  call find_another_face(vector,R,face)
 	  call getmatrix(face,R,A)
-	  call vecmatmul2(A,vector,vec)	
-	  x	= vec(1)/vec(3)
+	  !call vecmatmul2(A,vector,vec)	
+	  vec   = matmul(A,vector)
+          x	= vec(1)/vec(3)
 	  y	= vec(2)/vec(3)
 	  call adjust(x,y)
 	  call tangentplanepixel(resolution,x,y,pix,ifail)
@@ -1966,8 +1968,9 @@ end subroutine PlmBar_d1
 	  vector(2)	= y/norm
 	  vector(3)	= 1./norm
 	  call getmatrix(face,R,A)
-	  call vecmatmul1(A,vector,vector)
-	else
+	  !call vecmatmul1(A,vector,vector)
+	  vector        = matmul(A,vector)
+        else
 	  ! This is a corner pixel:
 	  if (pix.gt.11) then 
 	  	Write(*,*)"ERROR in the Tegmark modules: pixel number too big"

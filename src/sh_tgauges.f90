@@ -122,11 +122,11 @@ write(*,*) '    - There are', n, 'sites in file ', trim(adjustl(TGAUGES_DATABASE
 !
       call harmo(lmax,lon(1),lat(1),y(:,1))
 !
-!$OMP PARALLEL DO DEFAULT(PRIVATE) SHARED(LON,LAT,Y) SCHEDULE(GUIDED)
+!!$OMP PARALLEL DO DEFAULT(PRIVATE) SHARED(LON,LAT,Y) SCHEDULE(GUIDED)
       do i=2,n
  	     call harmo(lmax, lon(i), lat(i), y(:,i))
       end do
-!$OMP END PARALLEL DO
+!!$OMP END PARALLEL DO
 ! 
 !
 ! --- Adjusts 

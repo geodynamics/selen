@@ -41,9 +41,11 @@
  IMPLICIT NONE 
  INCLUDE "data.inc"
  CHARACTER*22 NAME, CJUNK 
- INTEGER I, J, NDATA, CODE(NRSL) 
- REAL*8 AJUNK, LONS(NRSL), LATS(NRSL)
- COMPLEX*16 Y(JMAX,NRSL) 
+ INTEGER I, J, NDATA
+ INTEGER, ALLOCATABLE :: CODE(:) 
+ REAL*8 AJUNK
+ REAL*8, ALLOCATABLE :: LONS(:), LATS(:)
+ COMPLEX*16, ALLOCATABLE :: Y(:,:) 
  CHARACTER*10  LATSC10, LONSC10 
  CHARACTER*200 LINEP
  CHARACTER*100 SS(2)
@@ -60,6 +62,12 @@
 ! 2) An italian Holocene database from Antonoili et al. (Quat. Int., 2008) 
 ! ========================================================================
 !
+!
+!------ Allocate memory
+!
+  ALLOCATE( LONS(NRSL), LATS(NRSL) )
+  ALLOCATE( CODE(NRSL) )
+  ALLOCATE( Y(JMAX,NRSL) )
 !
 !
 !------ Opening the selected database 
@@ -141,13 +149,13 @@
 !
  call harmo(lmax, lons(1), lats(1), y(:,1))
 !   
-!$OMP PARALLEL DO DEFAULT(PRIVATE) SHARED(lons,lats,y) &
-!$OMP    SCHEDULE(GUIDED)
+!!$OMP PARALLEL DO DEFAULT(PRIVATE) SHARED(lons,lats,y) &
+!!$OMP    SCHEDULE(GUIDED)
  do i=2, nrsl    
 !If(mod(i,25)==0) write(*,*) '    - sh_rsl.f:', i, 'RSL sites of', nrsl
        call harmo(lmax, lons(i), lats(i), y(:,i)) 
   enddo
-!$OMP END PARALLEL DO
+!!$OMP END PARALLEL DO
 !
 !
 !
@@ -156,6 +164,7 @@
   write(7) y; close(7) 
 !
 !
+ DEALLOCATE( LONS, LATS, Y, CODE )
 !
  END PROGRAM S
 !

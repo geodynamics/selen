@@ -38,14 +38,20 @@
  PROGRAM S
  INCLUDE "data.inc"
  INTEGER I, J
- REAL*8 LONS(NRSLC), LATS(NRSLC)
- COMPLEX*16 Y(JMAX,NRSLC)         
+ REAL*8, ALLOCATABLE :: LONS(:), LATS(:)
+ COMPLEX*16, ALLOCATABLE :: Y(:,:)
 !
 !
 !
 !------ sh_rslc.f: reading the coordinates of the RSL 
 !       sites & computing the SH at these coordinates 
 !  
+!
+!-- Allocate memory
+!
+   allocate( lons(nrslc), lats(nrslc) )
+   allocate( y(jmax,nrslc) )
+!
    write(*,*) '    - Number of virtual RSL sites:', nrslc
      
    OPEN(1,FILE=RSLC_FILE,STATUS='unknown')
@@ -62,6 +68,9 @@
   open(7,file='shrslc.bin',status='unknown',form='unformatted') 
   write(7) y
   close(7) 
+!
+  deallocate( lons, lats )
+  deallocate( y )
 !
  END PROGRAM S
 !
