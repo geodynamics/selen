@@ -223,7 +223,7 @@ run: default
 	(cd ${SETUP} && PATH=${PATH}:`pwd`/../${E} GMT=${GMT} ./selen.sh)
 
 req_dirs:
-	mkdir -p ${E}; mkdir -p ${O}; mkdir -p ${SETUP}
+	mkdir -p ${E}; mkdir -p ${O}; mkdir -p ${SETUP} ; mkdir -p INPUTS ; mkdir -p DEPOTS
 
 .PHONY: clean distclean dist req_dirs all run default config.dat
 
@@ -235,7 +235,7 @@ clean:
 	rm -rf ${E} ${O} ${SETUP} Makefile
 
 distclean: clean
-	rm -rf config.status config.log
+	rm -rf DEPOTS INPUTS config.status config.log
 
 #######################################
 # Rule for creating the distribution
