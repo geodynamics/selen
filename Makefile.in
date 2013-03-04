@@ -28,6 +28,7 @@ FCFLAGS = @FCFLAGS@ @FCFLAGS_PLATFORM@ -I${SETUP} -I${B} -w @FC_MODOUT@${SETUP} 
 LDFLAGS = -w @LDFLAGS_PLATFORM@ @OPENMP_FCFLAGS@
 FCCOMPILE = ${FC} ${FCFLAGS}
 FCLINK = ${FC} ${LDFLAGS}
+RUN_COMMANDS = @RUN_COMMANDS@
 
 ## compilation directories
 # B : build directory
@@ -220,7 +221,7 @@ default: $(DEFAULT)
 all: default
 
 run: default
-	(cd ${SETUP} && PATH=${PATH}:`pwd`/../${E} GMT=${GMT} ./selen.sh)
+	(cd ${SETUP} && PATH=${PATH}:`pwd`/../${E} GMT=${GMT} ${RUN_COMMANDS} ./selen.sh)
 
 req_dirs:
 	mkdir -p ${E}; mkdir -p ${O}; mkdir -p ${SETUP} ; mkdir -p INPUTS ; mkdir -p DEPOTS

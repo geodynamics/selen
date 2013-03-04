@@ -28,6 +28,7 @@ flags=`$flags_guess` ||
 eval $flags
 AC_ARG_VAR(FCFLAGS_PLATFORM, [Fortran platform specific compiler flags])
 AC_ARG_VAR(LDFLAGS_PLATFORM, [Fortran platform specific linker flags])
+AC_ARG_VAR(RUN_COMMANDS, [Fortran runtime commands])
 
 # Check for support programs
 AX_PROG_GMT

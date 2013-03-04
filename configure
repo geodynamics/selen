@@ -588,6 +588,7 @@ ac_subst_vars='LTLIBOBJS
 LIBOBJS
 ps2pdf
 gmt
+RUN_COMMANDS
 LDFLAGS_PLATFORM
 FCFLAGS_PLATFORM
 ac_empty
@@ -651,6 +652,7 @@ LDFLAGS
 LIBS
 FCFLAGS_PLATFORM
 LDFLAGS_PLATFORM
+RUN_COMMANDS
 ps2pdf'
 
 
@@ -1273,6 +1275,8 @@ Some influential environment variables:
               Fortran platform specific compiler flags
   LDFLAGS_PLATFORM
               Fortran platform specific linker flags
+  RUN_COMMANDS
+              Fortran runtime commands
   ps2pdf      specify default ps2pdf application
 
 Use these variables to override the choices made by `configure' or to help
@@ -2488,6 +2492,7 @@ $as_echo "$as_me: running $flags_guess" >&6;}
 flags=`$flags_guess` ||
     as_fn_error $? "$flags_guess failed" "$LINENO" 5
 eval $flags
+
 
 
 

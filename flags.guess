@@ -35,6 +35,9 @@ case $FC in
         #
         # Intel ifort Fortran90 for Linux
         #
+        if test x"$RUN_COMMANDS" = x; then
+            RUN_COMMANDS="FORT_FMT_RECL=500"
+        fi
         if test x"$FCFLAGS_PLATFORM" = x; then
             FCFLAGS_PLATFORM=""
         fi
@@ -104,6 +107,9 @@ case $FC in
         # arrays in the stack and the code crashes if the stack size is too
         # small (which is sometimes the case, but less often these days on large machines)
         #
+        if test x"$RUN_COMMANDS" = x; then
+            RUN_COMMANDS="XLFRTEOPTS=\"uwidth=64\""
+        fi
         if test x"$FCFLAGS_PLATFORM" = x; then
             FCFLAGS_PLATFORM="-qtune=pwr6 -qarch=pwr6 -WF,-DXLF"
         fi
@@ -127,5 +133,6 @@ esac
 
 echo FCFLAGS_PLATFORM=\"$FCFLAGS_PLATFORM\" | sed 's/\$/\\\$/g'
 echo LDFLAGS_PLATFORM=\"$LDFLAGS_PLATFORM\" | sed 's/\$/\\\$/g'
+echo RUN_COMMANDS=\"$RUN_COMMANDS\" | sed 's/\$/\\\$/g'
 
 # end of file
