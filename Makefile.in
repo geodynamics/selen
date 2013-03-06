@@ -24,10 +24,15 @@ EXEEXT = .exe
 FC = @FC@
 GMT = @gmt@
 PACKAGE_VERSION = @PACKAGE_VERSION@
-FCFLAGS = @FCFLAGS@ @FCFLAGS_PLATFORM@ -I${SETUP} -I${B} -w @FC_MODOUT@${SETUP} @OPENMP_FCFLAGS@
-LDFLAGS = -w @LDFLAGS_PLATFORM@ @OPENMP_FCFLAGS@
-FCCOMPILE = ${FC} ${FCFLAGS}
-FCLINK = ${FC} ${LDFLAGS}
+FCFLAGS = @FCFLAGS@ @FCFLAGS_PLATFORM@ -I${SETUP} -I${B} -w @FC_MODOUT@${SETUP}
+LDFLAGS = -w @LDFLAGS_PLATFORM@
+FCCOMPILE = ${FC} ${FCFLAGS} @OPENMP_FCFLAGS@
+FCLINK = ${FC} ${LDFLAGS} @OPENMP_FCFLAGS@
+
+# Compilation commands for non-OpenMP objs/exes
+NO_OMP_FCCOMPILE = ${FC} ${FCFLAGS}
+NO_OMP_FCLINK = ${FC} ${LDFLAGS}
+
 RUN_COMMANDS = @RUN_COMMANDS@
 
 ## compilation directories
@@ -45,9 +50,9 @@ SETUP = ${B}/tmp
 #######################################
 
 CONFIG_OBJECTS = \
-	$O/shtools.o \
+	$O/config_shtools.o \
 	$O/config.o \
-	$O/harmonics.o
+	$O/config_harmonics.o
 
 # Equivalent sea level
 ESL_OBJECTS = \
@@ -250,7 +255,7 @@ dist: distclean
 #######################################
 
 config$(EXEEXT): req_dirs $(CONFIG_OBJECTS)
-	${FCLINK} -o ${E}/config$(EXEEXT) $(CONFIG_OBJECTS)
+	${NO_OMP_FCLINK} -o ${E}/config$(EXEEXT) $(CONFIG_OBJECTS)
 
 esl$(EXEEXT): req_dirs $(ESL_OBJECTS)
 	${FCLINK} -o ${E}/esl$(EXEEXT) $(ESL_OBJECTS)
@@ -341,8 +346,14 @@ ${SETUP}/data.inc: config$(EXEEXT) config.dat
 # rules for object files
 #######################################
 
+$O/config_harmonics.o: $S/harmonics.f90
+	${NO_OMP_FCCOMPILE} -c -o $O/config_harmonics.o $S/harmonics.f90
+
+$O/config_shtools.o: $S/harmonics.f90 $S/shtools.f90
+	${NO_OMP_FCCOMPILE} -c -o $O/config_shtools.o $S/shtools.f90
+
 $O/config.o: $S/harmonics.f90 $S/config.f90 $S/shtools.f90
-	${FCCOMPILE} -c -o $O/config.o $S/config.f90
+	${NO_OMP_FCCOMPILE} -c -o $O/config.o $S/config.f90
 
 $O/esl.o: ${SETUP}/data.inc $S/harmonics.f90 $S/esl.f90
 	${FCCOMPILE} -c -o $O/esl.o $S/esl.f90
