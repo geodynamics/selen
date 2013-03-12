@@ -9,6 +9,7 @@
 ! Reviewed GS August 2009 -  
 ! *** Reviewed GS & FC November 2009 - Porting under gfortran  
 ! *** Reviewed GS April 2010 - Alma 
+! *** Reviewed DM March 2013 - Dynamic memory allocation
 ! 
 ! +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ! Copyright (C) 2008 Giorgio Spada, Florence Colleoni, and Paolo Stocchi 
@@ -53,29 +54,46 @@
  IMPLICIT NONE
  INCLUDE "data.inc"
  CHARACTER*22 FILENAME, INPUT_FILENAME, OUTPUT_FILENAME
- CHARACTER*50 TITREA(NRSL), TITREB(NRSL), AJUNK
- CHARACTER*100 TITRE(NRSL) 
- CHARACTER*22 NAME(NRSL)
+ CHARACTER*50 AJUNK
+ CHARACTER(50), ALLOCATABLE :: TITREA(:), TITREB(:)
+ CHARACTER(100), ALLOCATABLE :: TITRE(:)
+ CHARACTER(22), ALLOCATABLE :: NAME(:)
  CHARACTER*20 DATE, TIMC       
  CHARACTER*3 STRING, CJUNK  
- CHARACTER*40 LITHOC, VVVV(NV)     
+ CHARACTER*40 LITHOC
+ CHARACTER(40), ALLOCATABLE :: VVVV(:)     
  INTEGER, PARAMETER :: MAXD =100  
- INTEGER I, J, K, K1, K2, CODE(NRSL), NDATA(NRSL), DOM
- REAL*8    TIME(NRSL,0:MAXD)    	! times bp for which data are available at site#k
- REAL*8   DTIME(NRSL,0:MAXD)    	! uncertainties on the above times...
- REAL*8     RSL(NRSL,0:MAXD)    	! rsl datum for site k ad the times above
- REAL*8    DRSL(NRSL,0:MAXD)    	! uncertainties on the rsl datum
- REAL*8 LONS(NRSL), LATS(NRSL), MISFIT(NRSL), GLOBAL_MISFIT, INTERP  
- REAL*8 SLC(NRSL,0:NN), PREDICTED_RSL(NRSL,0:NN) 
- COMPLEX*16 YY(JMAX,NRSL), S(JMAX,0:NN) 
+ INTEGER I, J, K, K1, K2, DOM
+ INTEGER, ALLOCATABLE :: CODE(:), NDATA(:)
+ REAL*8, ALLOCATABLE ::    TIME(:,:)    	! times bp for which data are available at site#k
+ REAL*8, ALLOCATABLE ::   DTIME(:,:)    	! uncertainties on the above times...
+ REAL*8, ALLOCATABLE ::     RSL(:,:)    	! rsl datum for site k ad the times above
+ REAL*8, ALLOCATABLE ::    DRSL(:,:)    	! uncertainties on the rsl datum
+ REAL*8, ALLOCATABLE :: LONS(:), LATS(:), MISFIT(:)
+ REAL*8 GLOBAL_MISFIT, INTERP  
+ REAL*8, ALLOCATABLE :: SLC(:,:), PREDICTED_RSL(:,:) 
+ COMPLEX*16, ALLOCATABLE :: YY(:,:), S(:,:) 
  REAL*8 TIME_RSL1, TIME_RSL2 
  CHARACTER*10  LATSC10, LONSC10 
  CHARACTER*200 LINEP
  CHARACTER*100 SS(2)
  INTEGER NOUT
-
-
-
+!
+!
+!-- Allocate memory
+!
+ ALLOCATE( TITREA(NRSL), TITREB(NRSL) )
+ ALLOCATE( TITRE(NRSL) )
+ ALLOCATE( NAME(NRSL) )
+ ALLOCATE( VVVV(NV) )
+ ALLOCATE( CODE(NRSL), NDATA(NRSL) )
+ ALLOCATE(  TIME(NRSL,0:MAXD) )
+ ALLOCATE( DTIME(NRSL,0:MAXD) )
+ ALLOCATE(   RSL(NRSL,0:MAXD) )
+ ALLOCATE(  DRSL(NRSL,0:MAXD) )
+ ALLOCATE( LONS(NRSL), LATS(NRSL), MISFIT(NRSL) )
+ ALLOCATE( SLC(NRSL,0:NN), PREDICTED_RSL(NRSL,0:NN) )
+ ALLOCATE( YY(JMAX,NRSL), S(JMAX,0:NN) )
 !    
 !
 !
@@ -409,6 +427,20 @@ do 12 i=1, nrsl
   	enddo
   	CLOSE(10)
 12 CONTINUE 
+!
+!
+ DEALLOCATE( TITREA, TITREB )
+ DEALLOCATE( TITRE )
+ DEALLOCATE( NAME )
+ DEALLOCATE( VVVV )
+ DEALLOCATE( CODE, NDATA )
+ DEALLOCATE(  TIME )
+ DEALLOCATE( DTIME )
+ DEALLOCATE(   RSL )
+ DEALLOCATE(  DRSL )
+ DEALLOCATE( LONS, LATS, MISFIT )
+ DEALLOCATE( SLC, PREDICTED_RSL )
+ DEALLOCATE( YY, S )
 !
 !
  END PROGRAM SL
