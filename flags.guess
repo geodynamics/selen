@@ -36,7 +36,7 @@ case $FC in
         # Intel ifort Fortran90 for Linux
         #
         if test x"$RUN_COMMANDS" = x; then
-            RUN_COMMANDS="FORT_FMT_RECL=500"
+            RUN_COMMANDS="FORT_FMT_RECL=1024"
         fi
         if test x"$FCFLAGS_PLATFORM" = x; then
             FCFLAGS_PLATFORM=""
