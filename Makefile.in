@@ -226,7 +226,7 @@ default: $(DEFAULT)
 all: default
 
 run: default
-	(cd ${SETUP} && PATH=${PATH}:`pwd`/../${E} GMT=${GMT} ${RUN_COMMANDS} ./selen.sh)
+	(cd ${SETUP} && PATH=`pwd`/../${E}:"${PATH}" GMT=${GMT} ${RUN_COMMANDS} ./selen.sh)
 
 req_dirs:
 	mkdir -p ${E}; mkdir -p ${O}; mkdir -p ${SETUP} ; mkdir -p INPUTS ; mkdir -p DEPOTS
