@@ -2238,7 +2238,7 @@ If(option_sh=='y') then
 	Write(2,*) "echo" 
 	Write(2,*) " echo '---> SH.F90: Building the spherical harmonics'"
 	Write(2,*) "#echo ----------------------------------------"
-	Write(2,*) trim(RunCmd)," sh.exe"
+	Write(2,*) trim(RunCmd)," shx.exe"
 	Write(2,*) "cp sh.bin ", trim(adjustl(sh_file)) 
 !
 	           else

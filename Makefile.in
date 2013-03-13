@@ -125,7 +125,7 @@ RSLZONES_OBJECTS = \
 	$O/rsl_zones.o
 
 # Spherical harmonics 
-SH_OBJECTS = \
+SHX_OBJECTS = \
 	$O/harmonics.o \
 	$O/sh.o
 
@@ -209,7 +209,7 @@ DEFAULT = \
 	rslc$(EXEEXT) \
 	rslzones$(EXEEXT) \
 	sle$(EXEEXT) \
-	sh$(EXEEXT) \
+	shx$(EXEEXT) \
 	shice$(EXEEXT) \
 	shof$(EXEEXT) \
 	shapefactors$(EXEEXT) \
@@ -299,8 +299,8 @@ rslc$(EXEEXT): req_dirs $(RSLC_OBJECTS)
 rslzones$(EXEEXT): req_dirs $(RSLZONES_OBJECTS)
 	${FCLINK} -o ${E}/rslzones$(EXEEXT) $(RSLZONES_OBJECTS)
 
-sh$(EXEEXT): req_dirs $(SH_OBJECTS)
-	${FCLINK} -o ${E}/sh$(EXEEXT) $(SH_OBJECTS)
+shx$(EXEEXT): req_dirs $(SHX_OBJECTS)
+	${FCLINK} -o ${E}/shx$(EXEEXT) $(SHX_OBJECTS)
 
 shof$(EXEEXT): req_dirs $(SHOF_OBJECTS)
 	${FCLINK} -o ${E}/shof$(EXEEXT) $(SHOF_OBJECTS)
