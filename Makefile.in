@@ -340,7 +340,7 @@ wnw$(EXEEXT): req_dirs $(WNW_OBJECTS)
 #######################################
 
 ${SETUP}/data.inc: config$(EXEEXT) config.dat
-	(cp config.dat tmp && cd tmp && ../${E}/config$(EXEEXT) && chmod u+x selen.sh && cd ..)
+	(cp config.dat tmp && cd tmp && ${RUN_COMMANDS} ../${E}/config$(EXEEXT) && chmod u+x selen.sh && cd ..)
 
 #######################################
 # rules for object files
