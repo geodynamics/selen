@@ -219,6 +219,16 @@ IMPLICIT NONE
       REAL*8,  PARAMETER :: RHO_ICE  = 931.00
 !
 !
+! Set default parameters
+RSL_FILE = "'none'"
+RSL_DATABASE = "'none'"
+RSL_DATABASE_FORMAT = '-1'
+NRSL = 0
+TGAUGES_DATABASE="'none'"
+NTIDEGAUGES=0
+degree_st_min = "0"
+degree_st_max = "0"
+
 ! ************************************************************************
 ! ************************************************************************
 ! ************************************************************************
@@ -1271,11 +1281,6 @@ IF(line(1:3)=="240") THEN
 		Write(88,*) "NO RSL analysis will be performed "
      Endif     
 !
-else
-	RSL_FILE = "'none'"
-	RSL_DATABASE = "'none'"
-	RSL_DATABASE_FORMAT = '-1'
-	NRSL = 0
 ENDIF
 !
 !
@@ -1480,9 +1485,6 @@ IF(line(1:3)=="260") THEN
 		endif	
 !
 	endif
-else
-	TGAUGES_DATABASE="'none'"
-	NTIDEGAUGES=0
 !
 ENDIF
 !
@@ -1675,9 +1677,6 @@ IF(line(1:3)=="290") THEN
 	degree_st_max = ss(3)
 	If(option_st=='y') Write(88,*) 'Range of degrees for the Stokes coefficients: ', & 
 	    	  	   trim(degree_st_min), '-', trim(degree_st_max)
-ELSE
-	degree_st_min = "0"
-	degree_st_max = "0"
 ENDIF
 !
 !
