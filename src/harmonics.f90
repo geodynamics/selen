@@ -489,22 +489,24 @@ enddo
 !     from -90 to 90 degrees 
 !
 ! -- First part (degrees) 
-   if(lat1(1:1)/='0') then 
-   		      open(21,file='junk.dat',status='unknown') ; write(21,*) lat1(1:2) ; close(21) 
-   		      open(21,file='junk.dat',status='unknown') ; read(21,*) nlat ; close(21) 
-   elseif(lat1(2:2)/='0') then 
-   		      open(21,file='junk.dat',status='unknown') ; write(21,*) lat1(2:2) ; close(21) 
-   		      open(21,file='junk.dat',status='unknown') ; read(21,*) nlat ; close(21) 		      	
-   endif 
+!   if(lat1(1:1)/='0') then 
+!   		      open(21,file='junk.dat',status='unknown') ; write(21,*) lat1(1:2) ; close(21) 
+!   		      open(21,file='junk.dat',status='unknown') ; read(21,*) nlat ; close(21) 
+!   elseif(lat1(2:2)/='0') then 
+!   		      open(21,file='junk.dat',status='unknown') ; write(21,*) lat1(2:2) ; close(21) 
+!   		      open(21,file='junk.dat',status='unknown') ; read(21,*) nlat ; close(21) 		      	
+!   endif 
+   read(lat1,*) nlat
 !
 ! -- Second part (minutes) 
-   if(lat2(1:1)/='0') then 
-      		      open(21,file='junk.dat',status='unknown') ; write(21,*) lat2(1:2) ; close(21) 
-   		      open(21,file='junk.dat',status='unknown') ; read(21,*) dlat ; close(21) 
-   elseif(lat2(2:2)/='0') then 
-		      open(21,file='junk.dat',status='unknown') ; write(21,*) lat2(2:2) ; close(21) 
-   		      open(21,file='junk.dat',status='unknown') ; read(21,*) dlat ; close(21) 		      	
-   endif   
+!   if(lat2(1:1)/='0') then 
+!      		      open(21,file='junk.dat',status='unknown') ; write(21,*) lat2(1:2) ; close(21) 
+!   		      open(21,file='junk.dat',status='unknown') ; read(21,*) dlat ; close(21) 
+!   elseif(lat2(2:2)/='0') then 
+!		      open(21,file='junk.dat',status='unknown') ; write(21,*) lat2(2:2) ; close(21) 
+!   		      open(21,file='junk.dat',status='unknown') ; read(21,*) dlat ; close(21) 		      	
+!   endif   
+   read(lat2,*) dlat
    dlat=dlat/60. 
 !
 ! -- Computing latitude... 
@@ -517,25 +519,28 @@ enddo
 !     from 0 to 360 degrees  
 !
 ! -- First part (degrees) 
-   if(lon1(1:1)/='0') then 
-   	              open(21,file='junk.dat',status='unknown') ; write(21,*) lon1(1:3) ; close(21) 
-   		      open(21,file='junk.dat',status='unknown') ; read(21,*) nlon ; close(21) 
-   elseif(lon1(2:2)/='0') then 
-		      open(21,file='junk.dat',status='unknown') ; write(21,*) lon1(2:3) ; close(21) 
-   		      open(21,file='junk.dat',status='unknown') ; read(21,*) nlon ; close(21) 		      	
-   elseif(lon1(3:3)/='0') then 
-		      open(21,file='junk.dat',status='unknown') ; write(21,*) lon1(3:3) ; close(21) 
-   		      open(21,file='junk.dat',status='unknown') ; read(21,*) nlon ; close(21) 
-   endif  
+!   if(lon1(1:1)/='0') then 
+!   	              open(21,file='junk.dat',status='unknown') ; write(21,*) lon1(1:3) ; close(21) 
+!   		      open(21,file='junk.dat',status='unknown') ; read(21,*) nlon ; close(21) 
+!   elseif(lon1(2:2)/='0') then 
+!		      open(21,file='junk.dat',status='unknown') ; write(21,*) lon1(2:3) ; close(21) 
+!   		      open(21,file='junk.dat',status='unknown') ; read(21,*) nlon ; close(21) 		      	
+!   elseif(lon1(3:3)/='0') then 
+!		      open(21,file='junk.dat',status='unknown') ; write(21,*) lon1(3:3) ; close(21) 
+!   		      open(21,file='junk.dat',status='unknown') ; read(21,*) nlon ; close(21) 
+!   endif  
+   read(lon1, *) nlon
 !
 ! -- Second part (minutes) 
-   if(lon2(1:1)/='0') then 
-   	              open(21,file='junk.dat',status='unknown') ; write(21,*) lon2(1:2) ; close(21) 
-   		      open(21,file='junk.dat',status='unknown') ; read(21,*) dlon ; close(21) 
-   elseif(lon2(2:2)/='0') then 
-		      open(21,file='junk.dat',status='unknown') ; write(21,*) lon2(2:2) ; close(21) 
-   		      open(21,file='junk.dat',status='unknown') ; read(21,*) dlon ; close(21) 		      	
-   endif  
+!   if(lon2(1:1)/='0') then 
+!   	              open(21,file='junk.dat',status='unknown') ; write(21,*) lon2(1:2) ; close(21) 
+!   		      open(21,file='junk.dat',status='unknown') ; read(21,*) dlon ; close(21) 
+!   elseif(lon2(2:2)/='0') then 
+!		      open(21,file='junk.dat',status='unknown') ; write(21,*) lon2(2:2) ; close(21) 
+!   		      open(21,file='junk.dat',status='unknown') ; read(21,*) dlon ; close(21) 		      	
+!   endif  
+!
+   read(lon2,*) dlon
 !
    if(lon1(1:1)==' '.and.lon1(2:2)=='0'.and.lon1(3:3)=='0'.and. &
                          lon2(1:1)=='0'.and.lon2(2:2)=='0')        dlon=0.
