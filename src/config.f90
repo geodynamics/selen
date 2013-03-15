@@ -1271,6 +1271,11 @@ IF(line(1:3)=="240") THEN
 		Write(88,*) "NO RSL analysis will be performed "
      Endif     
 !
+else
+	RSL_FILE = "'none'"
+	RSL_DATABASE = "'none'"
+	RSL_DATABASE_FORMAT = '-1'
+	NRSL = 0
 ENDIF
 !
 !
@@ -1475,6 +1480,9 @@ IF(line(1:3)=="260") THEN
 		endif	
 !
 	endif
+else
+	TGAUGES_DATABASE="'none'"
+	NTIDEGAUGES=0
 !
 ENDIF
 !
@@ -1667,6 +1675,9 @@ IF(line(1:3)=="290") THEN
 	degree_st_max = ss(3)
 	If(option_st=='y') Write(88,*) 'Range of degrees for the Stokes coefficients: ', & 
 	    	  	   trim(degree_st_min), '-', trim(degree_st_max)
+ELSE
+	degree_st_min = "0"
+	degree_st_max = "0"
 ENDIF
 !
 !
@@ -3323,7 +3334,6 @@ If(option_topo=='y') then
 Endif 
 !
 !
-If(option_rsl=='y'.or.option_rslp=='y')then 
 Write(3,*) "!"
 Write(3,*) "!"
 Write(3,*) "!------------------- 5- RSL analysis at site of a database --------"
@@ -3335,9 +3345,7 @@ Write(3,*) "CHARACTER* 1, PARAMETER :: RSL_DATABASE_FORMAT = ", &
 		"'"//trim(adjustl(RSL_DATABASE_FORMAT))//"'"
 Write(3,*) "! --- Number of RSL sites in database"
 Write(3,*) "INTEGER, PARAMETER :: NRSL=", nrsl
-Endif
 !
-If(option_rslc=='y')then 
 Write(3,*) "!"
 Write(3,*) "!"
 Write(3,*) "!------------------- 6- Regional RSL analysis ---------------------"
@@ -3348,9 +3356,7 @@ Write(3,*) "! --- Number of virtual RSL sites"
 Write(3,*) "INTEGER, PARAMETER :: NRSLC=", nrslc
 Write(3,*) "! --- Time of analysis (ka)"
 Write(3,*) "REAL, PARAMETER :: TIME_BPC=", time_bpc
-Endif
 !
-If(option_tg=='y'.or.option_tgplot=='y')then 
 Write(3,*) "!"
 Write(3,*) "!"
 Write(3,*) "!------------------- 7- Predictions at tide-gauges ----------------"
@@ -3360,7 +3366,6 @@ Write(3,*) "CHARACTER*", LEN_TGAUGES, ", PARAMETER :: TGAUGES_DATABASE=", &
 					              TGAUGES_DATABASE
 Write(3,*) "! --- Number of tide gauges"
 Write(3,*) "INTEGER, PARAMETER :: NTIDEGAUGES=", NTIDEGAUGES
-Endif 
 !
 If(option_3d=='y')then 
 Write(3,*) "!"
@@ -3392,7 +3397,6 @@ enddo
 Endif
 !
 !
-If(option_st=='y')then 
 Write(3,*) "!"
 Write(3,*) "!"
 Write(3,*) "!------------------ 12- Stokes coefficients (SC) settings ---------"
@@ -3401,7 +3405,6 @@ Write(3,*) "! --- Min. degree for the SC"
 Write(3,*) "INTEGER, PARAMETER :: STMIN=", degree_st_min
 Write(3,*) "! --- Max. degree for the SC"
 Write(3,*) "INTEGER, PARAMETER :: STMAX=", degree_st_max
-endif 
 !
 Write(3,*) "!"
 Write(3,*) "!"
