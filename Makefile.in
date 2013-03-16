@@ -196,6 +196,7 @@ WNW_OBJECTS = \
 DEFAULT = \
 	config$(EXEEXT) \
 	esl$(EXEEXT) \
+	geo$(EXEEXT) \
 	gmaps$(EXEEXT) \
 	ms$(EXEEXT) \
 	ofdv$(EXEEXT) \
