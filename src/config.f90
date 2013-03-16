@@ -220,15 +220,29 @@ IMPLICIT NONE
 !
 !
 ! Set default parameters
-RSL_FILE = "'none'"
-RSL_DATABASE = "'none'"
-RSL_DATABASE_FORMAT = '-1'
-NRSL = 0
-TGAUGES_DATABASE="'none'"
-NTIDEGAUGES=0
-degree_st_min = "0"
-degree_st_max = "0"
-
+!
+      RSL_FILE = "'none'"
+      RSL_DATABASE = "'none'"
+      RSL_DATABASE_FORMAT = '-1'
+      NRSL = 0
+      len_rsl = 4
+!
+      RSLC_LONLAT_FILE="'none'"
+      len_rslc = 4
+      NRSLC = 0
+      time_bpc = 0
+!
+      TGAUGES_DATABASE = "'none'"
+      len_tgauges = 0
+      NTIDEGAUGES = 0
+!
+      GEODETIC_DATABASE = "'none'"
+      NGEOD = 0
+      len_geod = 4
+!
+      degree_st_min = "0"
+      degree_st_max = "0"
+!
 ! ************************************************************************
 ! ************************************************************************
 ! ************************************************************************
@@ -3366,7 +3380,7 @@ Write(3,*) "CHARACTER*", LEN_TGAUGES, ", PARAMETER :: TGAUGES_DATABASE=", &
 Write(3,*) "! --- Number of tide gauges"
 Write(3,*) "INTEGER, PARAMETER :: NTIDEGAUGES=", NTIDEGAUGES
 !
-If(option_3d=='y')then 
+!If(option_3d=='y')then 
 Write(3,*) "!"
 Write(3,*) "!"
 Write(3,*) "!------------------- 8- Predictions at geodetic sites ----------------"
@@ -3376,7 +3390,7 @@ Write(3,*) "CHARACTER*", LEN_GEOD, ", PARAMETER :: GEODETIC_DATABASE=", &
 						   GEODETIC_DATABASE
 Write(3,*) "! --- Number of tide gauges"
 Write(3,*) "INTEGER, PARAMETER :: NGEOD=", NGEOD
-Endif 
+!Endif 
 !
 If(option_3d_regions=='y')then 
 Write(3,*) "!"
