@@ -24,7 +24,7 @@ AC_DEFUN([AX_PROG_GMT],[
 AC_CHECK_PROGS(gmt,[gmt GMT],no)
 if test "x$gmt" = "xno" ;
 then
-	ifelse($#,0,[AC_MSG_ERROR([GMT program not found])],
+	ifelse($#,0,[AC_MSG_WARN([GMT program not found, visualization will not work])],
         $1)
 fi
 ])
