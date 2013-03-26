@@ -2543,8 +2543,8 @@ test -n "$gmt" || gmt="no"
 
 if test "x$gmt" = "xno" ;
 then
-	{ $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: GMT program not found, visualization will not work" >&5
-$as_echo "$as_me: WARNING: GMT program not found, visualization will not work" >&2;}
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: GMT not found, all GMT scripts will fail." >&5
+$as_echo "$as_me: WARNING: GMT not found, all GMT scripts will fail." >&2;}
 fi
 
 
