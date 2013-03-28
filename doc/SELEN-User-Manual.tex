@@ -4,6 +4,7 @@
 \usepackage{fancyhdr}
 \usepackage{graphics}
 \usepackage{graphicx}
+\usepackage{geometry}
 \usepackage[comma,authoryear]{natbib}
 \usepackage[dvipsnames]{xcolor}
 \pagestyle{fancy} 
@@ -49,6 +50,13 @@
 
 
 \begin{document} 
+\thispagestyle{empty}
+\newgeometry{left=1.5cm,right=1.5cm,top=2cm,bottom=2cm}
+\begin{figure}[!h]
+\centering\includegraphics[width=\textwidth]{./Figures/selen-cover.pdf}
+\end{figure}
+\restoregeometry
+\pagebreak
 
 \title{{\underline {\large \textbf{COMPUTATIONAL INFRASTRUCTURE FOR GEODYNAMICS (CIG)}}}\\
 \vspace{0.3cm}
@@ -97,6 +105,7 @@
 \newpage
 
 \tableofcontents
+\let\thefootnote\relax\footnotetext{The cover image is a GMT visualization of the rate of sea level change today (\textit{\sealevel fingerprint}) associated with GIA ($\dot S$) calculated by SELEN. Details about parameters and analysis are in Figure \ref{fig:sdot} in this manual.}
 
 \listoffigures
 
@@ -137,7 +146,7 @@ Computational Infrastructure for Geodynamics (CIG) and the SELEN developers are 
 
 \begin{itemize}
 \item Spada G, Stocchi P (2006) The Sea Level Equation, Theory and Numerical Examples. Aracne, Roma.
-\item G. Spada, P. Stocchi, SELEN: A Fortran 90 program for solving the √ísea-level equation√ì, Computers \& Geosciences, Volume 33, Issue 4, May 2007, Pages 538-562, ISSN 0098-3004, http://dx.doi.org/10.1016/j.cageo.2006.08.006 .
+\item G. Spada, P. Stocchi, SELEN: A Fortran 90 program for solving the “sea-level equation”, Computers \& Geosciences, Volume 33, Issue 4, May 2007, Pages 538-562, ISSN 0098-3004, http://dx.doi.org/10.1016/j.cageo.2006.08.006 .
 \item Spada G, Melini D, Galassi G, Colleoni F (2012) Modeling sea level changes and geodetic variations by glacial isostasy: the improved SELEN code (http://arxiv.org/abs/1212.5061)
 \end{itemize}
 
