@@ -249,7 +249,7 @@ distclean: clean
 #######################################
 
 dist: distclean
-	tar -czf selen_${PACKAGE_VERSION}.tgz .
+	tar -czf selen_${PACKAGE_VERSION}.tar.gz --exclude selen_${PACKAGE_VERSION}.tar.gz --exclude .git --exclude .gitignore --exclude doc .
 
 #######################################
 #### rules for executables
