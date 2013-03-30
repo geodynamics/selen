@@ -249,7 +249,7 @@ distclean: clean
 #######################################
 
 dist: distclean
-	tar -czf selen_${PACKAGE_VERSION}.tar.gz --exclude selen_${PACKAGE_VERSION}.tar.gz --exclude .git --exclude .gitignore --exclude doc .
+	mkdir SELEN_${PACKAGE_VERSION} ; cp -r AUTHORS COPYING DATA ICE-MODELS Makefile.in VSC aclocal.m4 config.dat configure configure.ac flags.guess m4 src SELEN_${PACKAGE_VERSION} ; tar -czf SELEN_${PACKAGE_VERSION}.tar.gz SELEN_${PACKAGE_VERSION} ; rm -rf SELEN_${PACKAGE_VERSION}
 
 #######################################
 #### rules for executables
