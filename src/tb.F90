@@ -2698,8 +2698,8 @@ real (qp) :: radsup, radinf, rigi, dens
 real (qp) :: mu (100), kappa (100), rho (100), r (100)  
 real (qp) :: mean1 (0:100), mean2 (0:100), mean3 (0:100), depth, top
 !
-open (19, file = './DATA/'//'prem1.dat'  , status = 'old')  
-open (29, file = './DATA/'//'prem200.dat', status = 'old')  
+open (19, file = '../DATA/'//'prem1.dat'  , status = 'old')  
+open (29, file = '../DATA/'//'prem200.dat', status = 'old')  
 !
 top = radsup  
 depth = radinf  
