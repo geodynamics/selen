@@ -1,6 +1,6 @@
 # Process this file with autoconf to produce a configure script.
 
-AC_INIT([SELEN], [2.9.10.4], BUG-REPORT-ADDRESS)
+AC_INIT([SELEN], [2.9.11], BUG-REPORT-ADDRESS)
 AC_CONFIG_MACRO_DIR([m4])
 
 # Checks for programs.
