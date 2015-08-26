@@ -21,6 +21,7 @@
 ! Modified DM August 2011 - Some optimizations in the compilation process (29.8-2)
 ! Modified DM Jan 2012 - Alaska ice model
 ! Modified EMH Feb 2013 - Updated for autoconf system, CIG release
+! Modified DM Aug 2015 - Fixed a bug in gmaps
 !
 ! +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ! Copyright (C) 2008 Giorgio Spada, Florence Colleoni, and Paolo Stocchi 
@@ -5462,6 +5463,7 @@ END
 ! Modified on June 24, 2008 for SELEN 2.6 GS 
 ! Modified on July 26, 2008 for SELEN 2.6 GS 
 ! Upgraded April 2010 by GS for ALMA on g95 
+! Fixed the pscoast options - DM Aug 2015
 !
 !
  IMPLICIT NONE
@@ -5517,7 +5519,7 @@ Write(9,*) "${GMT} psbasemap -X3 -Y5 -Ba180/a40WSEn -Jm0.018i ", &
 Write(9,*) "${GMT} pscontour -I -Jm -O -K ", trim(adjustl(R_OPTION)), & 
            " ", trim(adjustl(namein)), " -Cpale.cpt  >> ", trim(adjustl(nameout)) 
 If(option_rof=='r')then 
-  Write(9,*) "${GMT} pscoast -Jm -Dc -B -W2/0       -A1000 -O -K ", trim(adjustl(R_OPTION)), " >> ", trim(adjustl(nameout))  
+  Write(9,*) "${GMT} pscoast -Jm -Dc -B -W0,black  -A1000 -O -K ", trim(adjustl(R_OPTION)), " >> ", trim(adjustl(nameout))  
   else
   Write(9,*) "${GMT} pscoast -Jm -Dc -B -W1/240 -A1000 -O -K ", trim(adjustl(R_OPTION)), " >> ", trim(adjustl(nameout))  
 Endif
