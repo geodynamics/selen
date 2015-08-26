@@ -2221,17 +2221,9 @@ $as_echo "$ac_cv_prog_fc_g" >&6; }
 if test "$ac_test_FCFLAGS" = set; then
   FCFLAGS=$ac_save_FCFLAGS
 elif test $ac_cv_prog_fc_g = yes; then
-  if test "x$ac_cv_fc_compiler_gnu" = xyes; then
     FCFLAGS="-g -O2"
-  else
-    FCFLAGS="-g"
-  fi
 else
-  if test "x$ac_cv_fc_compiler_gnu" = xyes; then
     FCFLAGS="-O2"
-  else
-    FCFLAGS=
-  fi
 fi
 
 if test $ac_compiler_gnu = yes; then
