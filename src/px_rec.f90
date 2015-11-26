@@ -36,6 +36,7 @@
  IMPLICIT NONE 
  INCLUDE "data.inc"
  INTEGER I, J, K
+ INTEGER NHL
  INTEGER, ALLOCATABLE :: IANCH(:), IWET(:)
  REAL*8, ALLOCATABLE :: LON(:), LAT(:)
  REAL*8 :: XLON, XLAT
@@ -52,7 +53,8 @@
 !
 	open(1,file='weta.dat',status='unknown')
 	open(2,file='drya.dat',status='unknown') 
-		do j=1, 4
+        call count_header_lines(1,nhl)
+		do j=1, nhl
 			read(1,'(a30)') cjunk 
 			read(2,'(a30)') cjunk 	
 		enddo

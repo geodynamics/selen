@@ -12,7 +12,8 @@
 ! *** On october 2, I have moved here the pixelization routines 
 ! *** Reviewed GS & FC July 2009 -  "Varying coastlines" & ALMA coupling
 ! *** Reviewed GS & FC November 2009 - Porting under gfortran 
-! *** Revised GS May 2010 - g95 - Ice breaker routine included 
+! *** Revised GS May 2010 - g95 - Ice breaker routine included
+! *** Updated DM Nov 2015 - added the COUNT_HEADER_LINES sbr
 !
 !
 ! +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -74,7 +75,8 @@
 ! - Function COSDD                    Cosine with argument in degrees 
 ! - Subroutine ICE_BREAKER            Breaks the ice array in small parts 
 ! - Subroutine INTEGER_2_CHAR2        Int to CHAR*2, with left zerp padding
-
+! - Subroutine COUNT_HEADER_LINES     Count lines starting with '#' in a data file
+!
 !
 !   (*)  adapted from SHTOOLS, Copyright (c) 2005, Mark A. Wieczorek
 !   (**) implemented by the ACM TOMS algorithm #TOMS351. The "early" algorithm 
@@ -3075,6 +3077,34 @@ end subroutine PlmBar_d1
 !
 !
 !
+subroutine count_header_lines(lun,nh)
+! -----------------------------------------------------------------------
+! subroutine count_header_lines
+! DM, 17 Nov 2015
+! returns in nh the number of header lines starting with '#' in logical
+! unit lun
 !
+implicit none
+integer :: lun,nh
+logical :: flag
+character, parameter :: ch='#'
+character :: buffer
+!
+flag = .true.
+rewind( lun )
+!
+nh = 0
+do while( flag )
+   read(lun,*) buffer
+   if( buffer.eq.ch ) then
+       nh = nh+1
+   else
+       flag=.false.
+   end if
+end do
+!
+rewind(lun)
+!
+end subroutine count_header_lines!
 !
 !
