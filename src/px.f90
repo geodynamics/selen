@@ -197,10 +197,10 @@ write(*,*) '    - Number(pixels)/Number(main pixels)= ', &
 !
       write(*,*) '    - Building file pxa.dat' 
       open(8,file='pxa.dat',status='unknown') 
-      Write(8,*) "----------------------------------------------"  
-      Write(8,*) " Pixels lon-lats and with increasing latitude "
-      Write(8,*) "  pixel lon(deg), lat (deg), anchor, pixel #  "   
-      Write(8,*) "----------------------------------------------"         
+      Write(8,*) "# ----------------------------------------------"  
+      Write(8,*) "#  Pixels lon-lats and with increasing latitude "
+      Write(8,*) "#   pixel lon(deg), lat (deg), anchor, pixel #  "   
+      Write(8,*) "# ----------------------------------------------"         
       do 5 i=1, np 	
 !      do 5 j=1, nl 	
 !	   if(imin(j)<=i.and.i<=imax(j)) & 
