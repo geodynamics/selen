@@ -79,7 +79,7 @@
 %\normalsize{xy} \\
 %\normalsize{abc} \\
 \vspace{0.7cm}
-\texttt{\small{Manual version 1.2, November 2015}}\\
+\texttt{\small{Manual version 1.2, December 2015}}\\
 \vspace{0.9cm}
 \includegraphics[angle=0,width=0.75\textwidth]{./Figures/logo_SELEN29.png}
 \vspace{-0.5cm}
@@ -139,7 +139,7 @@ The SLE  is an integral equation that was introduced in the $70$s to model the \
 This User guide describes the essentials of the theory behind the SLE, and provides instructions for the configuration and execution of \selens. 
 
 \section{Acknowledgements}
-We thank all the \selen users and a number of colleagues for the numerous feedbacks that have greatly contributed to improve the program. We thank Max Tegmark for making available the code for the icosahedral pixelization of the sphere. For computations involving spherical harmonic functions, \selen implements some {SHTOOLS} routines developed by Mark Wieczorek. All the figures have been drawn using the free GMT software \citep{Wessel_and_Smith_1998}. The development of \selen has been supported by ISCRA (Italian SuperComputing Resource Allocation) with contracts n. HP10CS9J50 (SEASIM) and HP10CUX77T (SEAMED). Partly funded by COST Action ES0701 ``Improved Constraints on Models of Glacial Isostatic Adjustment'' and by the European Commission's 7$^{\textrm{th}}$ Framework Programme through grant number 226375 (ice2sea project). CIG is thanked for hosting SELEN (\texttt{http://geodynamics.org/cig/software/selen}). Eric Heien from CIG has greatly improved the \selen usability by implementing the autoconf system into the original code.
+We thank all the \selen users and a number of colleagues for the numerous feedbacks that have greatly contributed to improve the program. We thank Max Tegmark for making available the code for the icosahedral pixelization of the sphere. For computations involving spherical harmonic functions, \selen implements some {SHTOOLS} routines developed by Mark Wieczorek. All the figures have been drawn using the GMT free software \citep{Wessel_and_Smith_1998}. The development of \selen has been supported by ISCRA (Italian SuperComputing Resource Allocation) with contracts n. HP10CS9J50 (SEASIM) and HP10CUX77T (SEAMED). Partly funded by COST Action ES0701 ``Improved Constraints on Models of Glacial Isostatic Adjustment'' and by the European Commission's 7$^{\textrm{th}}$ Framework Programme through grant number 226375 (ice2sea project). CIG is thanked for hosting SELEN (\texttt{http://geodynamics.org/cig/software/selen}). Eric Heien from CIG has greatly improved the \selen usability by implementing the autoconf system into the original code.
 
 \section{Citation}
 Computational Infrastructure for Geodynamics (CIG) and the SELEN developers are making the source code to SELEN available to researchers in the hope that it will aid their research and teaching.  A number of individuals have contributed a significant amount of time and energy into the development of SELEN.  We request that you cite the appropriate papers and make acknowledgements as necessary. The SELEN development team asks that you cite the following papers:
@@ -385,7 +385,7 @@ where $\ell_{max}$ is the maximum harmonic degree of the SH expansion of the SLE
 
 \subsection{Software and hardware requirements}\label{sec:sw-hw}
 
-\paragraph{Software.} Running \selen requires a standard UNIX environment (including Linux and Mac OS X) and a Fortran 90 compiler. On Windows systems, \selen can run within the Cygwin environment\footnote{Cygwin is freely downloadable from: http://www.cygwin.com}. \selen also requires the free GMT\footnote{The Generic Mapping Tools can be downloaded from: http://gmt.soest.hawaii.edu/} (Generic Mapping Tools) mapping software \citep{Wessel_and_Smith_1998}.  
+\paragraph{Software.} Running \selen requires a standard UNIX environment (including Linux and Mac OS X) and a Fortran 90 compiler. On Windows systems, \selen can run within the Cygwin environment\footnote{Cygwin is freely downloadable from: http://www.cygwin.com}. \selen also requires the GMT\footnote{The Generic Mapping Tools can be downloaded from: http://gmt.soest.hawaii.edu/} (Generic Mapping Tools) free software \citep{Wessel_and_Smith_1998}.  
 
 The configuration and build process of \selen 2.9 is handled by standard GNU autoconf scripts\footnote{http://www.gnu.org/software/autoconf/}.  \selen 2.9 has been succesfully tested using both the freely available g95\footnote{Available from: http://www.g95.org} and gfortran\footnote{Available from: http://gcc.gnu.org/gfortran} compilers, or the commercial Intel Fortran compiler\footnote{More information at: http://software.intel.com/en-us/fortran-compilers}. Additional operating system and compiler configurations can be implemented by modifying the \texttt{flags.guess} file and providing suitable options to the \texttt{configure} script. 
 %A list of currently supported operating systems and Fortran compilers is given in %\marginpar{T\ref{table:compiler-options}} Table~\ref{table:compiler-options}. 
