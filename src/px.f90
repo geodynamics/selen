@@ -92,7 +92,7 @@ PROGRAM PIX
                       write(*, *) '    - The resolution must be >= 10'
                       WRITE(*, *) '    - P******* JOB ABORTED ********'
           	      call Stop_config 	
-		      Stop		      
+		      Stop
     ENDIF
 !
     write(*, *) '    - The resolution is:', res

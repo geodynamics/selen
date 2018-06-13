@@ -327,7 +327,7 @@ IMPLICIT NONE
 !		Write(* ,*) "For the OpenMP switch, only y/n are valid options"
 !		Write(88,*) "For the OpenMP switch, only y/n are valid options"
 !		Call stop_config 
-!		Stop	
+!		Stop
 !	Endif
 !  ENDIF  
 !
@@ -451,7 +451,7 @@ IMPLICIT NONE
 ! 	 Write(* ,*) "Error: OpenMP is not supported by the g95 compiler !"
 !	 Write(88,*) "Error: OpenMP is not supported by the g95 compiler !"
 !	 Call stop_config 
-!	 Stop	       
+!	 Stop
 !       endif
 !       if( ( option_mpi=='y' ) .and. ( option_omp=='n' ) ) then
 !         CompileMpi = "mpif90 -w -DMPI "  
@@ -461,13 +461,13 @@ IMPLICIT NONE
 ! 	 Write(* ,*) "Error: OpenMP is not supported by the g95 compiler !"
 !	 Write(88,*) "Error: OpenMP is not supported by the g95 compiler !"
 !	 Call stop_config 
-!	 Stop	       
+!	 Stop
 !       endif       
 !    Else   
 !	Write(* ,*) "Error: unknown platform"
 !	Write(88,*) "Error: unknown platform"
 !	Call stop_config 
-!	Stop	       
+!	Stop
 !    EndIf
 !    if( option_mpi == "y" ) then
 !       if( option_sys == "6" ) then
@@ -865,7 +865,7 @@ IF(line(1:3)=="150") THEN
  	Write(88,*) "  Please use a resolution RES>=12   "
         Write(88,*) 
         call Stop_Config
-	stop 
+	stop
  	endif 
 
 !
@@ -1003,7 +1003,7 @@ IF(line(1:3)=="200") THEN
 		Write(* ,*) "For the GMT switch, only y/n are valid options"
 		Write(88,*) "For the GMT switch, only y/n are valid options"
 		Call stop_config 
-		Stop	
+		Stop
 	Endif
 	
 	
@@ -1178,7 +1178,7 @@ IF(line(1:3)=="240") THEN
 		Write(88,*) "The RSL database has no elements"
 		Write(*, *) "The RSL database has no elements"
 		Call stop_config 
-		Stop	
+		Stop
 	Endif
 !
 !
@@ -1229,7 +1229,7 @@ IF(line(1:3)=="240") THEN
 				Write(88,*) "The RSL database is badly configured"
 				Write(*, *) "The RSL database is badly configured"
 				Call stop_config 
-				Stop					
+				Stop
 			ENDIF			 		
 			READ(44,'(a10)')CJUNK 	
  			WRITE(82,*) TIME_RSL/1000., RSL_DATUM, D_RSLDATUM		
@@ -1272,7 +1272,7 @@ IF(line(1:3)=="240") THEN
 				Write(88,*) "The RSL database is badly configured"
 				Write(*, *) "The RSL database is badly configured"
 				Call stop_config 
-				Stop					
+				Stop
 			ENDIF			 		
 			READ(44,'(a10)')CJUNK 	
  			WRITE(82,*) TIME_RSL/1000., RSL_DATUM, D_RSLDATUM		
@@ -1288,7 +1288,7 @@ IF(line(1:3)=="240") THEN
 		Write(88,*) "The RSL database does not exists"
 		Write(*, *) "The RSL database does not exists"
 		Call stop_config 
-		Stop	
+		Stop
 !     
      	 Endif 	
 !
@@ -1328,7 +1328,7 @@ IF(line(1:3)=="242") THEN
                         Write(* ,*) "Plotting RSl predictions vs. data requires computing ..." 
 			Write(* ,*) "... RSL predictions -- please modify file config.dat' --"
 			call stop_config 			    
-			stop 
+			stop
 			endif
 ENDIF
 !
@@ -1446,7 +1446,7 @@ IF(line(1:3)=="251") THEN
                 	Write(88,*) "File ", trim(adjustl(file_region)), " apparently"
 			Write(88,*) "does not exist -  Please check file <config.dat>"
 			Call Stop_Config 
-			stop		 
+			stop
 		endif 
 	endif 
 ENDIF
@@ -1495,7 +1495,7 @@ IF(line(1:3)=="260") THEN
 		Write(88,*) 'No tide-gauge database has been found...'	
 		Write(*, *) 'No tide-gauge database has been found...'	
                 Call Stop_Config 
-                stop		 		
+                stop
 !			
 		endif	
 !
@@ -1671,7 +1671,7 @@ IF(line(1:3)=="275") THEN
 !	
         Write(88,*) 'No geodetic database has been found...'	
         Write(*, *) 'No geodetic database has been found...'	
-        Call Stop_Config ; stop	
+        Call Stop_Config ; stop
 !
 	ENDIF   ! On the existence of the database ... 
 !

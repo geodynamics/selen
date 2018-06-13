@@ -152,7 +152,7 @@
 				Write(*, *) "The RSL database is badly configured"
 				Write(*, *) "The program will STOP --------------"
 				Call stop_config 
-				Stop	
+				Stop
 				
 			ENDIF	
 !
@@ -206,7 +206,7 @@
 				Write(*, *) "The RSL database is badly configured"
 				Write(*, *) "The program will STOP --------------"
 				Call stop_config 
-				Stop	
+				Stop
 				
 			ENDIF	
 !
