@@ -15,14 +15,15 @@ pipeline {
   stages {
     stage('Build') {
       steps {
-        sh './configure'
-        sh 'make'
+        sh -c 'cd src ; make'
       }
     }
 
     stage('Test') {
       steps {
-        sh 'make run'
+        sh -c 'cd DATA ; gunzip *R44*.gz'
+        sh -c './sha.exe 44 128 DATA/px-R44.dat DATA/px-lat-R44.dat DATA/sh-R44L128.bin'
+        sh -c 'make_sle.sh config.sle.I6G-R44-L128-I33'
       }
     }
   }
