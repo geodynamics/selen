@@ -2,9 +2,9 @@
 ############################################################# 
  date
 #
- SLE_SOLVER=sle.exe
+ SLE_SOLVER=./sle.exe
 #
- PPR_PROGRAM=ppr.exe
+ PPR_PROGRAM=./ppr.exe
 #
  RUN_NAME=$1
  CONFIG_NAME=$2
