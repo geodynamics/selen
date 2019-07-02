@@ -1,0 +1,71 @@
+ gmtset PAPER_MEDIA A4+
+ gmtset HEADER_FONT_SIZE 12p
+ gmtset FRAME_WIDTH 0.1c
+ gmtset ANNOT_FONT_SIZE 10p
+ gmtset HEADER_OFFSET -0.5c
+ gmtset PAGE_ORIENTATION landscape
+#
+  echo Maps of the GIA fingerprints S, U, N, and G 
+#
+  TIME_STEP="010"
+#
+  TITRE="AI-R44-N10-10yr-gre-smb.pix" 
+#
+  JOPT=" -JM7 "
+  ROPT=" -R0/360/-80/82 "
+  BOPT=" -Bf50g50a50/:"mm":" 
+#
+  FILE_OUT="sle.ps" 
+  FILE_PDF="sle.pdf" 
+# 
+  I_OPTION=" -I2"
+#
+  makecpt -CGMT_panoply -D -T-100/100/10 > pale.cpt
+#
+  FILE_IN="sung-var-"$TIME_STEP".pix"
+#
+  echo working on file $FILE_IN
+#
+  awk '{print $1, $2, $3}' $FILE_IN > s.pix
+  awk '{print $1, $2, $4}' $FILE_IN > u.pix
+  awk '{print $1, $2, $5}' $FILE_IN > n.pix
+  awk '{print $1, $2, $6}' $FILE_IN > g.pix
+# 
+  echo Blockmean on a Cartesian grid with spacing $I_OPTION 
+
+ blockmean $I_OPTION -F -C s.pix -Rg >  s.xyz
+ blockmean $I_OPTION -F -C u.pix -Rg >  u.xyz
+ blockmean $I_OPTION -F -C n.pix -Rg >  n.xyz
+ blockmean $I_OPTION -F -C g.pix -Rg >  g.xyz
+#
+#
+ echo S Fingerprint
+ psbasemap -X2 -Y12 -Ba90f45:."$TITRE - S":/a30f15wsen $ROPT $JOPT -K >  $FILE_OUT
+ pscontour -I -J -O -K -R s.xyz -Cpale.cpt >> $FILE_OUT
+ pscoast -Dc -B -W3,black -A1000 -O -K -R -J   >> $FILE_OUT
+ psscale -U/0/-0.75/'SELEN 4' -E -Cpale.cpt $BOPT -D3.5/-1/4.5/0.5h -O -K >> $FILE_OUT
+#
+ echo U Fingerprint
+ psbasemap -X8 -Y0 -Ba90f45:."U $TIME_STEP":/a30f15wsen $ROPT $JOPT -K -O >>  $FILE_OUT
+ pscontour -I -J -O -K -R u.xyz -Cpale.cpt >> $FILE_OUT
+ pscoast -Dc -B -W3,black -A1000 -O -K -R -J   >> $FILE_OUT
+ psscale -U/0/-0.75/'SELEN 4' -E -Cpale.cpt $BOPT  -D3.5/-1/4.5/0.5h -O -K >> $FILE_OUT
+#
+ echo N Fingerprint
+ psbasemap -X8 -Y0 -Ba90f45:."N $TIME_STEP":/a30f15wsen $ROPT $JOPT -K -O >>  $FILE_OUT
+ pscontour -I -J -O -K -R n.xyz -Cpale.cpt >> $FILE_OUT
+ pscoast -Dc -B -W3,black -A1000 -O -K -R -J   >> $FILE_OUT
+ psscale -U/0/-0.75/'SELEN 4' -E -Cpale.cpt $BOPT  -D3.5/-1/4.5/0.5h -O -K >> $FILE_OUT
+#
+ echo G Fingerprint
+ psbasemap -X-16 -Y-9 -Ba90f45:."G $TIME_STEP":/a30f15wsen $ROPT $JOPT -K -O >>  $FILE_OUT
+ pscontour -I -J -O -K -R g.xyz -Cpale.cpt >> $FILE_OUT
+ pscoast -Dc -B -W3,black -A1000 -O -K -R -J   >> $FILE_OUT
+ psscale -U/0/-0.75/'SELEN 4' -E -Cpale.cpt $BOPT  -D3.5/-1/4.5/0.5h -O >> $FILE_OUT
+#
+ echo Converting $FILE_OUT to $FILE_PDF
+ ps2pdf $FILE_OUT
+#
+#
+#
+#

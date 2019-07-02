@@ -1,0 +1,68 @@
+ gmtset PAPER_MEDIA A4+
+ gmtset HEADER_FONT_SIZE 12p
+ gmtset FRAME_WIDTH 0.1c
+ gmtset ANNOT_FONT_SIZE 10p
+ gmtset HEADER_OFFSET -0.5c
+ gmtset PAGE_ORIENTATION landscape
+#
+  echo Maps of the GIA fingerprints S, U, N, and G 
+#
+  TITRE="dot S - ICE-6G - R100 - L128 - I3 - ROT " 
+#
+  FILE_OUT="sle.ps" 
+  FILE_PDF="sle.pdf" 
+# 
+  I_OPTION=" -I0.5"
+#
+  makecpt -CGMT_panoply -D -T-1/1/0.25 > pale.cpt
+#
+ FILE_IN_S="sdot.pix"
+ FILE_IN_U="udot.pix"
+ FILE_IN_G="gdot.pix"
+ FILE_IN_N="ndot.pix"
+#
+ FILE_IN_S_BM="sdot.xyz"
+ FILE_IN_U_BM="udot.xyz"
+ FILE_IN_G_BM="gdot.xyz"
+ FILE_IN_N_BM="ndot.xyz"
+# 
+  echo Blockmean on a Cartesian grid with spacing $I_OPTION 
+
+ blockmean $I_OPTION -F -C $FILE_IN_S -Rg >  $FILE_IN_S_BM
+ blockmean $I_OPTION -F -C $FILE_IN_U -Rg >  $FILE_IN_U_BM
+ blockmean $I_OPTION -F -C $FILE_IN_N -Rg >  $FILE_IN_N_BM
+ blockmean $I_OPTION -F -C $FILE_IN_G -Rg >  $FILE_IN_G_BM 
+#
+  JOPT=" -JM7 "
+  ROPT=" -R0/360/-80/82 "
+#
+ echo S Fingerprint
+ psbasemap -X2 -Y12 -Ba90f45:."$TITRE ":/a30f15wsen $ROPT $JOPT -K >  $FILE_OUT
+ pscontour -I -J -O -K -R $FILE_IN_S_BM -Cpale.cpt >> $FILE_OUT
+ pscoast -Dc -B -W3,black -A1000 -O -K -R -J   >> $FILE_OUT
+ psscale -U/0/-0.75/'SELEN 4' -E -Cpale.cpt -Bf0.1g0.2a0.5/:"mm/yr": -D3.5/-1/4.5/0.5h -O -K >> $FILE_OUT
+#
+ echo U Fingerprint
+ psbasemap -X8 -Y0 -Ba90f45:."dot U":/a30f15wsen $ROPT $JOPT -K -O >>  $FILE_OUT
+ pscontour -I -J -O -K -R $FILE_IN_U_BM -Cpale.cpt >> $FILE_OUT
+ pscoast -Dc -B -W3,black -A1000 -O -K -R -J   >> $FILE_OUT
+ psscale -U/0/-0.75/'SELEN 4' -E -Cpale.cpt -Bf0.1g0.2a0.5/:"mm/yr": -D3.5/-1/4.5/0.5h -O -K >> $FILE_OUT
+#
+ echo N Fingerprint
+ psbasemap -X8 -Y0 -Ba90f45:."dot N":/a30f15wsen $ROPT $JOPT -K -O >>  $FILE_OUT
+ pscontour -I -J -O -K -R $FILE_IN_N_BM -Cpale.cpt >> $FILE_OUT
+ pscoast -Dc -B -W3,black -A1000 -O -K -R -J   >> $FILE_OUT
+ psscale -U/0/-0.75/'SELEN 4' -E -Cpale.cpt -Bf0.1g0.2a0.5/:"mm/yr": -D3.5/-1/4.5/0.5h -O -K >> $FILE_OUT
+#
+ echo G Fingerprint
+ psbasemap -X-16 -Y-9 -Ba90f45:."dot G":/a30f15wsen $ROPT $JOPT -K -O >>  $FILE_OUT
+ pscontour -I -J -O -K -R $FILE_IN_G_BM -Cpale.cpt >> $FILE_OUT
+ pscoast -Dc -B -W3,black -A1000 -O -K -R -J   >> $FILE_OUT
+ psscale -U/0/-0.75/'SELEN 4' -E -Cpale.cpt -Bf0.1g0.2a0.5/:"mm/yr": -D3.5/-1/4.5/0.5h -O >> $FILE_OUT
+#
+ echo Converting $FILE_OUT to $FILE_PDF
+ ps2pdf $FILE_OUT
+#
+#
+#
+#

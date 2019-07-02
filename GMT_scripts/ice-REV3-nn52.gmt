@@ -1,0 +1,98 @@
+ gmtset PAPER_MEDIA A4+
+ gmtset LABEL_FONT_SIZE 24p
+ gmtset ANOT_FONT_SIZE 6p
+ gmtset FRAME_WIDTH 0.1c
+ gmtset HEADER_OFFSET 0c
+
+
+if [ ! -d ./DEPOT ]
+then
+mkdir ./DEPOT/
+fi 
+
+ echo
+ echo ice contours since 26 ka BP
+ 
+ makecpt -Cocean -I -D -M -T0/4000/500 > pale.cpt
+ JOPT="-JM10 "  
+
+max=52
+
+TITLEH=" ICE-6G(VM5A) - R100 - "
+
+
+for i in {0..52}
+do
+if  [ $i == 0 ]; then TIME_STAMP="26.0" ; fi 
+if  [ $i == 1 ]; then TIME_STAMP="25.5" ; fi  
+if  [ $i == 2 ]; then TIME_STAMP="25.0" ; fi 
+if  [ $i == 3 ]; then TIME_STAMP="24.5" ; fi 
+if  [ $i == 4 ]; then TIME_STAMP="24.0" ; fi 
+if  [ $i == 5 ]; then TIME_STAMP="23.5" ; fi  
+if  [ $i == 6 ]; then TIME_STAMP="23.0" ; fi  
+if  [ $i == 7 ]; then TIME_STAMP="22.5" ; fi  
+if  [ $i == 8 ]; then TIME_STAMP="22.0" ; fi 
+if  [ $i == 9 ]; then TIME_STAMP="21.5" ; fi  
+if [ $i == 10 ]; then TIME_STAMP="21.0" ; fi  
+if [ $i == 11 ]; then TIME_STAMP="20.5" ; fi  
+if [ $i == 12 ]; then TIME_STAMP="20.0" ; fi 
+if [ $i == 13 ]; then TIME_STAMP="19.5" ; fi  
+if [ $i == 14 ]; then TIME_STAMP="19.0" ; fi  
+if [ $i == 15 ]; then TIME_STAMP="18.5" ; fi  
+if [ $i == 16 ]; then TIME_STAMP="18.0" ; fi  
+if [ $i == 17 ]; then TIME_STAMP="17.5" ; fi  
+if [ $i == 18 ]; then TIME_STAMP="17.0" ; fi  
+if [ $i == 19 ]; then TIME_STAMP="16.5" ; fi  
+if [ $i == 20 ]; then TIME_STAMP="16.0" ; fi  
+if [ $i == 21 ]; then TIME_STAMP="15.5" ; fi  
+if [ $i == 22 ]; then TIME_STAMP="15.0" ; fi  
+if [ $i == 23 ]; then TIME_STAMP="14.5" ; fi  
+if [ $i == 24 ]; then TIME_STAMP="14.0" ; fi  
+if [ $i == 25 ]; then TIME_STAMP="13.5" ; fi  
+if [ $i == 26 ]; then TIME_STAMP="13.0" ; fi  
+if [ $i == 27 ]; then TIME_STAMP="12.5" ; fi  
+if [ $i == 28 ]; then TIME_STAMP="12.0" ; fi  
+if [ $i == 29 ]; then TIME_STAMP="11.5" ; fi  
+if [ $i == 30 ]; then TIME_STAMP="11.0" ; fi  
+if [ $i == 31 ]; then TIME_STAMP="10.5" ; fi  
+if [ $i == 32 ]; then TIME_STAMP="10.0" ; fi  
+if [ $i == 33 ]; then TIME_STAMP="09.5" ; fi  
+if [ $i == 34 ]; then TIME_STAMP="09.0" ; fi  
+if [ $i == 35 ]; then TIME_STAMP="08.5" ; fi  
+if [ $i == 36 ]; then TIME_STAMP="08.0" ; fi  
+if [ $i == 37 ]; then TIME_STAMP="07.5" ; fi  
+if [ $i == 38 ]; then TIME_STAMP="07.0" ; fi  
+if [ $i == 39 ]; then TIME_STAMP="06.5" ; fi  
+if [ $i == 40 ]; then TIME_STAMP="06.0" ; fi  
+if [ $i == 41 ]; then TIME_STAMP="05.5" ; fi  
+if [ $i == 42 ]; then TIME_STAMP="05.0" ; fi  
+if [ $i == 43 ]; then TIME_STAMP="04.5" ; fi  
+if [ $i == 44 ]; then TIME_STAMP="04.0" ; fi  
+if [ $i == 45 ]; then TIME_STAMP="03.5" ; fi  
+if [ $i == 46 ]; then TIME_STAMP="03.0" ; fi  
+if [ $i == 47 ]; then TIME_STAMP="02.5" ; fi  
+if [ $i == 48 ]; then TIME_STAMP="02.0" ; fi  
+if [ $i == 49 ]; then TIME_STAMP="01.5" ; fi  
+if [ $i == 50 ]; then TIME_STAMP="01.0" ; fi  
+if [ $i == 51 ]; then TIME_STAMP="00.5" ; fi  
+if [ $i == 52 ]; then TIME_STAMP="00.0" ; fi  
+
+FILE_IN="ice."$TIME_STAMP".dat" 
+FILE_OU="ice."$TIME_STAMP".ps"
+echo from $FILE_IN to $FILE_OU
+
+awk '{print $1, $2, $3}' $FILE_IN > a.tmp 
+psbasemap -U"SELEN 4" -X6 -Y8 -Ba60f15/a30f15WSen:". $TITLEH $TIME_STAMP ka BP":\
+ $JOPT -R-120/240/-80/82 -K >  $FILE_OU
+pscontour -G1 $FILE_IN  -R -J -Cpale.cpt -W1 -Gd10000 -I -O -K -S >>  $FILE_OU
+pscoast -J -Dh -B -W1/0 -A1000 -O -K -R  >> $FILE_OU
+psscale -E -Cpale.cpt -Bf500a1000g500/:"H (m)": -D11/4/6/0.6 -O -K >> $FILE_OU
+psbasemap -J -R -B::/::EWSN -O >> $FILE_OU
+ps2pdf $FILE_OU
+/bin/rm $FILE_OU
+
+done 
+
+ echo converting all postcripts to PDFs
+
+

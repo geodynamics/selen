@@ -1,0 +1,59 @@
+ gmtset PAPER_MEDIA A4+
+ gmtset HEADER_FONT_SIZE 11p
+ gmtset FRAME_WIDTH 0.1c
+ gmtset ANNOT_FONT_SIZE 10p
+ gmtset PAGE_ORIENTATION landscape
+#
+#
+  FILE_OUT="fc76.ps" 
+# 
+# makecpt -CGMT_panoply -T-5/5/0.2 > pale.cpt
+# makecpt -Cpolar -D -T-5/5/0.05 > pale.cpt
+# makecpt -Cpolar -D -T-1/1/0.25 > pale.cpt
+# makecpt -Cjet -D -T-300/300/10 > pale.cpt
+#
+  makecpt -CGMT_panoply -D -T-1/1/0.25 > pale.cpt
+#
+#
+  JOPT=" -JM7 "
+  ROPT=" -R0/360/-80/82 "
+#
+ FILE_INS="sdot-fc76-l128-G11-i5g-i3.dat"
+ FILE_INU="udot-fc76-l128-G11-i5g-i3.dat"
+ FILE_ING="gdot-fc76-l128-G11-i5g-i3.dat"
+ FILE_INN="ndot-fc76-l128-G11-i5g-i3.dat"
+#
+ echo S
+ xyz2grd -F $FILE_INS -Ga.grd -I1.0 -Rg
+ psbasemap -X2 -Y12 -Ba90f45:."dot S - ICE-5G - FC76 - R44 - L128 - I3":/a30f15wsen $ROPT $JOPT -K >  $FILE_OUT
+ grdimage -O -K a.grd  -J -R  -Cpale.cpt >> $FILE_OUT
+ pscoast -Dc -B -W2,black -A1000 -O -K -R -J   >> $FILE_OUT
+ psscale -U/0/-0.75/'SELEN 4 beta' -E -Cpale.cpt -Bf0.1g0.2a0.5/:"mm/yr": -D3.5/-1/4.5/0.5h -O -K >> $FILE_OUT
+#
+ echo U
+ xyz2grd -F $FILE_INU -Ga.grd -I1.0 -Rg
+ psbasemap -X8 -Y0 -Ba90f45:."dot U":/a30f15wsen $ROPT $JOPT -K -O >>  $FILE_OUT
+ grdimage -O -K a.grd  -J -R  -Cpale.cpt >> $FILE_OUT
+ pscoast -Dc -B -W2,black -A1000 -O -K -R -J   >> $FILE_OUT
+ psscale -U/0/-0.75/'SELEN 4 beta' -E -Cpale.cpt -Bf0.1g0.2a0.5/:"mm/yr": -D3.5/-1/4.5/0.5h -O -K >> $FILE_OUT
+#
+ echo G
+ xyz2grd -F $FILE_ING -Ga.grd -I1.0 -Rg
+ psbasemap -X8 -Y0 -Ba90f45:."dot G":/a30f15wsen $ROPT $JOPT -K -O >>  $FILE_OUT
+ grdimage -O -K a.grd  -J -R  -Cpale.cpt >> $FILE_OUT
+ pscoast -Dc -B -W2,black -A1000 -O -K -R -J   >> $FILE_OUT
+ psscale -U/0/-0.75/'SELEN 4 beta' -E -Cpale.cpt -Bf0.1g0.2a0.5/:"mm/yr": -D3.5/-1/4.5/0.5h -O -K >> $FILE_OUT
+#
+ echo N
+ xyz2grd -F $FILE_INN -Ga.grd -I1.0 -Rg
+ psbasemap -X-16 -Y-9 -Ba90f45:."dot N":/a30f15wsen $ROPT $JOPT -K -O >>  $FILE_OUT
+ grdimage -O -K a.grd  -J -R  -Cpale.cpt >> $FILE_OUT
+ pscoast -Dc -B -W2,black -A1000 -O -K -R -J   >> $FILE_OUT
+ psscale -U/0/-0.75/'SELEN 4 beta' -E -Cpale.cpt -Bf0.1g0.2a0.5/:"mm/yr": -D3.5/-1/4.5/0.5h -O >> $FILE_OUT
+#
+ ps2pdf $FILE_OUT
+ echo $FILE_OUT
+#
+#
+#
+#
