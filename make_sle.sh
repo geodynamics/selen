@@ -84,6 +84,7 @@ mkdir -p $DEPOT_NAME/TGS
 mkdir -p $DEPOT_NAME/STK
 mkdir -p $DEPOT_NAME/PMT
 mkdir -p $DEPOT_NAME/BIN 
+mkdir -p $DEPOT_NAME/LOA
 #
 #
 # //////////////////////////////////////////////////////
@@ -133,6 +134,13 @@ cp ./GMT_scripts/ice-REV3-nn52.gmt $TO
 #
 #
 #
+# ------------------------------------------------------  LOAD FUNCTION
+TO=$DEPOT_NAME/LOA
+echo ---- Moving the LOAD FUNCTION data into folder: $TO
+if [ -e load.00.0.dat ]          ; then mv load.*.dat           $TO ; fi 
+#
+#
+#
 # ------------------------------------------------------  FINGERPRINTS
 TO=$DEPOT_NAME/FPR
 echo ---- Moving the FINGERPRINTS data into folder: $TO
@@ -140,6 +148,7 @@ if [ -e sdot.pix ]          ; then mv sdot.pix           $TO ; fi
 if [ -e udot.pix ]          ; then mv udot.pix           $TO ; fi 
 if [ -e ndot.pix ]          ; then mv ndot.pix           $TO ; fi 
 if [ -e gdot.pix ]          ; then mv gdot.pix           $TO ; fi 
+if [ -e ldot.pix ]          ; then mv ldot.pix           $TO ; fi 
 if [ -e fps-stats.dat ]     ; then mv fps-stats.dat      $TO ; fi 
 cp ./GMT_scripts/fps-sle.gmt $TO 
 #

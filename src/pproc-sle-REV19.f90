@@ -5,7 +5,7 @@
 !
 !-*-*-*-*-*-*-*-*
 !
-! REVISION 16 - Jun 27, 2019
+! REVISION 19 - Jul 26, 2019
 !
 ! Postprocessing the SLE 
 ! Author: GS July 2016 
@@ -17,6 +17,11 @@
 ! Revised DM Jun 27, 2019:   Changed the TIME_STAMP subroutine to handle
 !                            time steps different from 1.0kyr
 !                            Increased format width for 'l' & 'm' in stokes.dat
+! Revised DM Jul 11, 2019:   Added the load function output
+! Revised DM Jul 26, 2019:   Revised the topography and OF section to avoid 
+!                            re-reading data files
+!                            Compute T and OF also at the NN+1 time step
+!                            Added the L-dot fingerprint output
 !
 !/////////////////////////////////////////////////////////////////
 !/////////////////////////////////////////////////////////////////
@@ -96,11 +101,11 @@
  INTEGER :: ST_LMIN, ST_LMAX 
 ! 
  CHARACTER*32 FILE_TOPO, FILE_ICE, FILE_IFL, FILE_IGB 
- CHARACTER*32 FILE_IGA, FILE_OCE, FILE_CON
+ CHARACTER*32 FILE_IGA, FILE_OCE, FILE_CON, FILE_LOAD
  CHARACTER*4 CJUNK 
  CHARACTER*4, ALLOCATABLE :: TBP(:)
  REAL*8 DDELTA, XJ, PSI_X, PSI_Y, C_STOK, S_STOK 
- REAL*8 AVERAGE_N, AVERAGE_U, AVERAGE_S, AVERAGE_G
+ REAL*8 AVERAGE_N, AVERAGE_U, AVERAGE_S, AVERAGE_G, AVERAGE_L
  INTEGER I, N, J, K, L, M, P, IT, NA, NBP
  INTEGER J_INDEX, NPU, ILAT, ILON, NIN, MJ, LJ, DOM  
  COMPLEX*16 , ALLOCATABLE :: PSI(:) 
@@ -111,6 +116,8 @@
  REAL*8, ALLOCATABLE :: IN_TOPO(:,:), TOPO(:,:,:), T(:,:)
  REAL*8, ALLOCATABLE :: LONP(:), LATP(:),  PLM(:,:) 
  REAL*8, ALLOCATABLE :: LONG(:), LATG(:),  PLMG(:,:)
+ REAL*8, ALLOCATABLE :: LOAD(:,:)
+ REAL*8, ALLOCATABLE :: LDOT_PIX(:)
 !
  COMPLEX*16, ALLOCATABLE :: SH_S(:,:,:), SH_U(:,:), SH_G(:,:), SH_N(:,:)
  COMPLEX*16, ALLOCATABLE :: SIN_COS_G(:,:), SIN_COS(:,:)
@@ -179,11 +186,13 @@
  CHARACTER*100, PARAMETER :: UDOT_F="udot.dat"
  CHARACTER*100, PARAMETER :: NDOT_F="ndot.dat"
  CHARACTER*100, PARAMETER :: GDOT_F="gdot.dat"
+ CHARACTER*100, PARAMETER :: LDOT_F="ldot.dat"
 !
  CHARACTER*100, PARAMETER :: SDOT_F_PIX="sdot.pix"
  CHARACTER*100, PARAMETER :: UDOT_F_PIX="udot.pix"
  CHARACTER*100, PARAMETER :: NDOT_F_PIX="ndot.pix"
  CHARACTER*100, PARAMETER :: GDOT_F_PIX="gdot.pix"
+ CHARACTER*100, PARAMETER :: LDOT_F_PIX="ldot.pix"
 
 ! -----------------------------------------
 ! ******* Name of file with TG predictions
@@ -411,17 +420,25 @@
  write(*,*) 
  write(*,*) " **** WORKING on the OCEAN FUNCTION: "
 !
- ALLOCATE ( T(NP ,0:NN) )
- ALLOCATE ( OF(NP,0:NN) )
+ ALLOCATE ( T(NP ,0:NN+1) )
+ ALLOCATE ( OF(NP,0:NN+1) )
+!
+ DO N=0, NN+1
+    T(:,N) = TOPO(:,N,IEXT_MAX)
+ END DO
 !
  write(*,*) " ---- Re-building the OF from the TOPO and ICE data" 
- DO N=0, NN
-    FILE_ICE = "ice."//TBP(N)//".dat" 
-    FILE_TOPO="topo."//TBP(N)//".dat" 
+ DO N=0, NN+1
+    DO P=1, NP
+       IF(DBLE(T(P,N))+(RHOI/RHOW)*DBLE(H(P,N))< 0) OF(P,N)=1 
+       IF(DBLE(T(P,N))+(RHOI/RHOW)*DBLE(H(P,N))>=0) OF(P,N)=0 
+    END DO
+ END DO
 !
-    if(n==0.or.n==nn)WRITE(*,*) N, TBP(N), " ", FILE_ICE, FILE_TOPO 
-    OPEN(102, FILE=FILE_ICE ,STATUS="UNKNOWN") 
-    OPEN(103, FILE=FILE_TOPO,STATUS="UNKNOWN") 
+ write(*,*) " ---- Writing individual files for the OF since the LGM..." 
+ DO N=0, NN
+!
+    if(n==0.or.n==nn)WRITE(*,*) N, TBP(N)," ka"
 !
 ! Floating ice 
     FILE_IFL="ice_floating."//TBP(N)//".dat"
@@ -445,11 +462,6 @@
 !
 !
        DO P=1, NP 	
-         READ(102,*) LONP(P), LATP(P), H(P,N)
-         READ(103,*) LONP(P), LATP(P), T(P,N)
-!
-         IF(DBLE(T(P,N))+(RHOI/RHOW)*DBLE(H(P,N))< 0) OF(P,N)=1 
-         IF(DBLE(T(P,N))+(RHOI/RHOW)*DBLE(H(P,N))>=0) OF(P,N)=0 
 !
 ! "floating ice":   
          if(of(p,n)==1.and.t(p,n)<0.and.h(p,n)/=0)  write(104,*) lonp(p), latp(p)
@@ -468,15 +480,47 @@
 !
        ENDDO 
 !
-    CLOSE(102) 
-    CLOSE(103)
     CLOSE(104)
     CLOSE(105)
     CLOSE(106)
 !
  ENDDO
 !
-
+!
+! --------------------  ! -------------------- ! -------------------- 
+!			!		       !
+!   LOAD FUNCTION	!    LOAD FUNCTION     !    LOAD FUNCTION
+!			!		       !
+!---------------------	!--------------------- !---------------------
+!
+ write(*,*) 
+ write(*,*) " **** WORKING on the LOAD FUNCTION: "
+!
+ ALLOCATE ( LOAD(NP,0:NN+1) )
+!
+ DO N=0,NN+1
+    LOAD(:,N) = RHOI * H(:,N) * (1-OF(:,N)) - RHOW * T(:,N) * OF(:,N)
+ END DO
+!
+ write(*,*) " ---- Individual files for the load since the LGM..." 
+!
+ DO N=0,NN
+!
+    FILE_LOAD="load."//TBP(N)//".dat"
+!
+    if(n==0.or.n==nn)WRITE(*,*) N, TBP(N), " ", FILE_LOAD 
+!
+    OPEN(102,FILE=FILE_LOAD,STATUS='UNKNOWN')
+!
+    DO P=1, NP 	
+       WRITE(102,*) LONP(P), LATP(P), LOAD(P,N)
+    END DO 
+!    
+    CLOSE(102)
+!    
+  END DO
+!
+!
 ! -------------------- ! -------------------- ! --------------------
 !		       !		      !
 !     FINGERPRINTS     !     FINGERPRINTS     !     FINGERPRINTS
@@ -506,10 +550,11 @@
  ALLOCATE( UDOT_PIX(NP) )
  ALLOCATE( NDOT_PIX(NP) )
  ALLOCATE( GDOT_PIX(NP) )
+ ALLOCATE( LDOT_PIX(NP) )
 !
  DDELTA=2D0*DELTA
 !
- write(*,*) ' ---- Computing the fingeprints at the pixels...'  
+ write(*,*) ' ---- Computing the fingerprints at the pixels...'  
 !
  DO P=1, NP 
 !
@@ -518,7 +563,8 @@
  sdot_pix(p)=0d0	
  udot_pix(p)=0d0	
  ndot_pix(p)=0d0	
- gdot_pix(p)=0d0	
+ gdot_pix(p)=0d0
+ ldot_pix(p)=0d0	
 !
  DO J=1, JMAX 
 !
@@ -534,25 +580,31 @@
     gdot_pix(p) = gdot_pix(p) + dm(j)*PLM(j,anc(p))* &
          dble(((sh_g(j,nn+1)-sh_g(j,nn-1))/DDELTA)*sin_cos(mm(j),p))
 !
-    ENDDO	
+ ENDDO	
+!
+ ldot_pix(p) = (load(p,nn+1)-load(p,nn-1))/(RHOW*DDELTA)
+! 
  ENDDO	
 !
  open(7,file=SDOT_F_PIX,status='unknown')
  open(8,file=UDOT_F_PIX,status='unknown')
  open(9,file=NDOT_F_PIX,status='unknown')
  open(4,file=GDOT_F_PIX,status='unknown')
+ open(5,file=LDOT_F_PIX,status='unknown')
 !
  do p=1,np
     write(7,*) lonp(p), latp(p), sdot_pix(p)       
     write(8,*) lonp(p), latp(p), udot_pix(p)       
     write(9,*) lonp(p), latp(p), ndot_pix(p)       
     write(4,*) lonp(p), latp(p), gdot_pix(p)       
+    write(5,*) lonp(p), latp(p), ldot_pix(p)       
  enddo
 !
  close(7)
  close(8)
  close(9)
  close(4) 
+ close(5)
 !
 !
  write(*,*) ''
@@ -562,6 +614,7 @@
  average_u = 0d0 
  average_n = 0d0 
  average_g = 0d0 
+ average_l = 0d0 
  nin=0
  do p=1, np 
     if(of(p,nn)==1) then 
@@ -569,6 +622,7 @@
        average_u = average_u + udot_pix(p)
        average_n = average_n + ndot_pix(p)
        average_g = average_g + gdot_pix(p)
+       average_l = average_l + ldot_pix(p)
        nin=nin+1
     endif
  enddo
@@ -576,49 +630,57 @@
  average_u= average_u / float(nin)
  average_n= average_n / float(nin)
  average_g= average_g / float(nin)
+ average_l= average_g / float(nin)
 !
  write(*,*)   " ---- Average of S-DOT over the oceans (mm/yr): ", average_s
  write(*,*)   " ---- Average of U-DOT over the oceans (mm/yr): ", average_u
  write(*,*)   " ---- Average of N-DOT over the oceans (mm/yr): ", average_n
  write(*,*)   " ---- Average of G-DOT over the oceans (mm/yr): ", average_g
+ write(*,*)   " ---- Average of L-DOT over the oceans (mm/yr): ", average_l
  write(*,  *)"" 
  write(121,*)"" 
  write(121,*) " ---- Average of S-DOT over the oceans (mm/yr): ", average_s
  write(121,*) " ---- Average of U-DOT over the oceans (mm/yr): ", average_u
  write(121,*) " ---- Average of N-DOT over the oceans (mm/yr): ", average_n
  write(121,*) " ---- Average of G-DOT over the oceans (mm/yr): ", average_g
+ write(121,*) " ---- Average of L-DOT over the oceans (mm/yr): ", average_l
 !
  write(*,*) ' ---- Computing the WHOLE EARTH averages'  
  average_s=0d0 
  average_u=0d0 
  average_n=0d0 
  average_g=0d0 
+ average_l=0d0 
  nin=0
  do p=1, np 
     average_s = average_s + sdot_pix(p)
     average_u = average_u + udot_pix(p)
     average_n = average_n + ndot_pix(p)
     average_g = average_g + gdot_pix(p)
+    average_l = average_l + ldot_pix(p)
     nin=nin+1
  enddo
  average_s = average_s / float(nin)
  average_u = average_u / float(nin)
  average_n = average_n / float(nin)
  average_g = average_g / float(nin)
+ average_l = average_l / float(nin)
  write(*,*)   " ---- Average of S-DOT over the earth (mm/yr): ", average_s
  write(*,*)   " ---- Average of U-DOT over the earth (mm/yr): ", average_u
  write(*,*)   " ---- Average of N-DOT over the earth (mm/yr): ", average_n
  write(*,*)   " ---- Average of G-DOT over the earth (mm/yr): ", average_g
+ write(*,*)   " ---- Average of L-DOT over the earth (mm/yr): ", average_l
  write(*,*)   "" 
  write(121,*) "" 
  write(121,*) " ---- Average of S-DOT over the earth (mm/yr): ", average_s
  write(121,*) " ---- Average of U-DOT over the earth (mm/yr): ", average_u
  write(121,*) " ---- Average of N-DOT over the earth (mm/yr): ", average_n
  write(121,*) " ---- Average of G-DOT over the earth (mm/yr): ", average_g
+ write(121,*) " ---- Average of L-DOT over the earth (mm/yr): ", average_l
  close(121)
 !
 !
- DEALLOCATE ( SDOT_PIX, UDOT_PIX, NDOT_PIX, GDOT_PIX ) 
+ DEALLOCATE ( SDOT_PIX, UDOT_PIX, NDOT_PIX, GDOT_PIX, LDOT_PIX ) 
  DEALLOCATE ( PLM, SIN_COS, SH_U, SH_S, SH_N, SH_G )
 !
 !

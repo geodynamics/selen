@@ -3,7 +3,7 @@
 FC=gfortran
 FOPTS=-m64 -O
 #
-CURRENT_REVISION=REV16
+CURRENT_REVISION=REV19
 #
 SLE_SOURCES=sle-$(CURRENT_REVISION).f90 stop_config.f90 mj.f90 lj.f90 dom.f90 j_index.f90 config.f90
 #
