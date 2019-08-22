@@ -1,0 +1,55 @@
+! --- Configuration file for SELEN4
+!
+!
+!
+! >>>> Basic parameters ----------------------------------------
+!
+ 30       ! Tegmark resolution
+  32       ! LMAX
+   52       ! Number of time-steps in the ice history
+    9        ! Number of v/e layers
+     0.5      ! Ice history time step (kyr)
+      2        ! 0 is no rot, 1 classical, 2 revised
+       2        ! Number of external iterations
+        2        ! Number of internal iterations
+! 
+!
+! >>>> Input files required for the execution ----------------
+! 
+ ./DATA/                ! Directory for input files
+! 
+ px-R30.dat             ! pixel file
+!
+ sh-R30L32.bin         ! SH file
+!  
+ ebu-l1024-vm5a.dat          ! U Green Function
+ ebg-l1024-vm5a.dat          ! G Green Function
+!
+ gamma-REV-vm5a.dat            ! Rotational GF
+!
+ i6g-R30r-i.pix             ! Pixelized ice model
+!
+ topo-R30.pix               ! Pixelized present-day topo
+!
+ ofp-i6g-R30.pix            ! Pixelized present-day OF (only for elastic models)
+!
+ geodetic-points-GS18.txt   ! set of points for present-day velocity estimation
+!
+ sealevel-REV4.dat          ! RSL database
+!
+ PMTF-REV-vm5a.dat          ! PMTF
+!
+!
+! >>>>>>> Output files  --------------------------------------
+! 
+top-R30-L32-I6G-VM5a-I22.bin
+ofu-R30-L32-I6G-VM5a-I22.bin
+shs-R30-L32-I6G-VM5a-I22.bin
+shu-R30-L32-I6G-VM5a-I22.bin
+shg-R30-L32-I6G-VM5a-I22.bin
+shn-R30-L32-I6G-VM5a-I22.bin
+psi-R30-L32-I6G-VM5a-I22.dat
+sav-R30-L32-I6G-VM5a-I22.dat
+!
+! END OF FILE
+!

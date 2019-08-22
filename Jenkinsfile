@@ -21,9 +21,9 @@ pipeline {
 
     stage('Test') {
       steps {
-        sh 'cd DATA ; gunzip *R44*.gz'
-        sh './sha.exe 44 128 DATA/px-R44.dat DATA/px-lat-R44.dat DATA/sh-R44L128.bin'
-        sh 'sh ./make_sle.sh I6G-R44-L128-I33'
+        sh 'cd DATA ; gunzip *R30*.gz'
+        sh './sha.exe 30 32 DATA/px-R30.dat DATA/px-lat-R30.dat DATA/sh-R30L32.bin'
+        sh 'sh ./make_sle.sh TEST'
       }
     }
   }
