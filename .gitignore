@@ -1,17 +1,26 @@
-
+#
+# Un-compressed data files
+#
+DATA/px*dat
+DATA/ice*dat
+DATA/i5*pix
+DATA/i6*pix
+DATA/topo*pix
+#
+# Binary & object files
+#
+*.exe
+*.o
+*.mod
+#
+# SELEN output data files
+#
+*.bin
+RUN_*
+*R*L*dat
+stop_config.dat
+#
+# Misc
+#
 *.swp
-
 .DS_Store
-
-bin/
-
-obj/
-
-tmp/
-
-
-config.log
-
-Makefile
-
-*.status
