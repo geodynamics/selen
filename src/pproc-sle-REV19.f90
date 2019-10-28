@@ -328,7 +328,7 @@
     tbp(n)=cjunk  
  enddo
 !
- write(*,*) ' ---- Degres and orders ' 
+ write(*,*) ' ---- Degrees and orders ' 
  ALLOCATE ( MM(JMAX),LL(JMAX),DM(JMAX) )
  do j=1, jmax
     mm(j)=mj(j)
