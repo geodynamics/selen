@@ -26,9 +26,9 @@
                 call stop_config 
 	        Stop 1
   elseif(lmax>llmax) then 
-		Write(88,*) "Error in Sbr. PLMBAR_MOD: The degree exceeds 256", lmax 
+		Write(88,*) "Error in Sbr. PLMBAR_MOD: The degree exceeds 512", lmax 
 	 	Write(88,*) "The program will STOP ----------------"
- 	        Write(* ,*) "Error in Sbr. PLMBAR_MOD: The degree exceeds 256", lmax 
+ 	        Write(* ,*) "Error in Sbr. PLMBAR_MOD: The degree exceeds 512", lmax 
 	 	Write(* ,*) "The program will STOP ----------------"
                 call stop_config 
 	        Stop 2		
