@@ -21,6 +21,7 @@ pipeline {
 
     stage('Test') {
       steps {
+        sh 'cp EXAMPLES/config.sle.TEST .'
         sh 'cd DATA ; gunzip *R30*.gz'
         sh './sha.exe 30 32 DATA/px-R30.dat DATA/px-lat-R30.dat DATA/sh-R30L32.bin'
         sh 'sh ./make_sle.sh TEST'
