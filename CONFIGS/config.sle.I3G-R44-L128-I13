@@ -1,0 +1,55 @@
+! --- Configuration file for SELEN4
+!
+!
+!
+! >>>> Basic parameters ----------------------------------------
+!
+ 44       ! Tegmark resolution
+  128      ! LMAX
+   18       ! Number of time-steps in the ice history
+    9        ! Number of v/e layers
+     1.0      ! Ice history time step (kyr)
+      0        ! 0 is no rot, 1 classical, 2 revised
+       1        ! Number of external iterations
+        3        ! Number of internal iterations
+! 
+!
+! >>>> Input files required for the execution ----------------
+! 
+ ./DATA/                ! Directory for input files
+! 
+ px-R44.dat             ! pixel file
+!
+ sh-R44L128.bin         ! SH file
+!  
+ ebu-l1024-vm1.dat          ! U Green Function
+ ebg-l1024-vm1.dat          ! G Green Function
+!
+ gamma-NRT-vm2.dat          ! Rotational GF
+!
+ ice3g-R44.pix              ! Pixelized ice model
+!
+ topo-R44.pix               ! Pixelized present-day topo
+!
+ ofp-i6g-R44.pix            ! Pixelized present-day OF (only for elastic models)
+!
+ geodetic-points-GS18.txt   ! set of points for present-day velocity estimation
+!
+ sealevel-REV4.dat          ! RSL database
+!
+ PMTF-NRT-vm5a.dat          ! PMTF
+!
+!
+! >>>>>>> Output files  --------------------------------------
+! 
+top-R44-L128-I3G-VM1-I13.bin
+ofu-R44-L128-I3G-VM1-I13.bin
+shs-R44-L128-I3G-VM1-I13.bin
+shu-R44-L128-I3G-VM1-I13.bin
+shg-R44-L128-I3G-VM1-I13.bin
+shn-R44-L128-I3G-VM1-I13.bin
+psi-R44-L128-I3G-VM1-I13.dat
+sav-R44-L128-I3G-VM1-I13.dat
+!
+! END OF FILE
+!
