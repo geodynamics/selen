@@ -3,11 +3,14 @@
 FC=gfortran
 FOPTS=-m64 -O
 #
-CURRENT_REVISION=REV19
+CURRENT_REVISION=REV21
 #
 SLE_SOURCES=sle-$(CURRENT_REVISION).f90 stop_config.f90 mj.f90 lj.f90 dom.f90 j_index.f90 config.f90
 #
-PPR_SOURCES=pproc-sle-$(CURRENT_REVISION).f90 stop_config.f90 mj.f90 lj.f90 dom.f90 plmbar_mod.f90 plmbar.f90 harmo.f90 j_index.f90 config.f90
+PPR_SOURCES=pproc-sle-$(CURRENT_REVISION).f90 stop_config.f90 mj.f90 lj.f90 dom.f90 \
+            plmbar_mod.f90 plmbar.f90 harmo.f90 j_index.f90 config.f90 \
+            y.f90  y_t.f90 y_l.f90 y_tt.f90 y_ll.f90 y_ct.f90 y_cl.f90 y_tl.f90 \
+            plmbar_mod_d1.f90 plmbar_d1.f90                                      
 #
 SH_SOURCES=sha-REV2.f90 sindd.f90 cosdd.f90 plmbar.f90 j_index.f90 plmbar_mod.f90 stop_config.f90 mj.f90
 #

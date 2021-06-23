@@ -5,7 +5,7 @@
 !
 !-*-*-*-*-*-*-*-*
 !
-! REVISION 19 - Jul 26, 2019
+! REVISION 21 - Mar 7, 2021
 !
 ! Postprocessing the SLE 
 ! Author: GS July 2016 
@@ -22,6 +22,8 @@
 !                            re-reading data files
 !                            Compute T and OF also at the NN+1 time step
 !                            Added the L-dot fingerprint output
+! Revised GS Apr 19, 2020:   Implementation of "horizontals"
+! Revised DM Mar  7, 2021:   Wide timestamp labels and future GIA
 !
 !/////////////////////////////////////////////////////////////////
 !/////////////////////////////////////////////////////////////////
@@ -41,11 +43,13 @@
  INTEGER :: RES
  INTEGER :: LMAX
  INTEGER :: NN
+ INTEGER :: NN0
  INTEGER :: NV
  REAL*8  :: DELTA
  INTEGER :: IROT
  INTEGER :: IEXT_MAX
  INTEGER :: IINT_MAX
+ INTEGER :: KREF
 !
 ! >>>>>>> Input Files required for the execution ------------
 !
@@ -55,12 +59,14 @@
  CHARACTER*100 :: SHA_F
 !CHARACTER*100 :: SGF_F
  CHARACTER*100 :: UGF_F
+ CHARACTER*100 :: VGF_F
  CHARACTER*100 :: GGF_F
  CHARACTER*100 :: ROT_F
  CHARACTER*100 :: ICE_F
  CHARACTER*100 :: TOP_F
  CHARACTER*100 :: OFP_F
  CHARACTER*100 :: TGS_F
+ CHARACTER*100 :: GEO_F
  CHARACTER*100 :: RSL_F
  CHARACTER*100 :: PMT_F
 !
@@ -72,6 +78,7 @@
  CHARACTER*100 :: F_OUT_SHU
  CHARACTER*100 :: F_OUT_SHG
  CHARACTER*100 :: F_OUT_SHN
+ CHARACTER*100 :: F_OUT_SHV
  CHARACTER*100 :: F_OUT_TPW
  CHARACTER*100 :: F_OUT_SAV
 !
@@ -103,7 +110,8 @@
  CHARACTER*32 FILE_TOPO, FILE_ICE, FILE_IFL, FILE_IGB 
  CHARACTER*32 FILE_IGA, FILE_OCE, FILE_CON, FILE_LOAD
  CHARACTER*4 CJUNK 
- CHARACTER*4, ALLOCATABLE :: TBP(:)
+ CHARACTER*5 LABEL
+ CHARACTER*5, ALLOCATABLE :: TBP(:)
  REAL*8 DDELTA, XJ, PSI_X, PSI_Y, C_STOK, S_STOK 
  REAL*8 AVERAGE_N, AVERAGE_U, AVERAGE_S, AVERAGE_G, AVERAGE_L
  INTEGER I, N, J, K, L, M, P, IT, NA, NBP
@@ -118,8 +126,15 @@
  REAL*8, ALLOCATABLE :: LONG(:), LATG(:),  PLMG(:,:)
  REAL*8, ALLOCATABLE :: LOAD(:,:)
  REAL*8, ALLOCATABLE :: LDOT_PIX(:)
+ REAL*8, ALLOCATABLE :: VDOT_SOUT_PIX(:),  VDOT_EAST_PIX(:) 
 !
- COMPLEX*16, ALLOCATABLE :: SH_S(:,:,:), SH_U(:,:), SH_G(:,:), SH_N(:,:)
+ REAL*8, ALLOCATABLE :: E_TT(:), E_LL(:), E_TL(:)
+ COMPLEX*16, ALLOCATABLE :: YARMO (:),    YARMO_T(:),  YARMO_L(:)
+ COMPLEX*16, ALLOCATABLE :: YARMO_TT(:), YARMO_LL(:), YARMO_TL(:)
+ COMPLEX*16, ALLOCATABLE :: YARMO_CT(:),  YARMO_CL(:)
+!
+ COMPLEX*16, ALLOCATABLE :: SH_S(:,:,:)
+ COMPLEX*16, ALLOCATABLE :: SH_U(:,:), SH_G(:,:), SH_N(:,:), SH_V(:,:)
  COMPLEX*16, ALLOCATABLE :: SIN_COS_G(:,:), SIN_COS(:,:)
 !
  INTEGER, ALLOCATABLE :: ANC(:), MM(:), LL(:), DM(:), OF(:,:), H(:,:)
@@ -133,11 +148,16 @@
 !  Input files and data for TIDE GAUGES
 ! ===================================== 
  INTEGER, PARAMETER :: NH_TG = 10, LARGE_N=10**5
+ INTEGER, PARAMETER :: NH_TG_GEO = 3
  INTEGER NTG, psmsl(large_n), code(large_n)
  CHARACTER*36 tg_name(large_n)
  REAL*8 LAT_TG(large_n), LON_TG(large_n)
- REAL*8 TG_SDOT, TG_UDOT, TG_NDOT, TG_GDOT, X
+ REAL*8 X
+ REAL*8 TG_SDOT, TG_UDOT, TG_NDOT, TG_GDOT
+ REAL*8 TG_V_SOUT_DOT, TG_V_EAST_DOT
  COMPLEX*16, ALLOCATABLE :: YTG(:) 
+ COMPLEX*16, ALLOCATABLE :: YTG_THETA(:)
+ COMPLEX*16, ALLOCATABLE :: YTG_LAMBDA(:)
  CHARACTER*72, PARAMETER :: SH_TG_F  = "sh_tg.bin"
 !
 ! ===================================
@@ -164,7 +184,8 @@
  CHARACTER*72, PARAMETER :: ALL_RSL_CURVES  = "RSL.DAT"
 !
 ! ========================================
-!  Input files and data for POLAR MOTION   The dimension is nmodes, in any case. RGS 21 OCT 2018 
+!  Input files and data for POLAR MOTION
+!  The dimension is nmodes, in any case. RGS 21 OCT 2018 
 ! ======================================== 
  INTEGER MP
  CHARACTER*4 JUNK
@@ -186,22 +207,35 @@
  CHARACTER*100, PARAMETER :: UDOT_F="udot.dat"
  CHARACTER*100, PARAMETER :: NDOT_F="ndot.dat"
  CHARACTER*100, PARAMETER :: GDOT_F="gdot.dat"
+ CHARACTER*100, PARAMETER :: VDOT_F="vdot.dat"
  CHARACTER*100, PARAMETER :: LDOT_F="ldot.dat"
 !
  CHARACTER*100, PARAMETER :: SDOT_F_PIX="sdot.pix"
  CHARACTER*100, PARAMETER :: UDOT_F_PIX="udot.pix"
  CHARACTER*100, PARAMETER :: NDOT_F_PIX="ndot.pix"
  CHARACTER*100, PARAMETER :: GDOT_F_PIX="gdot.pix"
+ CHARACTER*100, PARAMETER :: VDOT_SOUT_F_PIX="vdot_sout.pix"
+ CHARACTER*100, PARAMETER :: VDOT_EAST_F_PIX="vdot_east.pix"
  CHARACTER*100, PARAMETER :: LDOT_F_PIX="ldot.pix"
-
+!
+ CHARACTER*100, PARAMETER :: FILE_STRAIN="edot.pix"
+!
+ LOGICAL, PARAMETER :: HORIZ_FPR = .false.
+ LOGICAL, PARAMETER :: STRAIN_FPR = .false.
+!
 ! -----------------------------------------
 ! ******* Name of file with TG predictions
 ! -----------------------------------------  
  CHARACTER*100, PARAMETER :: TG_OUT_F="tg.dat"
-
+!
+! ----------------------------------------------
+! ******* Name of file with geodetic velocities
+! ----------------------------------------------  
+ CHARACTER*100, PARAMETER :: GEO_OUT_F="velocities.dat"
+!
 ! ----------------------------------------------
 ! ******* Name of file with Stokes coefficients
-! ----------------------------------------- ---- 
+! ---------------------------------------------- 
  CHARACTER*100, PARAMETER :: STOKES_F="stokes.dat"
 !
 ! ----------------------------------------------
@@ -240,6 +274,7 @@
  call read_data_line(99,buffer)   ;   read(buffer,*) nv
  call read_data_line(99,buffer)   ;   read(buffer,*) delta
  call read_data_line(99,buffer)   ;   read(buffer,*) irot
+ call read_data_line(99,buffer)   ;   read(buffer,*) kref 
  call read_data_line(99,buffer)   ;   read(buffer,*) iext_max
  call read_data_line(99,buffer)   ;   read(buffer,*) iint_max
 !
@@ -252,11 +287,13 @@
 !call read_data_line(99,buffer)   ;   SGF_F=trim(pt)//trim(adjustl(buffer))
  call read_data_line(99,buffer)   ;   UGF_F=trim(pt)//trim(adjustl(buffer))
  call read_data_line(99,buffer)   ;   GGF_F=trim(pt)//trim(adjustl(buffer))
+ call read_data_line(99,buffer)   ;   VGF_F=trim(pt)//trim(adjustl(buffer))
  call read_data_line(99,buffer)   ;   ROT_F=trim(pt)//trim(adjustl(buffer))
  call read_data_line(99,buffer)   ;   ICE_F=trim(pt)//trim(adjustl(buffer))
  call read_data_line(99,buffer)   ;   TOP_F=trim(pt)//trim(adjustl(buffer))
  call read_data_line(99,buffer)   ;   OFP_F=trim(pt)//trim(adjustl(buffer))
  call read_data_line(99,buffer)   ;   TGS_F=trim(pt)//trim(adjustl(buffer))
+ call read_data_line(99,buffer)   ;   GEO_F=trim(pt)//trim(adjustl(buffer))
  call read_data_line(99,buffer)   ;   RSL_F=trim(pt)//trim(adjustl(buffer))
  call read_data_line(99,buffer)   ;   PMT_F=trim(pt)//trim(adjustl(buffer))
 !
@@ -268,6 +305,7 @@
  call read_data_line(99,buffer)   ;   F_OUT_SHU=trim(adjustl(buffer))
  call read_data_line(99,buffer)   ;   F_OUT_SHG=trim(adjustl(buffer))
  call read_data_line(99,buffer)   ;   F_OUT_SHN=trim(adjustl(buffer))
+ call read_data_line(99,buffer)   ;   F_OUT_SHV=trim(adjustl(buffer))
  call read_data_line(99,buffer)   ;   F_OUT_TPW=trim(adjustl(buffer))
  call read_data_line(99,buffer)   ;   F_OUT_SAV=trim(adjustl(buffer))
 !
@@ -282,6 +320,11 @@
  ST_LMIN=0
  ST_LMAX=LMAX
 !
+! >>>>>>>>>>> Set time-step for reference topo
+!
+ IF( KREF<0 )     KREF=NN+1+KREF
+ NN0 = KREF
+!
 ! >>>>>>>>>>> Allocate variable whose size depends on input parameters
 !
  ALLOCATE( M1(0:NN), M2(0:NN) )
@@ -290,6 +333,8 @@
  ALLOCATE( TBP(0:NN) )
  ALLOCATE( PSI(0:NN+1) )
  ALLOCATE( YTG(JMAX) )
+ ALLOCATE( YTG_THETA(JMAX) )
+ ALLOCATE( YTG_LAMBDA(JMAX) )
 !
 !
 ! ========================== END OF CONFIGURATION SECTION ==========================
@@ -324,8 +369,9 @@
 !
  write(*,*) ' ---- Time stamps ' 
  do n=0, nn 
-    CALL TIME_STAMP( nn, n, DELTA, cjunk )
-    tbp(n)=cjunk  
+!    CALL TIME_STAMP( nn, n, DELTA, label )
+    CALL TIME_STAMP( nn0, n, DELTA, label )
+    tbp(n)=label  
  enddo
 !
  write(*,*) ' ---- Degrees and orders ' 
@@ -352,9 +398,6 @@
  enddo
  CLOSE(1) 
 !
-!!!!!!!!!!!!!!!!!!!!!!!!
-! ENDIF
-!!!!!!!!!!!!!!!!!!!!!!!!
 !
 !
 ! --------------------  ! -------------------- ! -------------------- 
@@ -558,7 +601,7 @@
 !
  DO P=1, NP 
 !
- if(mod(np,5000)==0) write(*,*) p, "of ", np
+ if(mod(p,5000)==0) write(*,*) p, "of ", np
 !
  sdot_pix(p)=0d0	
  udot_pix(p)=0d0	
@@ -569,20 +612,20 @@
  DO J=1, JMAX 
 !
     sdot_pix(p) = sdot_pix(p) + dm(j)*PLM(j,anc(p))* &
-         dble(((sh_s(j,nn+1,IEXT_MAX)-sh_s(j,nn-1,IEXT_MAX))/DDELTA)*sin_cos(mm(j),p))
+         dble(((sh_s(j,nn0+1,IEXT_MAX)-sh_s(j,nn0-1,IEXT_MAX))/DDELTA)*sin_cos(mm(j),p))
 !
     udot_pix(p) = udot_pix(p) + dm(j)*PLM(j,anc(p))* &
-         dble(((sh_u(j,nn+1)-sh_u(j,nn-1))/DDELTA)*sin_cos(mm(j),p))
+         dble(((sh_u(j,nn0+1)-sh_u(j,nn0-1))/DDELTA)*sin_cos(mm(j),p))
 !
     ndot_pix(p) = ndot_pix(p) + dm(j)*PLM(j,anc(p))* &
-         dble(((sh_n(j,nn+1)-sh_n(j,nn-1))/DDELTA)*sin_cos(mm(j),p))
+         dble(((sh_n(j,nn0+1)-sh_n(j,nn0-1))/DDELTA)*sin_cos(mm(j),p))
 !
     gdot_pix(p) = gdot_pix(p) + dm(j)*PLM(j,anc(p))* &
-         dble(((sh_g(j,nn+1)-sh_g(j,nn-1))/DDELTA)*sin_cos(mm(j),p))
+         dble(((sh_g(j,nn0+1)-sh_g(j,nn0-1))/DDELTA)*sin_cos(mm(j),p))
 !
  ENDDO	
 !
- ldot_pix(p) = (load(p,nn+1)-load(p,nn-1))/(RHOW*DDELTA)
+ ldot_pix(p) = (load(p,nn0+1)-load(p,nn0-1))/(RHOW*DDELTA)
 ! 
  ENDDO	
 !
@@ -605,6 +648,202 @@
  close(9)
  close(4) 
  close(5)
+!
+ DEALLOCATE ( PLM, SIN_COS, SH_U, SH_S, SH_N, SH_G)
+!
+!
+!
+!\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+! GS: NEW as of APR 2020
+!\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+!
+!
+! +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  IF ( HORIZ_FPR ) THEN
+! +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+!
+!
+ write(*,*) 
+ write(*,*) " **** WORKING on the fingerprints (horizontals)"
+!
+ write(*,*) ' ---- Reading SHV data from file: ', trim(adjustl(F_OUT_SHV))
+!
+ ALLOCATE ( SH_V(JMAX,0:NN+1) )  
+!
+ OPEN (13,FILE=F_OUT_SHV, status="unknown", form="unformatted"); READ (13) SH_V; CLOSE(13) 
+!
+ ALLOCATE ( VDOT_SOUT_PIX(NP), VDOT_EAST_PIX(NP) )
+!
+ DO P=1, NP 
+!
+      if(mod(p,5000)==0) write(*,*) p, "of ", np
+!
+      ALLOCATE ( YARMO_T (JMAX) ) 
+      ALLOCATE ( YARMO_L (JMAX) ) 
+!
+      yarmo_t(:)= (0d0,0d0)
+      yarmo_l(:)= (0d0,0d0)
+      if(abs(latp(p)).ne.90.0) then 
+    	   	call harmo_y_t (lmax, lonp(p), latp(p), yarmo_t )
+    	   	call harmo_y_l (lmax, lonp(p), latp(p), yarmo_l)
+       Endif 
+       !if(abs(latp(p))==90.0) then
+       !	       write(*,*) latp(p)
+       !Endif 
+!
+      VDOT_SOUT_PIX(P)=0d0
+      VDOT_EAST_PIX(P)=0d0
+!
+ 		  DO J=1, JMAX 
+!
+      		   VDOT_SOUT_PIX(P) = VDOT_SOUT_PIX(P) + & 
+                                 DM(J)*REAL(((SH_V(J,NN0+1)-SH_V(J,NN0-1))/DDELTA)*YARMO_T(J))   
+!
+      		   VDOT_EAST_PIX(P) = VDOT_EAST_PIX(P)  +  & 
+                                 DM(J)*REAL(((SH_V(J,NN0+1)-SH_V(J,NN0-1))/DDELTA)*YARMO_L(J))   
+!
+       ENDDO
+!
+       DEALLOCATE ( YARMO_T, YARMO_L) 
+!
+ ENDDO
+!
+      open(7,file=VDOT_SOUT_F_PIX,status='unknown')
+      open(8,file=VDOT_EAST_F_PIX,status='unknown')
+!
+      do p=1,np
+           write(7,*) lonp(p), latp(p), VDOT_SOUT_PIX(P)
+           write(8,*) lonp(p), latp(p), VDOT_EAST_PIX(P)                      
+      enddo
+!
+      close(7)
+      close(8)
+!
+      DEALLOCATE ( SH_V )
+      DEALLOCATE ( VDOT_SOUT_PIX, VDOT_EAST_PIX ) 
+
+!
+! +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  END IF
+! +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+!
+!
+!
+!\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+! GS: NEW as of MAY 2020
+!\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+!
+!
+!
+! +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  IF ( STRAIN_FPR ) THEN
+! +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+!
+!
+ write(*,*) 
+ write(*,*) " **** WORKING on the 2nd invariant of the STRAIN"
+!
+ write(*,*) ' ---- Reading SHV data from file: ', trim(adjustl(F_OUT_SHV))
+ write(*,*) ' ---- Reading SHU data from file: ', trim(adjustl(F_OUT_SHU))
+ ALLOCATE ( SH_V(JMAX,0:NN+1) ) 
+ ALLOCATE ( SH_U(JMAX,0:NN+1) )
+ OPEN (13,FILE=F_OUT_SHV, status="unknown", form="unformatted"); READ (13) SH_V; CLOSE(13) 
+ OPEN (13,FILE=F_OUT_SHU, status="unknown", form="unformatted"); READ (13) SH_U; CLOSE(13) 
+!
+ ALLOCATE ( E_TT(NP), E_LL(NP), E_TL(NP) )
+!
+ DDELTA=2D0*DELTA
+!
+ DO 11011 P=1, NP 
+!
+      if(mod(p,5000)==0) write(*,*) p, "of ", np
+!
+      ALLOCATE ( YARMO    (JMAX) ) 
+      ALLOCATE ( YARMO_TT (JMAX) ) 
+      ALLOCATE ( YARMO_LL (JMAX) ) 
+      ALLOCATE ( YARMO_CT (JMAX) ) 
+      ALLOCATE ( YARMO_TL (JMAX) ) 
+      ALLOCATE ( YARMO_CL (JMAX) ) 
+!
+      yarmo(:)   = (0d0,0d0)
+      yarmo_tt(:)= (0d0,0d0)
+      yarmo_ll(:)= (0d0,0d0)
+      yarmo_ct(:)= (0d0,0d0)
+      yarmo_tl(:)= (0d0,0d0)
+      yarmo_cl(:)= (0d0,0d0)
+!      
+      if(abs(latp(p)).ne.90.0) then 
+    	   	call harmo_y    (lmax, lonp(p), latp(p), yarmo    )
+    	   	call harmo_y_tt (lmax, lonp(p), latp(p), yarmo_tt )
+    	   	call harmo_y_ll (lmax, lonp(p), latp(p), yarmo_ll )
+    	   	call harmo_y_ct (lmax, lonp(p), latp(p), yarmo_ct )
+    	   	call harmo_y_tl (lmax, lonp(p), latp(p), yarmo_tl )
+    	   	call harmo_y_cl (lmax, lonp(p), latp(p), yarmo_cl )
+       Endif 
+       !  if(abs(latp(p))==90.0) then
+       !       write(*,*) latp(p)
+       !  Endif       
+!
+       E_TT(P)=0d0       
+       E_LL(P)=0d0
+       E_TL(P)=0d0
+!       
+       DO J=1, JMAX 
+      		   E_TT(P) = E_TT(P) + DM(J)*REAL(((SH_U(J,NN0+1)-SH_U(J,NN0-1))/DDELTA)*YARMO(J))   
+      		   E_TT(P) = E_TT(P) + DM(J)*REAL(((SH_V(J,NN0+1)-SH_V(J,NN0-1))/DDELTA)*YARMO_TT(J))   		   
+!
+		   E_LL(P) = E_LL(P) + DM(J)*REAL(((SH_V(J,NN0+1)-SH_V(J,NN0-1))/DDELTA)*YARMO_LL(J)) 
+		   E_LL(P) = E_LL(P) + DM(J)*REAL(((SH_U(J,NN0+1)-SH_U(J,NN0-1))/DDELTA)*YARMO(J)) 
+		   E_LL(P) = E_LL(P) + DM(J)*REAL(((SH_V(J,NN0+1)-SH_V(J,NN0-1))/DDELTA)*YARMO_CT(J)) 
+		  		   
+		   E_TL(P) = E_TL(P) + DM(J)*REAL(((SH_V(J,NN0+1)-SH_V(J,NN0-1))/DDELTA)*YARMO_TL(J)) 
+		   E_TL(P) = E_TL(P) - DM(J)*REAL(((SH_V(J,NN0+1)-SH_V(J,NN0-1))/DDELTA)*YARMO_CL(J)) 
+!
+       ENDDO
+!       
+      E_TT(P) = E_TT(P)/ERAD/1000d0     
+      E_LL(P) = E_LL(P)/ERAD/1000d0
+      E_TL(P) = E_TL(P)/ERAD/1000d0		  
+!
+      DEALLOCATE ( YARMO    ) 
+      DEALLOCATE ( YARMO_TT ) 
+      DEALLOCATE ( YARMO_LL ) 
+      DEALLOCATE ( YARMO_CT ) 
+      DEALLOCATE ( YARMO_TL ) 
+      DEALLOCATE ( YARMO_CL ) 
+!
+ 11011 CONTINUE
+!
+      open(7,file=FILE_STRAIN,status='unknown')
+!
+! Units for the strain rate are 10^{-9}/yr
+!
+       do p=1,np
+           write(7,*) lonp(p), latp(p),  10**9*(E_LL(P) + E_TT(P)),                           & 
+	   				 10**9*SQRT(E_TT(P)**2 + E_LL(P)**2 + 2.*E_TL(P)**2), & 
+	                                 10**9*E_TT(P), 10**9*E_LL(P), 10**9*E_TL(P) 
+!	                                
+       enddo
+!
+      close(7)
+!     
+!      
+!      
+!      
+!      
+ DEALLOCATE ( E_TT, E_LL, E_TL )      
+ DEALLOCATE ( SH_U, SH_V )      
+!
+!
+!
+! +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  END IF 
+! +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+      
+!      
+!
+!\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+!\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+!
 !
 !
  write(*,*) ''
@@ -681,7 +920,7 @@
 !
 !
  DEALLOCATE ( SDOT_PIX, UDOT_PIX, NDOT_PIX, GDOT_PIX, LDOT_PIX ) 
- DEALLOCATE ( PLM, SIN_COS, SH_U, SH_S, SH_N, SH_G )
+!DEALLOCATE ( PLM, SIN_COS, SH_U, SH_S, SH_N, SH_G )
 !
 !
 !
@@ -762,10 +1001,14 @@
  OPEN(33,FILE=ALL_RSL_CURVES,STATUS="UNKNOWN")
  DO I=1, NRSL 
  write(33,*) codes(i), name(i)
-    DO K=0, NN
-       RSL(I,K)= -(SLC(I,NN)-SLC(I,NN-K))
-       WRITE(33,*) FLOAT(K)*DELTA*1000.0, RSL(I,K)	 
-    ENDDO
+!   DO K=0, NN
+!      RSL(I,K)= -(SLC(I,NN)-SLC(I,NN-K))
+!      WRITE(33,*) FLOAT(K)*DELTA*1000.0, RSL(I,K)	 
+!   ENDDO
+    DO K=NN,0,-1
+       RSL(I,K)= -(SLC(I,NN0)-SLC(I,K))
+       WRITE(33,*) FLOAT(NN0-K)*DELTA*1000.0, RSL(I,K)	 
+    END DO
  ENDDO 
  CLOSE(33)	
 !
@@ -779,9 +1022,12 @@
     WRITE (91,'(a1,1x,a22,a5,a3,1x,a8,2(1x,f10.5))') &
     '#', NAME(i), 'code=', string, ' lon/lat:', lons(i), lats(i)	      
     WRITE (91,'(a2,a17)') '# ', 'years BP, RSL (m)'
-       DO K=0, NN
-          WRITE(91,"(F10.2,1X,F11.3)") 500.*k, RSL(I,K)	 
+       DO K=NN, 0, -1
+          WRITE(91,"(F10.2,1X,F11.3)") DELTA*1000.0*(nn0-k), RSL(I,K)           ! was '500.*k'	 
        ENDDO
+!       DO K=0, NN
+!          WRITE(91,"(F10.2,1X,F11.3)") DELTA*1000.0*k, RSL(I,K)           ! was '500.*k'	 
+!       ENDDO
  ENDDO
 !
  write(*,*) ' ---- Files with RSL data at individual sites...'
@@ -876,13 +1122,13 @@ ENDDO
     TG_GDOT = 0D0 
        do j=1, jmax
           TG_SDOT = TG_SDOT + &
-	            DM(J)*REAL(((SH_S(J,NN+1,IEXT_MAX)-SH_S(J,NN-1,IEXT_MAX))/DDELTA)*YTG(J)) 
+	            DM(J)*REAL(((SH_S(J,NN0+1,IEXT_MAX)-SH_S(J,NN0-1,IEXT_MAX))/DDELTA)*YTG(J)) 
           TG_UDOT = TG_UDOT + & 
-	            DM(J)*REAL(((SH_U(J,NN+1)-SH_U(J,NN-1))/DDELTA)*YTG(J)) 
+	            DM(J)*REAL(((SH_U(J,NN0+1)-SH_U(J,NN0-1))/DDELTA)*YTG(J)) 
           TG_NDOT = TG_NDOT + & 
-	            DM(J)*REAL(((SH_N(J,NN+1)-SH_N(J,NN-1))/DDELTA)*YTG(J))    
+	            DM(J)*REAL(((SH_N(J,NN0+1)-SH_N(J,NN0-1))/DDELTA)*YTG(J))    
           TG_GDOT = TG_GDOT + & 
-	            DM(J)*REAL(((SH_G(J,NN+1)-SH_G(J,NN-1))/DDELTA)*YTG(J))    
+	            DM(J)*REAL(((SH_G(J,NN0+1)-SH_G(J,NN0-1))/DDELTA)*YTG(J))    
        enddo
     write(34,"(6(F14.8,1X),I6,1X,A36)") & 
     lon_tg(i), lat_tg(i), TG_SDOT, TG_UDOT, TG_NDOT, TG_GDOT, psmsl(i), tg_name(i)  
@@ -895,7 +1141,136 @@ ENDDO
 !
 !
 !
-
+!
+!
+!
+!
+!
+!
+! -------------------- ! -------------------- ! --------------------
+!		       !		      !
+! GEODETIC VELOCITIES  ! GEODETIC VELOCITIES  ! GEODETIC VELOCITIES
+!		       !		      !
+!--------------------- !--------------------- !---------------------
+! GS April 2020
+!
+ write(*,*) 
+ write(*,*) " **** WORKING on GEODETIC POINTS: "
+!
+ write(*,*) " ---- Counting the number of points from file: "
+ write(*,*) "      ", trim(adjustl(GEO_F))
+ open(1,file=GEO_F,status="unknown") 
+ do i=1, nh_tg_geo 
+    read(1,"(A4)")cjunk
+ enddo
+ ntg=0
+ do i=1, large_n 
+    read(1,"(A4)",end=112)cjunk  
+    ntg=ntg+1
+ enddo
+ 112 continue 
+ write(*,*) " ---- Number of geodetic points: ", ntg
+ close(1) 
+!
+ write(*,*) " ---- Computing the SHs at the geodetic points..." 
+ open(1,file=GEO_F,status="unknown") 
+ do i=1, nh_tg_geo 
+    read(1,"(A4)")cjunk
+ enddo
+!----------------
+ open(17,file=SH_TG_F,form="unformatted",access="SEQUENTIAL")
+ do i=1, ntg
+    read(1,*) lon_tg(i), lat_tg(i), tg_name(i)
+        if(lon_tg(i).le.0) lon_tg(i)=lon_tg(i)+360d0
+        if(mod(i,200)==0)write(*,*) i, tg_name(i)
+    call harmo_y    (lmax, lon_tg(i), lat_tg(i), ytg)
+    call harmo_y_t  (lmax, lon_tg(i), lat_tg(i), ytg_theta )
+    call harmo_y_l  (lmax, lon_tg(i), lat_tg(i), ytg_lambda)
+    write(17) ytg, ytg_theta, ytg_lambda
+ enddo
+!----------------
+ close(17)
+ close(1)
+!
+!//////////////////////////////////
+!
+ write(*,*) " ---- Computing  3D velocities at the geodetic points"
+!
+ open(17,file=SH_TG_F,form="unformatted",access="SEQUENTIAL")
+!
+!write(*,*) ' ---- Reading SHS data from file: ', trim(adjustl(F_OUT_SHS))
+ write(*,*) ' ---- Reading SHU data from file: ', trim(adjustl(F_OUT_SHU))
+!write(*,*) ' ---- Reading SHN data from file: ', trim(adjustl(F_OUT_SHN))
+!write(*,*) ' ---- Reading SHG data from file: ', trim(adjustl(F_OUT_SHG))
+ write(*,*) ' ---- Reading SHV data from file: ', trim(adjustl(F_OUT_SHV))
+!ALLOCATE ( SH_S(JMAX,0:NN+1,0:IEXT_MAX) )
+ ALLOCATE ( SH_U(JMAX,0:NN+1) )
+!ALLOCATE ( SH_N(JMAX,0:NN+1) )
+!ALLOCATE ( SH_G(JMAX,0:NN+1) )
+ ALLOCATE ( SH_V(JMAX,0:NN+1) )
+!OPEN (13,FILE=F_OUT_SHS, status="unknown", form="unformatted"); READ (13) SH_S; CLOSE(13)
+ OPEN (13,FILE=F_OUT_SHU, status="unknown", form="unformatted"); READ (13) SH_U; CLOSE(13)
+!OPEN (13,FILE=F_OUT_SHN, status="unknown", form="unformatted"); READ (13) SH_N; CLOSE(13)
+!OPEN (13,FILE=F_OUT_SHG, status="unknown", form="unformatted"); READ (13) SH_G; CLOSE(13)
+ OPEN (13,FILE=F_OUT_SHV, status="unknown", form="unformatted"); READ (13) SH_V; CLOSE(13)
+!
+ open(34,file=GEO_OUT_F,status="unknown")
+!
+  write(34,*) "------------------------------------------------------"
+  write(34,*) "  Lon       Lat       Up     South    East      Id   "
+  write(34,*) "------------------------------------------------------"
+!
+  DDELTA=2D0*DELTA
+  do i=1, ntg
+    if(i==1)  write(*,*) " ---- ", "point ", i, " of ", ntg
+    if(i==ntg)write(*,*) " ---- ", "point ", i, " of ", ntg
+!
+    read(17) ytg, ytg_theta, ytg_lambda
+!
+!   TG_SDOT = 0D0
+    TG_UDOT = 0D0
+!   TG_NDOT = 0D0
+!   TG_GDOT = 0D0
+    TG_V_SOUT_DOT = 0d0
+    TG_V_EAST_DOT = 0d0
+!
+       DO J=1, JMAX
+!
+!         TG_SDOT = TG_SDOT + &
+!                   DM(J)*REAL(((SH_S(J,NN0+1,IEXT_MAX)-SH_S(J,NN0-1,IEXT_MAX))/DDELTA)*YTG(J))
+          TG_UDOT = TG_UDOT + &
+                    DM(J)*REAL(((SH_U(J,NN0+1)-SH_U(J,NN0-1))/DDELTA)*YTG(J))
+!         TG_NDOT = TG_NDOT + &
+!                   DM(J)*REAL(((SH_N(J,NN0+1)-SH_N(J,NN0-1))/DDELTA)*YTG(J))
+!         TG_GDOT = TG_GDOT + &
+!                   DM(J)*REAL(((SH_G(J,NN0+1)-SH_G(J,NN0-1))/DDELTA)*YTG(J))
+!
+          TG_V_SOUT_DOT = TG_V_SOUT_DOT + &                                                                                                                                             !***!
+                    DM(J)*REAL(((SH_V(J,NN0+1)-SH_V(J,NN0-1))/DDELTA)*YTG_THETA(J))
+!
+          TG_V_EAST_DOT = TG_V_EAST_DOT + &                                                                                                                                     !***!
+                    DM(J)*REAL(((SH_V(J,NN0+1)-SH_V(J,NN0-1))/DDELTA)*YTG_LAMBDA(J))
+!
+       ENDDO
+!
+!
+       write(34,"(5(F8.3,1X),3X,A7)") &
+              lon_tg(i), lat_tg(i), &
+              TG_UDOT, TG_V_SOUT_DOT, TG_V_EAST_DOT, TG_NAME(i)
+!
+!
+ enddo
+ close(17)
+ close(34)
+ write(*,*) ' ---- For the 3D velocities at the geodetic points, see file: ', trim(adjustl(GEO_OUT_F))
+!
+!DEALLOCATE ( SH_S, SH_U, SH_N, SH_G, SH_V )
+ DEALLOCATE (SH_U, SH_V )
+!
+!
+!
+!
+!
 !
 ! ----------------------- !! ----------------------- !! ----------------------- ! 
 !		          !!			     !! 			!
@@ -921,7 +1296,7 @@ ENDDO
  DO L= ST_LMIN, ST_LMAX  
     DO M=0, L 
 !
-       RATE_G = (SH_G(J_INDEX(L,M),NN+1)-SH_G(J_INDEX(L,M),NN-1))/DDELTA
+       RATE_G = (SH_G(J_INDEX(L,M),NN0+1)-SH_G(J_INDEX(L,M),NN0-1))/DDELTA
 !
 ! ---- now in (yrs)^(-1)
        RATE_G = RATE_G/(ERADIUS*1E3)  
@@ -979,6 +1354,10 @@ ENDDO
     write(*,*) ' ---- Number of rotational modes: ', MP 
     write(*,*) ' ---- Reading PMTF data from file: ', trim(adjustl(PMT_F)) 
     OPEN (1,file=PMT_F,status='unknown') 
+    READ (1,"(A10)") JUNK 
+    READ (1,"(A10)") JUNK 
+    READ (1,"(A10)") JUNK 
+    READ (1,"(A10)") JUNK 
     READ (1,"(A10)") JUNK 
     READ (1,"(A10)") JUNK 
     READ (1,"(A10)") JUNK 
@@ -1098,16 +1477,20 @@ enddo
  SUBROUTINE TIME_STAMP ( nn, n, delta, etichetta ) 
  implicit NONE 
  integer n, nn, nbp
- character*4 etichetta
+ character*5 etichetta
  real(8)  tbp, delta
 !  
      nbp=nn-n 
      tbp=dble(nbp)*delta
 !
-     if( tbp.lt.10. ) then
-         write(etichetta,'(a1,f3.1)')  '0', tbp
+     if( tbp.lt.0.  ) then
+         write(etichetta,'(a2,f3.1)')  '-0', -tbp
+     elseif( tbp.lt.10. ) then
+         write(etichetta,'(a2,f3.1)')  '00', tbp
+     elseif( tbp.lt.100. ) then
+         write(etichetta,'(a1,f4.1)')  '0', tbp
      else
-         write(etichetta,'(f4.1)') tbp
+         write(etichetta,'(f5.1)') tbp
      endif
 !
 !      if(0.le.nbp.and.nbp.le.19) then 

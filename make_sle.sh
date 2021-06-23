@@ -81,6 +81,7 @@ mkdir -p $DEPOT_NAME/ICE
 mkdir -p $DEPOT_NAME/FPR
 mkdir -p $DEPOT_NAME/RSL
 mkdir -p $DEPOT_NAME/TGS
+mkdir -p $DEPOT_NAME/GEO
 mkdir -p $DEPOT_NAME/STK
 mkdir -p $DEPOT_NAME/PMT
 mkdir -p $DEPOT_NAME/BIN 
@@ -108,18 +109,18 @@ cp $CONFIG_NAME $TO
 # ------------------------------------------------------  OCEAN FUNCTION
 TO=$DEPOT_NAME/OFU
 echo ---- Moving the OF data into folder: $TO
-if [ -e ice_floating.00.0.dat ]       ; then mv ice_floating*.dat $TO ; fi 
-if [ -e ice_grounded_below.00.0.dat ] ; then mv ice_grounded_below*.dat $TO ; fi 
-if [ -e ice_grounded_above.00.0.dat ] ; then mv ice_grounded_above*.dat $TO ; fi 
-if [ -e continent.00.0.dat ]          ; then mv continent*.dat    $TO ; fi 
-if [ -e ocean.00.0.dat ]              ; then mv ocean.*.dat       $TO ; fi 
+if [ -e ice_floating.000.0.dat ]       ; then mv ice_floating*.dat $TO ; fi 
+if [ -e ice_grounded_below.000.0.dat ] ; then mv ice_grounded_below*.dat $TO ; fi 
+if [ -e ice_grounded_above.000.0.dat ] ; then mv ice_grounded_above*.dat $TO ; fi 
+if [ -e continent.000.0.dat ]          ; then mv continent*.dat    $TO ; fi 
+if [ -e ocean.000.0.dat ]              ; then mv ocean.*.dat       $TO ; fi 
 cp ./GMT_scripts/of-REV4-nn*.gmt $TO 
 #
 #
 # ------------------------------------------------------  TOPOGRAPHY
 TO=$DEPOT_NAME/TOP
 echo ---- Moving the TOPO data into folder: $TO
-if [ -e topo.00.0.dat ]          ; then mv topo*.dat        $TO ; fi 
+if [ -e topo.000.0.dat ]          ; then mv topo*.dat        $TO ; fi 
 cp ./GMT_scripts/topo-REV2-nn42.gmt $TO
 cp ./GMT_scripts/topo-REV2-nn52.gmt $TO
 #
@@ -128,7 +129,7 @@ cp ./GMT_scripts/topo-REV2-nn52.gmt $TO
 # ------------------------------------------------------  ICE DATA
 TO=$DEPOT_NAME/ICE
 echo ---- Moving the ICE data into folder: $TO
-if [ -e ice.00.0.dat ]          ; then mv ice.*.dat           $TO ; fi 
+if [ -e ice.000.0.dat ]          ; then mv ice.*.dat           $TO ; fi 
 cp ./GMT_scripts/ice-REV3-nn42.gmt $TO 
 cp ./GMT_scripts/ice-REV3-nn52.gmt $TO 
 #
@@ -137,7 +138,7 @@ cp ./GMT_scripts/ice-REV3-nn52.gmt $TO
 # ------------------------------------------------------  LOAD FUNCTION
 TO=$DEPOT_NAME/LOA
 echo ---- Moving the LOAD FUNCTION data into folder: $TO
-if [ -e load.00.0.dat ]          ; then mv load.*.dat           $TO ; fi 
+if [ -e load.000.0.dat ]          ; then mv load.*.dat           $TO ; fi 
 #
 #
 #
@@ -149,6 +150,9 @@ if [ -e udot.pix ]          ; then mv udot.pix           $TO ; fi
 if [ -e ndot.pix ]          ; then mv ndot.pix           $TO ; fi 
 if [ -e gdot.pix ]          ; then mv gdot.pix           $TO ; fi 
 if [ -e ldot.pix ]          ; then mv ldot.pix           $TO ; fi 
+if [ -e vdot_east.pix ]     ; then mv vdot_east.pix      $TO ; fi 
+if [ -e vdot_sout.pix ]     ; then mv vdot_sout.pix      $TO ; fi 
+if [ -e edot.pix ]          ; then mv edot.pix           $TO ; fi 
 if [ -e fps-stats.dat ]     ; then mv fps-stats.dat      $TO ; fi 
 cp ./GMT_scripts/fps-sle.gmt $TO 
 #
@@ -169,6 +173,13 @@ cp ./GMT_scripts/rsl-SINGLE.gmt $TO
 TO=$DEPOT_NAME/TGS
 echo ---- Moving the TG data into folder: $TO
 if [ -e tg.dat ]            ; then mv tg.dat              $TO ; fi 
+#
+#
+#
+# ------------------------------------------------------  GEODETIC VELOCITIES
+TO=$DEPOT_NAME/GEO
+echo ---- Moving the geodetic velocities into folder: $TO
+if [ -e velocities.dat ]    ; then mv velocities.dat      $TO ; fi 
 #
 #
 #

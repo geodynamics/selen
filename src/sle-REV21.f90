@@ -5,7 +5,7 @@
 !
 !-*-*-*-*-*-*-*-*-*-*-*-*-*  
 !
-! REVISION 19 - Jul 26, 2019
+! REVISION 21 - Mar 07, 2021
 !
 !\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 ! This program upgrades previous version (8) by the 
@@ -24,6 +24,9 @@
 ! DM Jun 27, 2019:   Changes in the post-processor
 ! DM Jul 11, 2019:   Changes in the post-processor
 ! DM Jul 26, 2019:   Changes in the post-processor
+! GS Apr 19, 2020:   Implementation of "horizontals"
+! DM Sep 21, 2020:   Future GIA
+! DM Mar 07, 2021:   New format for SRFs and RRFs
 !
 !\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 !
@@ -58,12 +61,14 @@
  CHARACTER*100 :: SHA_F
 !CHARACTER*100 :: SGF_F
  CHARACTER*100 :: UGF_F
+ CHARACTER*100 :: VGF_F 
  CHARACTER*100 :: GGF_F
  CHARACTER*100 :: ROT_F
  CHARACTER*100 :: ICE_F
  CHARACTER*100 :: TOP_F
  CHARACTER*100 :: OFP_F
  CHARACTER*100 :: TGS_F
+ CHARACTER*100 :: GEO_F
  CHARACTER*100 :: RSL_F
  CHARACTER*100 :: PMT_F
 !
@@ -72,7 +77,8 @@
  CHARACTER*100 :: F_OUT_TOP 
  CHARACTER*100 :: F_OUT_OFU 
  CHARACTER*100 :: F_OUT_SHS 
- CHARACTER*100 :: F_OUT_SHU 
+ CHARACTER*100 :: F_OUT_SHU
+ CHARACTER*100 :: F_OUT_SHV 
  CHARACTER*100 :: F_OUT_SHG 
  CHARACTER*100 :: F_OUT_SHN 
  CHARACTER*100 :: F_OUT_TPW 
@@ -91,6 +97,7 @@
 !
  INTEGER III, DOM, IINT, IEXT, J_INDEX
  INTEGER I, J, K, L, M, N, P, NA, LJ, MJ
+ INTEGER :: KREF, NN0
 !
  INTEGER, ALLOCATABLE :: OF(:,:), OFP(:), MM(:), LL(:), DM(:)
 !
@@ -104,17 +111,24 @@
  COMPLEX*16, ALLOCATABLE :: SH_GR(:,:), SH_UR(:,:), SH_RR(:,:) 
  COMPLEX*16, ALLOCATABLE :: SH_RRP(:,:), SH_KR(:,:), SH_N(:,:)
  COMPLEX*16, ALLOCATABLE :: SH_LA21(:), SH_LB21(:), SH_LC21(:)
+ COMPLEX*16, ALLOCATABLE :: SH_VR(:,:), SH_V(:,:)
 !
- REAL*4, ALLOCATABLE :: BETA_S(:,:), BETA_U(:,:), BETA_G(:,:)
+ REAL*4, ALLOCATABLE :: BETA_S(:,:), BETA_U(:,:), BETA_G(:,:), BETA_V(:,:)
  REAL*8, ALLOCATABLE :: RA_AVE(:), RB_AVE(:), RC_AVE(:)
- REAL*4, ALLOCATABLE :: ES(:), EU(:), EG(:), RR_AVE(:)
+ REAL*4, ALLOCATABLE :: ES(:), EU(:), EG(:), EV(:), RR_AVE(:)
  REAL*8, ALLOCATABLE :: S_EQU(:), S_OFU(:), S_AVE(:)   	 
  REAL*8, ALLOCATABLE :: TOPO(:,:), TOPOP(:), CHI(:,:)
- REAL*8, ALLOCATABLE :: GAMMA_G(:), GAMMA_U(:), PLM(:,:) 
+ REAL*8, ALLOCATABLE :: GAMMA_G(:), GAMMA_U(:), GAMMA_V(:)
+ REAL*8, ALLOCATABLE :: PLM(:,:) 
  REAL*8, ALLOCATABLE :: Q(:), H(:,:), C_CON(:)
  INTEGER, ALLOCATABLE :: ANC(:)
 !
  REAL*8 XN, XD
+!
+!--- Number of header lines in GF files
+ INTEGER, PARAMETER :: NH_GF=8
+ INTEGER, PARAMETER :: NH_GA=5
+! 
 !------------------------------------------------------------------------
 ! End of Declarations... End of Declarations... End of Declarations... 
 !------------------------------------------------------------------------
@@ -149,6 +163,7 @@
  call read_data_line(99,buffer)   ;   read(buffer,*) nv
  call read_data_line(99,buffer)   ;   read(buffer,*) delta
  call read_data_line(99,buffer)   ;   read(buffer,*) irot
+ call read_data_line(99,buffer)   ;   read(buffer,*) kref 
  call read_data_line(99,buffer)   ;   read(buffer,*) iext_max
  call read_data_line(99,buffer)   ;   read(buffer,*) iint_max
 !
@@ -161,11 +176,13 @@
 !call read_data_line(99,buffer)   ;   SGF_F=trim(pt)//trim(adjustl(buffer))
  call read_data_line(99,buffer)   ;   UGF_F=trim(pt)//trim(adjustl(buffer))
  call read_data_line(99,buffer)   ;   GGF_F=trim(pt)//trim(adjustl(buffer))
+ call read_data_line(99,buffer)   ;   VGF_F=trim(pt)//trim(adjustl(buffer))
  call read_data_line(99,buffer)   ;   ROT_F=trim(pt)//trim(adjustl(buffer))
  call read_data_line(99,buffer)   ;   ICE_F=trim(pt)//trim(adjustl(buffer))
  call read_data_line(99,buffer)   ;   TOP_F=trim(pt)//trim(adjustl(buffer))
  call read_data_line(99,buffer)   ;   OFP_F=trim(pt)//trim(adjustl(buffer))
  call read_data_line(99,buffer)   ;   TGS_F=trim(pt)//trim(adjustl(buffer))
+ call read_data_line(99,buffer)   ;   GEO_F=trim(pt)//trim(adjustl(buffer))
  call read_data_line(99,buffer)   ;   RSL_F=trim(pt)//trim(adjustl(buffer))
  call read_data_line(99,buffer)   ;   PMT_F=trim(pt)//trim(adjustl(buffer))
 !
@@ -177,6 +194,7 @@
  call read_data_line(99,buffer)   ;   F_OUT_SHU=trim(adjustl(buffer))
  call read_data_line(99,buffer)   ;   F_OUT_SHG=trim(adjustl(buffer))
  call read_data_line(99,buffer)   ;   F_OUT_SHN=trim(adjustl(buffer))
+ call read_data_line(99,buffer)   ;   F_OUT_SHV=trim(adjustl(buffer))
  call read_data_line(99,buffer)   ;   F_OUT_TPW=trim(adjustl(buffer))
  call read_data_line(99,buffer)   ;   F_OUT_SAV=trim(adjustl(buffer))
 !
@@ -187,6 +205,11 @@
  NP=2*RES*(RES-1)*20+12
  JMAX=(LMAX+1)*(LMAX+2)/2
  NMODES=4*NV
+!
+! >>>>>>>>>>> Set time-step for reference topo
+!
+ IF( KREF<0 )     KREF=NN+1+KREF  
+ NN0 = KREF
 !
 !
 ! ========================== END OF CONFIGURATION SECTION ==========================
@@ -215,6 +238,7 @@
  write(*,*) ' ---- SHs at the pixels:  ', trim(adjustl(SHA_F))
  write(*,*) ' ---- Geoid displac. GF:  ', trim(adjustl(GGF_F))
  write(*,*) ' ---- Vert. displac. GF:  ', trim(adjustl(UGF_F))
+ write(*,*) ' ---- Horz. displac. GF:  ', trim(adjustl(VGF_F))
  write(*,*) ' ---- Rotational GFs      ', trim(adjustl(ROT_F))
  write(*,*) ' ---- Ice sheets history: ', trim(adjustl(ICE_F))
  write(*,*) ' ---- Present topo:       ', trim(adjustl(TOP_F))
@@ -226,6 +250,7 @@
  OPEN(36,file=f_out_shu, status="unknown",form="unformatted")
  OPEN(37,file=f_out_shg, status="unknown",form="unformatted")
  OPEN(38,file=f_out_shn, status="unknown",form="unformatted")
+ OPEN(32,file=f_out_shv, status="unknown",form="unformatted")
  OPEN(39,file=f_out_tpw, status="unknown",form="formatted")
  OPEN(40,file=f_out_sav, status="unknown",form="formatted")
 !
@@ -305,17 +330,29 @@
 !
 !
 !----------------------------------------------------: Data input                                  
- write(*,*) ' ---- INPUT: Coefficients beta^g_ln and beta^u_ln'
- write(*,*) ' ---- INPUT: Coefficients beta^s_ln'
+ write(*,*) ' ---- INPUT: Coefficients beta^g_ln'
+ write(*,*) ' ---- INPUT: Coefficients beta^u_ln'
+ write(*,*) ' ---- INPUT: Coefficients beta^v_ln'
  ALLOCATE ( beta_g(0:lmax,0:nn+1), eg(0:lmax) )   
  ALLOCATE ( beta_u(0:lmax,0:nn+1), eu(0:lmax) )   
  ALLOCATE ( beta_s(0:lmax,0:nn+1), es(0:lmax) )   
- beta_s(:,:)=0d0 ; beta_g(:,:)=0d0 ; beta_u(:,:)=0d0 
+ ALLOCATE ( beta_v(0:lmax,0:nn+1), ev(0:lmax) )
+ beta_s(:,:)=0d0
+ beta_g(:,:)=0d0
+ beta_u(:,:)=0d0 
+ beta_v(:,:)=0d0 
  open(1,file=GGF_F) 
  open(2,file=UGF_F)  
+ open(3,file=VGF_F)  
+ do i=1, nh_gf
+    read(1,*)
+	read(2,*)
+	read(3,*)
+ end do
  do i=0, lmax 
     read(1,*) l, eg(l), (beta_g(l,k), k=0,nn+1) 
     read(2,*) l, eu(l), (beta_u(l,k), k=0,nn+1) 
+    read(3,*) l, ev(l), (beta_v(l,k), k=0,nn+1) 
  enddo
  do l=0, lmax  
   es(l) = eg(l)-eu(l)
@@ -325,18 +362,24 @@
  enddo
  Close(1)
  Close(2)  
+ Close(3)  
 !  
 !
 !----------------------------------------------------: Data input                                  
- write(*,*) ' ---- INPUT: Coefficients gamma^g_n & gamma^u_n'
- ALLOCATE ( GAMMA_G(0:NN+1), GAMMA_U(0:NN+1) )     
+ write(*,*) ' ---- INPUT: Coefficients gamma^g_n'
+ write(*,*) ' ---- INPUT: Coefficients gamma^u_n'
+ write(*,*) ' ---- INPUT: Coefficients gamma^v_n'
+ ALLOCATE ( GAMMA_G(0:NN+1), GAMMA_U(0:NN+1), GAMMA_V(0:NN+1) )     
  IF(IROT==0) then 
-   gamma_g(:)=0D0 ; gamma_u(:)=0D0
+   gamma_g(:)=0D0 ; gamma_u(:)=0D0 ; gamma_v(:)=0D0
  endif
  IF(IROT==1.or.IROT==2) then 
  open(1,file=ROT_F) 
+ do i=1, nh_ga
+    read(1,*)
+ end do
  do n=0, nn+1
-    read(1,*) j, gamma_g(n), gamma_u(n)  
+    read(1,*) j, gamma_g(n), gamma_u(n), gamma_v(n)
  enddo
  ENDIF
  Close(1)
@@ -486,6 +529,7 @@
 !
  ALLOCATE ( sh_gr (JMAX,0:NN+1) )
  ALLOCATE ( sh_ur (JMAX,0:NN+1) )
+ ALLOCATE ( sh_vr (JMAX,0:NN+1) )
  ALLOCATE ( sh_rr (JMAX,0:NN+1) )
  ALLOCATE ( sh_kr (JMAX,0:NN+1) )
 ! 
@@ -922,18 +966,22 @@
 !
 !---------------------------------------------------------: INT loop: (G, U)^rot_jn
  IF(IROT==1.or.IROT==2) THEN
-   write(*,*) ' ---- INT: Computing G^rot_jn and U^rot_jn'
+   write(*,*) ' ---- INT: Computing G^rot_jn, U^rot_jn and V^rot_jn'
    sh_gr(:,:)=(0d0,0d0)
    sh_ur(:,:)=(0d0,0d0)
+   sh_vr(:,:)=(0d0,0d0)   
    do n=0, nn+1 
      sh_gr(j_index(2,1),n)=(0d0,0d0)
      sh_ur(j_index(2,1),n)=(0d0,0d0)
+     sh_vr(j_index(2,1),n)=(0d0,0d0)
      if(n>=1) then 
         do k=0, n-1 
           sh_gr(j_index(2,1),n) = sh_gr(j_index(2,1),n) + &
 	                   C21_PSI*(sh_ll21(k+1)-sh_ll21(k))*gamma_g(n-k)
           sh_ur(j_index(2,1),n) = sh_ur(j_index(2,1),n) + & 
 	                   C21_PSI*(sh_ll21(k+1)-sh_ll21(k))*gamma_u(n-k)
+          sh_vr(j_index(2,1),n) = sh_vr(j_index(2,1),n) + &
+	                   C21_PSI*(sh_ll21(k+1)-sh_ll21(k))*gamma_v(n-k)
         enddo
      endif 
    enddo
@@ -946,6 +994,7 @@
  ELSE
    sh_gr(:,:)=(0d0,0d0)
    sh_ur(:,:)=(0d0,0d0)
+   sh_vr(:,:)=(0d0,0d0)
    sh_rr(:,:)=(0d0,0d0) 
  ENDIF
 !
@@ -1093,7 +1142,7 @@
 !----------------------------------------------------: Ext loop: T_pn 
  write(*,*) ' ---- EXT: new topography T_pn'
 !$OMP PARALLEL DO DEFAULT(NONE) PRIVATE(P,N) &
-!$OMP SHARED(TOPO,TOPOP,CHI,NP,NN) &
+!$OMP SHARED(TOPO,TOPOP,CHI,NP,NN,NN0) &
 !$OMP SCHEDULE(GUIDED)
 !
 ! * ** *** We use "CHI" to save memory *** ** * 
@@ -1101,7 +1150,7 @@
  do p=1, np 
  if(p==1.or.p==np)write(*,"(A9,1X,I7)") "p=", p 
     do n=0, nn+1 
-       topo(p,n) = dble(topop(p))-(chi(p,n)-chi(p,nn)) 
+       topo(p,n) = dble(topop(p))-(chi(p,n)-chi(p,nn0)) 
     enddo
  enddo
 !$OMP END PARALLEL DO
@@ -1195,10 +1244,85 @@
 !------------------------------------------------------- : Generic SH's 
  ALLOCATE ( SH_XA(JMAX,0:NN+1), & 
             SH_XB(JMAX,0:NN+1), & 
-              SH_XC(JMAX,0:NN+1) )
+            SH_XC(JMAX,0:NN+1) )
 !
 !
-! ++++++++++++++++++++++++++++++++++++++++++++++++++++++ : Vertical displacement 
+!
+!
+! ++++++++++++++++++++++++++++++++++++++++++++++++++++++ : Horizontal displacement 
+!
+!------------------------------------------------------- : Closing: V^a_jn
+ write(*,*) ' >>>> Closing: V^a_jn'
+!$OMP PARALLEL DO DEFAULT(NONE) PRIVATE(J,N,K) &
+!$OMP SHARED(SH_XA,SH_W,LL,beta_v,EV,JMAX,NN) &
+!$OMP SCHEDULE(GUIDED)
+ do j=1, jmax 
+    do n=0, nn+1
+       sh_xa(j,n)= dble(ev(ll(j)))*sh_w(j,n) 
+       if(n>=1)then
+          do k=0, n-1 
+             sh_xa(j,n) = sh_xa(j,n)+&
+            (sh_w(j,k+1)-sh_w(j,k))*dble(beta_v(ll(j),n-k))
+         enddo 
+       endif
+    enddo
+ enddo	
+!$OMP END PARALLEL DO
+ sh_xa(:,:)=sh_xa(:,:)*3d0*rho_ie
+!
+!
+!-------------------------------------------------------: Closing: V^b_jn  
+ write(*,*) ' >>>> Closing: V^b_jn'
+!$OMP PARALLEL DO DEFAULT(NONE) PRIVATE(J,N,K) &
+!$OMP SHARED(SH_XB,SH_Z,LL,beta_v,EV,JMAX,NN,IINT_MAX) &
+!$OMP SCHEDULE(GUIDED)
+ do j=1, jmax 
+    do n=0, nn+1
+       sh_xb(j,n)= dble(ev(ll(j)))*sh_z(j,n,IINT_MAX) 
+       if(n>=1)then
+          do k=0, n-1 
+             sh_xb(j,n) = sh_xb(j,n) + &
+             (sh_z(j,k+1,IINT_MAX)-sh_z(j,k,IINT_MAX))*&
+	     			dble(beta_v(ll(j),n-k))
+          enddo 
+       endif
+    enddo
+ enddo	
+! $OMP END PARALLEL DO
+ sh_xb(:,:)=sh_xb(:,:)*3d0*rho_we
+!
+!
+!------------------------------------------------------- : Closing: V^c_jn
+ write(*,*) ' >>>> Closing: V^c_jn'
+!$OMP PARALLEL DO DEFAULT(NONE) PRIVATE(J,N,K) &
+!$OMP SHARED(SH_XC,SH_X,LL,beta_v,EV,JMAX,NN) &
+!$OMP SCHEDULE(GUIDED)
+ do j=1, jmax 
+    do n=0, nn+1
+       sh_xc(j,n)= dble(ev(ll(j)))*sh_x(j,n) 
+       if(n>=1)then
+          do k=0, n-1 
+             sh_xc(j,n) = sh_xc(j,n)+&
+             (sh_x(j,k+1)-sh_x(j,k))*dble(beta_v(ll(j),n-k))
+         enddo 
+	endif
+    enddo
+ enddo	
+! $OMP END PARALLEL DO
+ sh_xc(:,:)=sh_xc(:,:)*3d0*rho_re
+!
+!
+ ALLOCATE ( SH_V(JMAX,0:NN+1) )
+!
+ sh_v(:,:)= sh_xa(:,:)+ sh_xb(:,:)+ sh_xc(:,:) + sh_vr(:,:)
+!
+ Write(*,*) " ==== OUT: V_jn"
+ WRITE(32)SH_V 
+!
+!
+!
+!
+! ++++++++++++++++++++++++++++++++++++++++++++++++++++++ : Vertical displacement 			  
 !
 !------------------------------------------------------- : Closing: U^a_jn
  write(*,*) ' >>>> Closing: U^a_jn'
