@@ -1,0 +1,5 @@
+# Points for 3D velocity estimation
+#
+#  Lon       Lat       Name
+  25.237    37.125     Nausa_Paros
+ 338.060    64.151     REYKJAVIK

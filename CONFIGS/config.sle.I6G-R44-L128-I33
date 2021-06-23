@@ -7,11 +7,12 @@
  44       ! Tegmark resolution
   128      ! LMAX
    52       ! Number of time-steps in the ice history
-    9        ! Number of v/e layers
+    5        ! Number of v/e layers
      0.5      ! Ice history time step (kyr)
       2        ! 0 is no rot, 1 classical, 2 revised
-       3        ! Number of external iterations
-        3        ! Number of internal iterations
+       -1       ! Time step for reference topo
+         3        ! Number of external iterations
+          3        ! Number of internal iterations
 ! 
 !
 ! >>>> Input files required for the execution ----------------
@@ -22,8 +23,9 @@
 !
  sh-R44L128.bin         ! SH file
 !  
- ebu-l1024-vm5a.dat          ! U Green Function
- ebg-l1024-vm5a.dat          ! G Green Function
+ ebu-l512-vm5a.dat           ! U Green Function
+ ebg-l512-vm5a.dat           ! G Green Function
+ ebv-l512-vm5a.dat           ! V Green Function
 !
  gamma-REV-vm5a.dat            ! Rotational GF
 !
@@ -33,7 +35,9 @@
 !
  ofp-i6g-R44.pix            ! Pixelized present-day OF (only for elastic models)
 !
- geodetic-points-GS18.txt   ! set of points for present-day velocity estimation
+ tide-gauges-GS18.txt       ! set of points for present-day fingerprints at tide-gauges
+! 
+ geodetic-points.txt        ! set of points for present-day 3D velocity estimation
 !
  sealevel-REV4.dat          ! RSL database
 !
@@ -48,6 +52,7 @@ shs-R44-L128-I6G-VM5a-I33.bin
 shu-R44-L128-I6G-VM5a-I33.bin
 shg-R44-L128-I6G-VM5a-I33.bin
 shn-R44-L128-I6G-VM5a-I33.bin
+shv-R44-L128-I6G-VM5a-I33.bin
 psi-R44-L128-I6G-VM5a-I33.dat
 sav-R44-L128-I6G-VM5a-I33.dat
 !
