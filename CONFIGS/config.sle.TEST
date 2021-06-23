@@ -21,7 +21,7 @@
 ! 
  px-R30.dat             ! pixel file
 !
- sh-R30L64.bin          ! SH file
+ sh-R30L32.bin          ! SH file
 !  
  ebu-l512-vm5a.dat          ! U Green Function
  ebg-l512-vm5a.dat          ! G Green Function
@@ -46,15 +46,15 @@
 !
 ! >>>>>>> Output files  --------------------------------------
 ! 
-top-R30-L64-I6G-VM5a-RRT-I22.bin
-ofu-R30-L64-I6G-VM5a-RRT-I22.bin
-shs-R30-L64-I6G-VM5a-RRT-I22.bin
-shu-R30-L64-I6G-VM5a-RRT-I22.bin
-shg-R30-L64-I6G-VM5a-RRT-I22.bin
-shn-R30-L64-I6G-VM5a-RRT-I22.bin
-shv-R30-L64-I6G-VM5a-RRT-I22.bin
-psi-R30-L64-I6G-VM5a-RRT-I22.dat
-sav-R30-L64-I6G-VM5a-RRT-I22.dat
+top-R30-L32-I6G-VM5a-TEST-I22.bin
+ofu-R30-L32-I6G-VM5a-TEST-I22.bin
+shs-R30-L32-I6G-VM5a-TEST-I22.bin
+shu-R30-L32-I6G-VM5a-TEST-I22.bin
+shg-R30-L32-I6G-VM5a-TEST-I22.bin
+shn-R30-L32-I6G-VM5a-TEST-I22.bin
+shv-R30-L32-I6G-VM5a-TEST-I22.bin
+psi-R30-L32-I6G-VM5a-TEST-I22.dat
+sav-R30-L32-I6G-VM5a-TEST-I22.dat
 !
 ! END OF FILE
 !
