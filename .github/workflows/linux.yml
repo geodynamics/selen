@@ -1,0 +1,27 @@
+name: linux
+
+on: [push, pull_request]
+
+# always only run a single (the newest) instance per PR
+concurrency:
+  group: ${{ github.actor }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  job:
+    name: build
+    runs-on: [ubuntu-latest]
+    container:
+      image: geodynamics/selen-buildenv-bionic:latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: build
+      run: |
+        cd src
+        make
+    - name: test
+      run: |
+        cp CONFIGS/config.sle.TEST .
+        cd DATA ; gunzip *R30*.gz ; cd ..
+        ./sha.exe 30 32 DATA/px-R30.dat DATA/px-lat-R30.dat DATA/sh-R30L32.bin
+        sh ./make_sle.sh TEST
