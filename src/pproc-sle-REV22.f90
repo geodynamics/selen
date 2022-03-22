@@ -5,7 +5,7 @@
 !
 !-*-*-*-*-*-*-*-*
 !
-! REVISION 21 - Mar 7, 2021
+! REVISION 22 - Mar 18, 2022
 !
 ! Postprocessing the SLE 
 ! Author: GS July 2016 
@@ -24,6 +24,7 @@
 !                            Added the L-dot fingerprint output
 ! Revised GS Apr 19, 2020:   Implementation of "horizontals"
 ! Revised DM Mar  7, 2021:   Wide timestamp labels and future GIA
+! Revised DM Mar 18, 2022:   Checks if the cfg file exists
 !
 !/////////////////////////////////////////////////////////////////
 !/////////////////////////////////////////////////////////////////
@@ -223,6 +224,8 @@
  LOGICAL, PARAMETER :: HORIZ_FPR = .false.
  LOGICAL, PARAMETER :: STRAIN_FPR = .false.
 !
+ LOGICAL :: IOFLAG
+!
 ! -----------------------------------------
 ! ******* Name of file with TG predictions
 ! -----------------------------------------  
@@ -257,7 +260,23 @@
  write(*,*) ' ****'
  write(*,*)
 !
+ if( iargc().ne.1 ) then
+    write(*,*) ''
+    write(*,*) ' Usage: ppr.exe CONFIG_FILE '
+    write(*,*) ''
+    stop
+ end if
+!
  call getarg(1,cfg_f)
+!
+ inquire(file=trim(cfg_f),exist=ioflag)
+ if( .not.ioflag ) then
+    write(*,*) ''
+    write(*,*) ' ERROR: Cannot open configuration file "', trim(cfg_f) ,'"'
+    write(*,*) ''
+    stop
+ end if
+!
  open(99,file=trim(cfg_f),status='old')
 !
  write(*,*) ''

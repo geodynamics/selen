@@ -5,7 +5,7 @@
 !
 !-*-*-*-*-*-*-*-*-*-*-*-*-*  
 !
-! REVISION 21 - Mar 07, 2021
+! REVISION 22 - Mar 18, 2022
 !
 !\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 ! This program upgrades previous version (8) by the 
@@ -27,6 +27,9 @@
 ! GS Apr 19, 2020:   Implementation of "horizontals"
 ! DM Sep 21, 2020:   Future GIA
 ! DM Mar 07, 2021:   New format for SRFs and RRFs
+! DM Mar 18, 2022:   Checks if the config file exists
+! DM Mar 18, 2022:   Rearranged loops for optimal performance 
+! DM Mar 19, 2022:   Further optimizations
 !
 !\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 !
@@ -98,6 +101,7 @@
  INTEGER III, DOM, IINT, IEXT, J_INDEX
  INTEGER I, J, K, L, M, N, P, NA, LJ, MJ
  INTEGER :: KREF, NN0
+ LOGICAL :: IOFLAG
 !
  INTEGER, ALLOCATABLE :: OF(:,:), OFP(:), MM(:), LL(:), DM(:)
 !
@@ -146,7 +150,23 @@
  write(*,*) ' ****'
  write(*,*)
 !
+ if( iargc().ne.1 ) then
+    write(*,*) ''
+    write(*,*) ' Usage: sle.exe CONFIG_FILE '
+    write(*,*) ''
+    stop
+ end if
+!
  call getarg(1,cfg_f)
+!
+ inquire(file=trim(cfg_f),exist=ioflag)
+ if( .not.ioflag ) then
+    write(*,*) ''
+    write(*,*) ' ERROR: Cannot open configuration file "', trim(cfg_f) ,'"'
+    write(*,*) ''
+    stop
+ end if
+!
  open(99,file=trim(cfg_f),status='old')
 !
  write(*,*) ''
@@ -483,7 +503,7 @@
 !
  s_ave(:) = s_equ(:) + s_ofu(:)
 ! 
- DEALLOCATE ( H )
+!DEALLOCATE ( H )
 !
 !
  write(*,*) ' ---- INIT: S^ave_jn'  
@@ -559,35 +579,35 @@
 !
 !---------------------------------------------------------: Ext loop: Q_p  
  write(*,*) ' ---- EXT: Computing Q_p' 
- ALLOCATE ( H(NP,0:NN+1) ) 
- open(1,file=ICE_F) 
- do p=1, np  
-    read(1,*) j, xn, xn, xn, (h(p,n),n=0,nn+1)
- enddo
- Close(1) 
+!ALLOCATE ( H(NP,0:NN+1) ) 
+!open(1,file=ICE_F) 
+!do p=1, np  
+!   read(1,*) j, xn, xn, xn, (h(p,n),n=0,nn+1)
+!enddo
+!Close(1) 
 !
  Q(:)=-(rho_ir*dble(h(:,0))+rho_wr*dble(topo(:,0)))
 !
- DEALLOCATE ( H )
+!DEALLOCATE ( H )
 !
 !
 !---------------------------------------------------------: Ext loop: O_jn  
  write(*,*) ' ---- EXT: Computing O_jn'
+ sh_ofu=(0d0,0d0)
 !$OMP PARALLEL DO DEFAULT(NONE) PRIVATE(J,N,P) &
 !$OMP SHARED(SH_OFU,PLM,ANC,OF,SIN_COS,MM,NN,NP,JMAX) &
 !$OMP SCHEDULE(GUIDED)
  do n=0, nn+1 
  if(n==0.or.n==nn)write(*,"(A9,1X,I3)") "n=", n
-    do j=1, jmax 
-       sh_ofu(j,n)=(0d0,0d0)
-         do p=1,np
-             if(of(p,n)==1) then 
-                         sh_ofu(j,n) = sh_ofu(j,n) + & 
-                         PLM(j,anc(p))*conjg(sin_cos(mm(j),p)) 
-             endif
-         enddo 
-    enddo
- enddo
+    do p=1,np
+       if(of(p,n)==1) then 
+	      do j=1, jmax 
+              sh_ofu(j,n) = sh_ofu(j,n) + & 
+                  PLM(j,anc(p))*conjg(sin_cos(mm(j),p)) 
+          end do
+       end if
+    end do
+ end do
 !$OMP END PARALLEL DO
  sh_ofu(:,:)=sh_ofu(:,:)/float(np)   
 !
@@ -604,31 +624,31 @@
 !
 !---------------------------------------------------------: Ext loop: W_jn  
  write(*,*) ' ---- EXT: Computing W_jn'
- ALLOCATE ( H(NP,0:NN+1) ) 
- open(1,file=ICE_F) 
- do p=1, np  
-    read(1,*) j, xn, xn, xn, (h(p,n),n=0,nn+1)
- enddo
- Close(1) 
+!ALLOCATE ( H(NP,0:NN+1) ) 
+!open(1,file=ICE_F) 
+!do p=1, np  
+!   read(1,*) j, xn, xn, xn, (h(p,n),n=0,nn+1)
+!enddo
+!Close(1) 
 ! 
  sh_w(:,:)=(0d0,0d0)
 !$OMP PARALLEL DO DEFAULT(NONE) PRIVATE(N,J,P) &
 !$OMP SHARED(SH_W,H,PLM,ANC,OF,SIN_COS,MM,NN,NP,JMAX) &        
 !$OMP SCHEDULE(GUIDED)
  do n=0,nn+1
- if(n==0.or.n==nn)write(*,"(A9,1X,I3)") "n=", n
-    do j=1, jmax 
-         do p=1,np
-             if((h(p,n)-h(p,0)/=0).and.(of(p,n)/=1)) then
-	     sh_w(j,n) = sh_w(j,n) + & 
- 		  dble(h(p,n)-h(p,0))*dble(1-of(p,n))* & 
- 		  PLM(j,anc(p))*conjg(sin_cos(mm(j),p)) 
-	    endif
-         enddo 
-    enddo
- enddo
+    if(n==0.or.n==nn)write(*,"(A9,1X,I3)") "n=", n
+    do p=1, np
+       if((h(p,n)-h(p,0)/=0).and.(of(p,n)/=1)) then	   
+          do j=1, jmax 
+             sh_w(j,n) = sh_w(j,n) + & 
+ 		         dble(h(p,n)-h(p,0))*dble(1-of(p,n))* & 
+ 		         PLM(j,anc(p))*conjg(sin_cos(mm(j),p)) 
+	      end do
+       end if
+    end do
+ end do
  sh_w(:,:)=sh_w(:,:)/float(np)   
- DEALLOCATE ( H )
+!DEALLOCATE ( H )
 !
 !
 !---------------------------------------------------------: Ext loop: L^a_21n  
@@ -645,17 +665,17 @@
 !$OMP PARALLEL DO DEFAULT(NONE) PRIVATE(J,N,K) &
 !$OMP SHARED(SH_RAP,SH_W,LL,beta_s,ES,NN,NV,JMAX) &
 !$OMP SCHEDULE(GUIDED)
- do j=1, jmax 
-    do n=0, nn+1
+ do n=0, nn+1
+    do j=1, jmax 
        sh_rap(j,n)= dble(es(ll(j)))*sh_w(j,n) 
-         if(n>=1)then  
-	    if(nv.ne.0) then          
+       if(n>=1)then  
+	      if(nv.ne.0) then          
             do k=0, n-1 
                sh_rap(j,n) = sh_rap(j,n)+&
-               (sh_w(j,k+1)-sh_w(j,k))*dble(beta_s(ll(j),n-k))
-	    enddo 
-            endif
-	 endif
+                 (sh_w(j,k+1)-sh_w(j,k))*dble(beta_s(ll(j),n-k))
+	        enddo 
+          endif
+	   endif
     enddo
  enddo	
 !$OMP END PARALLEL DO
@@ -669,13 +689,13 @@
 !$OMP SHARED(SH_OFU,RA_AVE,SH_RAP,DM,NN,JMAX) &
 !$OMP SCHEDULE(GUIDED)
  do n=0,nn+1 
-    ra_ave(n)=0D0 
-       do j=1, jmax 
+     ra_ave(n)=0D0 
+     do j=1, jmax 
           ra_ave(n)=ra_ave(n)+ &
-	  dm(j)*real(conjg(sh_ofu(j,n))*sh_rap(j,n))&
-	  /sh_ofu(j_index(0,0),n) 	
-       enddo 
- enddo
+	         dm(j)*real(conjg(sh_ofu(j,n))*sh_rap(j,n))&
+	         /sh_ofu(j_index(0,0),n) 	
+     end do 
+ end do
 !$OMP END PARALLEL DO
 !
 !
@@ -687,20 +707,20 @@
 !---------------------------------------------------------: Ext loop: chi^a_pn  
  write(*,*) ' ---- EXT: Computing chi^a_pn'
  ALLOCATE ( CHI(NP,0:NN+1) )
+ chi = 0d0
 !$OMP PARALLEL DO DEFAULT(NONE) PRIVATE(P,N,J) &
 !$OMP SHARED(CHI,SH_RAP,PLM,SIN_COS,DM,MM,ANC,NP,NN,JMAX) &
 !$OMP SCHEDULE(GUIDED)
- do p=1,np 
- if(p==1.or.p==np)write(*,"(A9,1X,I7)") "p=", p 
-    do n=0, nn+1 
-       chi(p,n)=0d0
-          do j=1,jmax 
-              chi(p,n)=chi(p,n)+&
-              PLM(j,anc(p))*dm(j)*&
-	      real(sh_rap(j,n)*sin_cos(mm(j),p))	
-           enddo 
-    enddo
- enddo
+ do n=0, nn+1
+   if(n==0.or.n==nn)write(*,"(A9,1X,I3)") "n=", n
+   do p=1,np 
+     do j=1,jmax 
+          chi(p,n)=chi(p,n)+&
+             PLM(j,anc(p))*dm(j)*&
+	         real(sh_rap(j,n)*sin_cos(mm(j),p))	
+     end do 
+   end do
+ end do
 !$OMP END PARALLEL DO
  chi(:,:)=chi(:,:)/float(np)
 !
@@ -711,16 +731,18 @@
 !$OMP PARALLEL DO DEFAULT(NONE) PRIVATE(P,N,J) &
 !$OMP SHARED(SH_KA,PLM,CHI,SIN_COS,MM,OF,ANC,JMAX,NP,NN) &
 !$OMP SCHEDULE(GUIDED)
- do j=1,jmax 
- if(j==1.or.j==jmax)write(*,"(A9,1X,I7)") "j=", j 
-  do p=1, np 	
-      do n=0, nn+1 
-          if(of(p,n)==1) sh_ka(j,n) = sh_ka(j,n)+ & 
-             PLM(j,anc(p))*chi(p,n)*conjg(sin_cos(mm(j),p))	
-      enddo
-  enddo 
- enddo
-!$OMP END PARALLEL DO
+ do n=0, nn+1 
+    if(n==0.or.n==nn)write(*,"(A9,1X,I3)") "n=", n
+    do p=1, np 	
+       if(of(p,n)==1) then 
+          do j=1,jmax
+		      sh_ka(j,n) = sh_ka(j,n)+ & 
+                  PLM(j,anc(p))*chi(p,n)*conjg(sin_cos(mm(j),p))	
+          end do
+	   end if
+    end do
+ end do 
+ !$OMP END PARALLEL DO
  DEALLOCATE ( CHI )
 !
 !
@@ -729,22 +751,22 @@
 !
 !---------------------------------------------------------: Ext loop: X_jn  
  write(*,*) ' ---- EXT: Computing X_jn'
+ sh_x=(0d0,0d0) 
 !$OMP PARALLEL DO DEFAULT(NONE) PRIVATE(N,J,P) &
 !$OMP SHARED(SH_X,PLM,ANC,OF,Q,SIN_COS,MM,NN,JMAX,NP) &        
 !$OMP SCHEDULE(GUIDED)
  do n=0,nn+1
- if(n==0.or.n==nn)write(*,"(A9,1X,I3)") "n=", n
-    do j=1, jmax 
-       sh_x(j,n)=(0d0,0d0)
-          do p=1,np
-             if((of(p,n)-of(p,0))/=0) then
-	            sh_x(j,n)= sh_x(j,n) + & 
-		    dble(of(p,n)-of(p,0))*Q(p)* & 
+    if(n==0.or.n==nn)write(*,"(A9,1X,I3)") "n=", n
+    do p=1,np
+       if((of(p,n)-of(p,0))/=0) then
+           do j=1, jmax 
+	          sh_x(j,n)= sh_x(j,n) + & 
+		            dble(of(p,n)-of(p,0))*Q(p)* & 
                     PLM(j,anc(p))*conjg(sin_cos(mm(j),p)) 
-             endif
-          enddo 
-    enddo
- enddo
+           end do
+       end if 
+    end do
+ end do
 !$OMP END PARALLEL DO
  sh_x(:,:)=sh_x(:,:)/float(np)   
 !
@@ -762,17 +784,17 @@
 !$OMP PARALLEL DO DEFAULT(NONE) PRIVATE(J,N,K) &
 !$OMP SHARED(SH_RCP,SH_X,LL,beta_s,ES,JMAX,NN,NV) &
 !$OMP SCHEDULE(GUIDED)
- do j=1, jmax 
-    do n=0, nn+1
+ do n=0, nn+1
+    do j=1, jmax 
        sh_rcp(j,n)= dble(es(ll(j)))*sh_x(j,n) 
-         if(n>=1)then  
-	  if(nv.ne.0) then          
+       if(n>=1)then  
+	      if(nv.ne.0) then          
             do k=0, n-1 
                 sh_rcp(j,n) = sh_rcp(j,n)+&
                (sh_x(j,k+1)-sh_x(j,k))*dble(beta_s(ll(j),n-k))
-	    enddo 
+	        enddo 
           endif
-	 endif
+	   endif
     enddo
  enddo	
 !$OMP END PARALLEL DO
@@ -803,39 +825,41 @@
 !---------------------------------------------------------: Ext loop: chi^c_pn  
  write(*,*) ' ---- EXT: Computing chi^c_pn'
  ALLOCATE ( CHI(NP,0:NN+1) )
+ chi = 0d0
 !$OMP PARALLEL DO DEFAULT(NONE) PRIVATE(P,N,J) &
 !$OMP SHARED(CHI,SH_RCP,PLM,SIN_COS,DM,MM,ANC,NP,NN,JMAX) &
 !$OMP SCHEDULE(GUIDED)
- do p=1,np 
- if(p==1.or.p==np)write(*,"(A9,1X,I7)") "p=", p 
-     do n=0, nn+1 
-       chi(p,n)=0d0
-          do j=1,jmax 
-              chi(p,n)=chi(p,n)+&
+ do n=0, nn+1 
+    if(n==0.or.n==nn)write(*,"(A9,1X,I3)") "n=", n
+    do p=1,np 
+       do j=1,jmax 
+           chi(p,n)=chi(p,n)+&
               PLM(j,anc(p))*dm(j)*real(sh_rcp(j,n)*&
-	      sin_cos(mm(j),p))	
-          enddo 
-     enddo
- enddo
+	          sin_cos(mm(j),p))	
+       end do 
+    end do
+ end do
 !$OMP END PARALLEL DO
  chi(:,:)=chi(:,:)/float(np)
 !
 !
 !---------------------------------------------------------: Ext loop: K^c_jn  
  write(*,*) ' ---- EXT: Computing K^c_jn' 
+ sh_kc = (0d0, 0d0)
 !$OMP PARALLEL DO DEFAULT(NONE) PRIVATE(P,N,J) &
 !$OMP SHARED(SH_KC,PLM,CHI,SIN_COS,MM,OF,ANC,JMAX,NN,NP) &
 !$OMP SCHEDULE(GUIDED)
- do j=1,jmax 
- if(j==1.or.j==jmax)write(*,"(A9,1X,I7)") "j=", j 
-  do n=0, nn+1 
-    sh_kc(j,n)=(0D0,0D0)
+ do n=0, nn+1 
+    if(n==0.or.n==nn)write(*,"(A9,1X,I3)") "n=", n
     do p=1, np 	
-          if(of(p,n)==1) sh_kc(j,n) = sh_kc(j,n)+ & 
-          PLM(j,anc(p))*chi(p,n)*conjg(sin_cos(mm(j),p))	
-    enddo
-  enddo 
- enddo
+       if(of(p,n)==1) then
+	      do j=1,jmax 
+             sh_kc(j,n) = sh_kc(j,n)+ & 
+                PLM(j,anc(p))*chi(p,n)*conjg(sin_cos(mm(j),p))	
+          end do
+       end if
+    end do
+ end do
 !$OMP END PARALLEL DO
  DEALLOCATE ( CHI )
 !
@@ -883,8 +907,8 @@
 !$OMP PARALLEL DO DEFAULT(NONE) PRIVATE(J,N,K) &
 !$OMP SHARED(SH_RBP,LL,beta_s,ES,SH_Z,IINT,JMAX,NN,NV) &
 !$OMP SCHEDULE(GUIDED)
- do j=1, jmax 
-    do n=0, nn+1
+ do n=0, nn+1
+    do j=1, jmax 
        sh_rbp(j,n)= dble(es(ll(j)))*sh_z(j,n,iint-1) 
          if(n>=1)then  
 	    if(nv.ne.0) then          
@@ -924,38 +948,40 @@
 !---------------------------------------------------------: INT loop: chi^b_pn  
  write(*,*) ' ---- INT: Computing chi^b_pn'
  ALLOCATE ( CHI(NP,0:NN+1) )
+ chi=0d0
 !$OMP PARALLEL DO DEFAULT(NONE) PRIVATE(P,N,J) &
 !$OMP SHARED(CHI,SH_RBP,PLM,SIN_COS,DM,MM,ANC,NP,NN,JMAX) &
 !$OMP SCHEDULE(GUIDED)
- do p=1,np 
- if(p==1.or.p==np)write(*,"(A9,1X,I7)") "p=", p 
-    do n=0, nn+1 
-       chi(p,n)=0d0
-          do j=1,jmax 
-              chi(p,n)=chi(p,n)+&
+ do n=0, nn+1 
+    if(n==0.or.n==nn)write(*,"(A9,1X,I3)") "n=", n
+    do p=1,np 
+        do j=1,jmax 
+           chi(p,n)=chi(p,n)+&
               PLM(j,anc(p))*dm(j)*real(sh_rbp(j,n)*sin_cos(mm(j),p))	
-          enddo 
-    enddo
- enddo
+        end do 
+    end do
+ end do
 !$OMP END PARALLEL DO
  chi(:,:)=chi(:,:)/float(np)
 !
 !
 !---------------------------------------------------------: INT loop: K^b_jn  
  write(*,*) ' ---- INT: Computing K^b_jn' 
+ sh_kb=(0D0,0D0) 
 !$OMP PARALLEL DO DEFAULT(NONE) PRIVATE(P,N,J) &
 !$OMP SHARED(SH_KB,PLM,CHI,SIN_COS,MM,OF,ANC,JMAX,NN,NP) &
 !$OMP SCHEDULE(GUIDED)
- do j=1,jmax 
- if(j==1.or.j==jmax)write(*,"(A9,1X,I7)") "j=", j 
-    do n=0, nn+1 
-      sh_kb(j,n)=(0D0,0D0) 
-      do p=1, np 	
-          if(of(p,n)==1) sh_kb(j,n)=sh_kb(j,n)+ & 
-             PLM(j,anc(p))*chi(p,n)*conjg(sin_cos(mm(j),p))	
-      enddo
-    enddo 
- enddo
+ do n=0, nn+1 
+    if(n==0.or.n==nn)write(*,"(A9,1X,I3)") "n=", n
+    do p=1, np 	
+       if(of(p,n)==1) then
+	      do j=1,jmax 
+             sh_kb(j,n)=sh_kb(j,n)+ & 
+                PLM(j,anc(p))*chi(p,n)*conjg(sin_cos(mm(j),p))	
+          end do
+       end if
+    end do	   
+ end do
 !$OMP END PARALLEL DO
  DEALLOCATE ( CHI )
 !
@@ -1031,20 +1057,20 @@
 !---------------------------------------------------------: INT loop: chi^rot_pn  
  write(*,*) ' ---- INT: Computing chi^rot_pn'
  ALLOCATE ( CHI(NP,0:NN+1) )
+ CHI = 0d0
  IF(IROT==1.or.IROT==2)THEN
 !$OMP PARALLEL DO DEFAULT(NONE) PRIVATE(P,N,J) &
 !$OMP SHARED(CHI,SH_RRP,PLM,SIN_COS,DM,MM,ANC,NP,NN,JMAX) &
 !$OMP SCHEDULE(GUIDED)
- do p=1,np 
- if(p==1.or.p==np)write(*,"(A9,1X,I7)") "p=", p 
-    do n=0, nn+1 
-       chi(p,n)=0d0
-          do j=1,jmax 
-              chi(p,n)=chi(p,n)+&
+ do n=0, nn+1 
+    if(n==0.or.n==nn)write(*,"(A9,1X,I3)") "n=", n
+    do p=1,np 
+        do j=1,jmax 
+           chi(p,n)=chi(p,n)+&
               PLM(j,anc(p))*dm(j)*real(SH_RRP(j,n)*sin_cos(mm(j),p))	
-          enddo 
-    enddo
- enddo
+        end do 
+    end do
+ end do
 !$OMP END PARALLEL DO
  chi(:,:)=chi(:,:)/float(np)
  ELSE
@@ -1058,15 +1084,17 @@
 !$OMP PARALLEL DO DEFAULT(NONE) PRIVATE(P,N,J) &
 !$OMP SHARED(sh_kr,PLM,CHI,SIN_COS,MM,OF,ANC,JMAX,NP,NN) &
 !$OMP SCHEDULE(GUIDED)
- do j=1,jmax 
- if(j==1.or.j==jmax)write(*,"(A9,1X,I7)") "j=", j 
+ do n=0, nn+1
+    if(n==0.or.n==nn)write(*,"(A9,1X,I3)") "n=", n
     do p=1, np 	
-       do n=0, nn+1 
-          if(of(p,n)==1) sh_kr(j,n) = sh_kr(j,n)+ & 
-             PLM(j,anc(p))*chi(p,n)*conjg(sin_cos(mm(j),p))	
-	  enddo
-       enddo 
- enddo
+        if(of(p,n)==1) then
+		   do j=1,jmax 
+              sh_kr(j,n) = sh_kr(j,n)+ & 
+                 PLM(j,anc(p))*chi(p,n)*conjg(sin_cos(mm(j),p))	
+	       end do
+        end if 
+    end do
+ end do
 !$OMP END PARALLEL DO
  DEALLOCATE ( CHI )
 !
@@ -1122,20 +1150,20 @@
 ! * ** *** We use "CHI" to save memory *** ** * 
 ! 
  ALLOCATE ( CHI(NP,0:NN+1) )   
+ chi = 0d0
 !$OMP PARALLEL DO DEFAULT(NONE) PRIVATE(P,N,J) &
 !$OMP SHARED(CHI,SH_S,PLM,SIN_COS,DM,MM,ANC,IEXT,NP,NN,JMAX) &
 !$OMP SCHEDULE(GUIDED)
- do p=1, np 
- if(p==1.or.p==np)write(*,"(A9,1X,I7)") "p=", p 
-   do n=0, nn+1 
-      chi(p,n)=0d0
-	do j=1, jmax 
-             chi(p,n)=chi(p,n) + & 
+ do n=0, nn+1 
+    if(n==0.or.n==nn)write(*,"(A9,1X,I3)") "n=", n
+    do p=1, np 
+ 	   do j=1, jmax 
+          chi(p,n)=chi(p,n) + & 
              PLM(j,anc(p))*dm(j)*&
-	     real(SH_S(J,N,IEXT)*sin_cos(mm(j),p))	
-	enddo
-   enddo
- enddo
+	         real(SH_S(J,N,IEXT)*sin_cos(mm(j),p))	
+	   end do
+    end do
+ end do
 !$OMP END PARALLEL DO
 !
 !
@@ -1147,9 +1175,10 @@
 !
 ! * ** *** We use "CHI" to save memory *** ** * 
 ! 
- do p=1, np 
- if(p==1.or.p==np)write(*,"(A9,1X,I7)") "p=", p 
-    do n=0, nn+1 
+ do n=0, nn+1 
+    if(n==0.or.n==nn)write(*,"(A9,1X,I3)") "n=", n
+    do p=1, np 
+ !if(p==1.or.p==np)write(*,"(A9,1X,I7)") "p=", p 
        topo(p,n) = dble(topop(p))-(chi(p,n)-chi(p,nn0)) 
     enddo
  enddo
@@ -1162,16 +1191,17 @@
 !
 !----------------------------------------------------: Ext loop: O_pn 
  write(*,*) ' ---- EXT: new Ocean Function O_pn' 
- ALLOCATE ( H(NP,0:NN+1) ) 
- open(1,file=ICE_F) 
- do p=1, np  
-    read(1,*) j, xn, xn, xn, (h(p,n),n=0,nn+1)
- enddo
- Close(1) 
+!ALLOCATE ( H(NP,0:NN+1) ) 
+!open(1,file=ICE_F) 
+!do p=1, np  
+!   read(1,*) j, xn, xn, xn, (h(p,n),n=0,nn+1)
+!enddo
+!Close(1) 
 ! 
- do p=1, np  
- if(p==1.or.p==np)write(*,"(A9,1X,I7)") "p=", p 
-   do n=0, nn+1 
+ do n=0, nn+1 
+ if(n==0.or.n==nn)write(*,"(A9,1X,I3)") "n=", n
+ !if(p==1.or.p==np)write(*,"(A9,1X,I7)") "p=", p 
+   do p=1, np  
      of(p,n)=0
      if(topo(p,n)+rho_iw*dble(h(p,n))< 0) of(p,n)=1 
      if(topo(p,n)+rho_iw*dble(h(p,n))>=0) of(p,n)=0 
@@ -1214,7 +1244,7 @@
  SH_SAV(:,:) = (0D0,0D0)
  SH_SAV(J_INDEX(0,0),:) = S_AVE(:) 
 !
- DEALLOCATE ( H )
+!DEALLOCATE ( H )
 !
  write(*,*) 
  write(*,*) " o~o~o~o~o~o~o~o~o~o~o" 
@@ -1256,8 +1286,8 @@
 !$OMP PARALLEL DO DEFAULT(NONE) PRIVATE(J,N,K) &
 !$OMP SHARED(SH_XA,SH_W,LL,beta_v,EV,JMAX,NN) &
 !$OMP SCHEDULE(GUIDED)
- do j=1, jmax 
-    do n=0, nn+1
+ do n=0, nn+1
+    do j=1, jmax 
        sh_xa(j,n)= dble(ev(ll(j)))*sh_w(j,n) 
        if(n>=1)then
           do k=0, n-1 
@@ -1276,8 +1306,8 @@
 !$OMP PARALLEL DO DEFAULT(NONE) PRIVATE(J,N,K) &
 !$OMP SHARED(SH_XB,SH_Z,LL,beta_v,EV,JMAX,NN,IINT_MAX) &
 !$OMP SCHEDULE(GUIDED)
- do j=1, jmax 
-    do n=0, nn+1
+ do n=0, nn+1
+    do j=1, jmax 
        sh_xb(j,n)= dble(ev(ll(j)))*sh_z(j,n,IINT_MAX) 
        if(n>=1)then
           do k=0, n-1 
@@ -1297,8 +1327,8 @@
 !$OMP PARALLEL DO DEFAULT(NONE) PRIVATE(J,N,K) &
 !$OMP SHARED(SH_XC,SH_X,LL,beta_v,EV,JMAX,NN) &
 !$OMP SCHEDULE(GUIDED)
- do j=1, jmax 
-    do n=0, nn+1
+ do n=0, nn+1
+    do j=1, jmax 
        sh_xc(j,n)= dble(ev(ll(j)))*sh_x(j,n) 
        if(n>=1)then
           do k=0, n-1 
@@ -1329,8 +1359,8 @@
 !$OMP PARALLEL DO DEFAULT(NONE) PRIVATE(J,N,K) &
 !$OMP SHARED(SH_XA,SH_W,LL,beta_u,EU,JMAX,NN) &
 !$OMP SCHEDULE(GUIDED)
- do j=1, jmax 
-    do n=0, nn+1
+ do n=0, nn+1
+    do j=1, jmax 
        sh_xa(j,n)= dble(eu(ll(j)))*sh_w(j,n) 
        if(n>=1)then
           do k=0, n-1 
@@ -1349,8 +1379,8 @@
 !$OMP PARALLEL DO DEFAULT(NONE) PRIVATE(J,N,K) &
 !$OMP SHARED(SH_XB,SH_Z,LL,beta_u,EU,JMAX,NN,IINT_MAX) &
 !$OMP SCHEDULE(GUIDED)
- do j=1, jmax 
-    do n=0, nn+1
+ do n=0, nn+1
+    do j=1, jmax 
        sh_xb(j,n)= dble(eu(ll(j)))*sh_z(j,n,IINT_MAX) 
        if(n>=1)then
           do k=0, n-1 
@@ -1370,8 +1400,8 @@
 !$OMP PARALLEL DO DEFAULT(NONE) PRIVATE(J,N,K) &
 !$OMP SHARED(SH_XC,SH_X,LL,beta_u,EU,JMAX,NN) &
 !$OMP SCHEDULE(GUIDED)
- do j=1, jmax 
-    do n=0, nn+1
+ do n=0, nn+1
+    do j=1, jmax 
        sh_xc(j,n)= dble(eu(ll(j)))*sh_x(j,n) 
        if(n>=1)then
           do k=0, n-1 
@@ -1401,8 +1431,8 @@
 !$OMP PARALLEL DO DEFAULT(NONE) PRIVATE(J,N,K) &
 !$OMP SHARED(SH_XA,SH_W,LL,beta_g,EG,JMAX,NN) &
 !$OMP SCHEDULE(GUIDED)
- do j=1, jmax 
-    do n=0, nn+1
+ do n=0, nn+1
+    do j=1, jmax 
        sh_xa(j,n)= dble(eg(ll(j)))*sh_w(j,n) 
        if(n>=1)then
           do k=0, n-1 
@@ -1421,8 +1451,8 @@
 !$OMP PARALLEL DO DEFAULT(NONE) PRIVATE(J,N,K) &
 !$OMP SHARED(SH_XB,SH_Z,LL,beta_g,EG,JMAX,NN,IINT_MAX) &
 !$OMP SCHEDULE(GUIDED)
- do j=1, jmax 
-    do n=0, nn+1
+ do n=0, nn+1
+    do j=1, jmax 
        sh_xb(j,n)= dble(eg(ll(j)))*sh_z(j,n,IINT_MAX) 
        if(n>=1)then
           do k=0, n-1 
@@ -1442,8 +1472,8 @@
 !$OMP PARALLEL DO DEFAULT(NONE) PRIVATE(J,N,K) &
 !$OMP SHARED(SH_XC,SH_X,LL,beta_g,EG,JMAX,NN) &
 !$OMP SCHEDULE(GUIDED)
- do j=1, jmax 
-    do n=0, nn+1
+ do n=0, nn+1
+    do j=1, jmax 
        sh_xc(j,n)= dble(eg(ll(j)))*sh_x(j,n) 
        if(n>=1)then
           do k=0, n-1 
