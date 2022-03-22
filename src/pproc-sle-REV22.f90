@@ -25,6 +25,7 @@
 ! Revised GS Apr 19, 2020:   Implementation of "horizontals"
 ! Revised DM Mar  7, 2021:   Wide timestamp labels and future GIA
 ! Revised DM Mar 18, 2022:   Checks if the cfg file exists
+! Revised DM Mar 22, 2022:   Changed the H(:,:) array to REAL*8
 !
 !/////////////////////////////////////////////////////////////////
 !/////////////////////////////////////////////////////////////////
@@ -138,7 +139,8 @@
  COMPLEX*16, ALLOCATABLE :: SH_U(:,:), SH_G(:,:), SH_N(:,:), SH_V(:,:)
  COMPLEX*16, ALLOCATABLE :: SIN_COS_G(:,:), SIN_COS(:,:)
 !
- INTEGER, ALLOCATABLE :: ANC(:), MM(:), LL(:), DM(:), OF(:,:), H(:,:)
+ INTEGER, ALLOCATABLE :: ANC(:), MM(:), LL(:), DM(:), OF(:,:)
+ REAL*8, ALLOCATABLE :: H(:,:)
 !
 !/////////////////////////////////////////////////////////////////
 !/////////////////////////////////////////////////////////////////
