@@ -31,7 +31,7 @@
 !
  ice3g-R44.pix              ! Pixelized ice model
 !
- topo-R44.pix               ! Pixelized present-day topo
+ topo-R44-ETOPO2022         ! Pixelized present-day topo
 !
  ofp-i6g-R44.pix            ! Pixelized present-day OF (only for elastic models)
 !
