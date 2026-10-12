@@ -19,6 +19,8 @@ FLUID_LN_OBJS=fluid-ln.o utils.o
 #
 FMLIB_OBJS=fmsave.o fmzm90.o fm.o
 #
+BIN_DIR=../bin
+#
 all: ../bin/taboo.exe ../bin/pmtf.exe ../bin/pmtf-rev.exe ../bin/guv.exe ../bin/guv-rev.exe ../bin/fluid-ln.exe
 #
 ../bin/taboo.exe: $(FMLIB_OBJS) $(TABOO_OBJS) | $(BIN_DIR)
