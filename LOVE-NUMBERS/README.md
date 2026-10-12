@@ -12,15 +12,15 @@ The Earth model is described in a data file. Some example model files are availa
 
 ```
 #--------------------------------------------------------------------------------------------------
- # GSpada 081219 / PREM_LT60_NV4_VM5a.dat
- #      r<(m)          r>(m)          rho(kg/m^3)    rig(Pa)       visco(Pa.s)   Thick(km)     Layer 
- #--------------------------------------------------------------------------------------------------
-   5   0.63110E+07    0.63710E+07    0.30954E+04    0.5377E+11    0.1000E+24    0.6000E+02     LT    
-   4   0.62710E+07    0.63110E+07    0.33747E+04    0.6745E+11    0.1000E+23    0.4000E+02     M1    
-   3   0.57000E+07    0.62710E+07    0.36466E+04    0.8943E+11    0.5000E+21    0.5710E+03     M2    
-   2   0.51120E+07    0.57000E+07    0.45512E+04    0.1841E+12    0.1570E+22    0.5880E+03     M3    
-   1   0.34800E+07    0.51120E+07    0.51032E+04    0.2445E+12    0.3230E+22    0.1632E+04     M4    
-   0   0.00000E+00    0.34800E+07    0.10981E+05    0.7114E+10    0.0000E+00    0.3480E+04     CO    
+# GSpada 081219 / PREM_LT60_NV4_VM5a.dat
+#      r<(m)          r>(m)          rho(kg/m^3)    rig(Pa)       visco(Pa.s)   Thick(km)     Layer 
+#--------------------------------------------------------------------------------------------------
+  5   0.63110E+07    0.63710E+07    0.30954E+04    0.5377E+11    0.1000E+24    0.6000E+02     LT    
+  4   0.62710E+07    0.63110E+07    0.33747E+04    0.6745E+11    0.1000E+23    0.4000E+02     M1    
+  3   0.57000E+07    0.62710E+07    0.36466E+04    0.8943E+11    0.5000E+21    0.5710E+03     M2    
+  2   0.51120E+07    0.57000E+07    0.45512E+04    0.1841E+12    0.1570E+22    0.5880E+03     M3    
+  1   0.34800E+07    0.51120E+07    0.51032E+04    0.2445E+12    0.3230E+22    0.1632E+04     M4    
+  0   0.00000E+00    0.34800E+07    0.10981E+05    0.7114E+10    0.0000E+00    0.3480E+04     CO    
 ```
 
 The first four lines are intended as headers describing the contents of the file and will not be used. Each of the remaining lines describes a model layer. Layers are ordered from top to bottom (from the surface to the core). The columns contain the following information:
