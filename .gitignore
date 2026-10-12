@@ -17,7 +17,7 @@ DATA/topo*pix
 #
 *.bin
 RUN_*
-*R*L*dat
+*R*L*bin
 stop_config.dat
 #
 # Misc
