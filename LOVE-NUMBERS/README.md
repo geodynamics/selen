@@ -1,26 +1,27 @@
-# SELEN Green's Functions calculator
+# SELEN Green's functions calculator
 
 This directory contains utilities based upon the TABOO code (https://github.com/danielemelini/TABOO) which compute SELEN surface and rotational Green's functions for a given user-supplied rheological profile.
 
-To build the Green's Functions code, type the `make` command inside the `src/` directory. 
+To build the code, type the `make` command inside the `src/` directory. 
 
-The SELEN Green's Functions calcuator is based upon the FMLIB multi-precision arithmetic library by D.M. Smith (https://dmsmith.lmu.build/), whose source code is included in the `src/` directory. A copy of the FMLIB license is also included in the `src/FMLIB-LICESE.txt` file.
+The SELEN Green's functions calcuator uses the FMLIB multi-precision arithmetic library by D.M. Smith (https://dmsmith.lmu.build/), whose source code is included in the `src/` directory. A copy of the FMLIB license is also included in the `src/FMLIB-LICENSE.txt` file.
 
 # Defining the Earth model
 
-The Earth model is described in a data file. Some example model files are available in the `MODELS` directory. The contents of a model file is listed below:
+The Earth model is described in a data file. An example model file is listed below:
 
 ```
-#--------------------------------------------------------------------------------------------------
-# GSpada 081219 / PREM_LT60_NV4_VM5a.dat
-#      r<(m)          r>(m)          rho(kg/m^3)    rig(Pa)       visco(Pa.s)   Thick(km)     Layer 
-#--------------------------------------------------------------------------------------------------
-  5   0.63110E+07    0.63710E+07    0.30954E+04    0.5377E+11    0.1000E+24    0.6000E+02     LT    
-  4   0.62710E+07    0.63110E+07    0.33747E+04    0.6745E+11    0.1000E+23    0.4000E+02     M1    
-  3   0.57000E+07    0.62710E+07    0.36466E+04    0.8943E+11    0.5000E+21    0.5710E+03     M2    
-  2   0.51120E+07    0.57000E+07    0.45512E+04    0.1841E+12    0.1570E+22    0.5880E+03     M3    
-  1   0.34800E+07    0.51120E+07    0.51032E+04    0.2445E+12    0.3230E+22    0.1632E+04     M4    
-  0   0.00000E+00    0.34800E+07    0.10981E+05    0.7114E+10    0.0000E+00    0.3480E+04     CO    
+#----------------------------------------------------------------------------------------------------
+# DM 26-Nov-2025 / PREM_LT60_NV5_VM5a.dat / From Table 2 of Roy&Peltier 2017
+#      r<(m)          r>(m)          rho(kg/m^3)    rig(Pa)       visco(Pa.s)   Thick(km)     Layer
+#----------------------------------------------------------------------------------------------------
+   6   6.31100E+06    6.37100E+06    3.09544E+03    5.3767E+10    1.0000E+99    6.0000E+01    LT
+   5   6.27100E+06    6.31100E+06    3.37472E+03    6.7446E+10    1.0000E+22    4.0000E+01    M1
+   4   5.95100E+06    6.27100E+06    3.44828E+03    7.3874E+10    5.0000E+20    3.2000E+02    M2
+   3   5.70100E+06    5.95100E+06    3.89413E+03    1.1088E+11    5.0000E+20    2.5000E+02    M3
+   2   5.11100E+06    5.70100E+06    4.54824E+03    1.8321E+11    1.5700E+21    5.9000E+02    M4
+   1   3.48550E+06    5.11100E+06    5.10252E+03    2.4446E+11    3.2300E+21    1.6255E+03    M5
+   0   0.00000E+00    3.48550E+06    1.09626E+04    8.4634E+09    0.0000E+00    3.4855E+03    CO
 ```
 
 The first four lines are intended as headers describing the contents of the file and will not be used. Each of the remaining lines describes a model layer. Layers are ordered from top to bottom (from the surface to the core). The columns contain the following information:
@@ -33,39 +34,35 @@ The first four lines are intended as headers describing the contents of the file
 * Column 7: Thickness of the layer, in km. The value is present for the user's convenience and is not read by the program.
 * Column: 8 Layer label. This column is present for user’s convenience and it is not read by the program.
 
+Example model files for rheological profiles VM1, VM2a and VM5a are available in the `MODELS/` folder.
+
 # Configuring the Green's functions calculator
 
-The various parameters of the Green’s Functions are specified in a configuration file. Some example files are available in the `CONFIGS` directory. An example configuration file is listed below.
+The parameters controlling the generation of the Green's functions are specified in a configuration file. An example configuration file is listed below.
 
 ```
-! -------------------------------------------------------
-! This is the configuration file for procedure "TABOO"
-! -------------------------------------------------------
+!  -------------------------------------------------------
+!  This is the configuration file for procedure "TABOO"
+!  -------------------------------------------------------
 !
-! GS December 12 2019
-! GS January 06 2020
-! GS October 02 2020
-! DM February 25 2021
+! >>>>>>> Maximum harmonic degrees
 !
-! >>>>>>> Maximum harmonic degree
+  512
 !
- 512                                  
+! >>>>>>> Multi-precision parameter 
 !
-! >>>>>>> Multi-precision parameter
-!
- 128 
+  256
 !
 ! >>>>>>> Number of time steps and their length in kyrs
 !
-  60 
- 0.5 
+  52 
+  0.5   
 !
 ! >>>>>>> Number of mantle layers and model file
 !
-   4  
+   5 
 !
-MODELS/PREM_LT60_NV4_VM5a.dat
-!
+   MODELS/PREM_LT60_NV5_VM5a.dat    
 !
 ! ================ End of configuration file ================
 ```
@@ -77,9 +74,11 @@ Lines starting with an exclamation mark (`!`) are interpreted as comments and ar
 * the number $N_V$ of visco-elastic layers in the model (`5` in the example avove).
 * the full path to the model file (`MODELS/PREM_LT90_NV5_UM1_TZ1_LM3_ANU.dat`). Note that the number of mantle layers specified in the config file shall be coherent with the total number of layers in the model file ($N=N_V+2$, where $N$ is the total number of layers in the model file and $N_V$ is the number of mantle layers specified in the config file).
 
-# Running the Green's Numbers calculator
+Example configuration files for generating the surface and rotational Green's functions for models VM1, VM2a and VM5a are available in the `CONFIGS/` folder.
 
-To compute the Green's Functions for a given configuration, type the following command:
+# Running the Green's functions calculator
+
+To compute the Green's functions for a given configuration, type the following command:
 
 ```
 sh TABOO.sh config_file
