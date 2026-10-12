@@ -27,7 +27,7 @@ The first four lines are intended as headers describing the contents of the file
 
 * Column 1: Layer number (from $N-1$ to $0$, where $N$ is the total number of layers)
 * Column 2 & 3: Bottom and top radii of the layer (in m)
-* Column 4: Density $\rho$ (in kg/m^2)
+* Column 4: Density $\rho$ (in kg/m^3)
 * Column 5; Rigidity $\mu$ (i.e., shear modulus, in Pa)
 * Column 6 Viscosity $\eta$ (in Pa*s). Its value is ignored for the outermost layer (which is assumed to be elastic, i.e. with infinite viscosity) and for the inner core (which is assumed to be an inviscid fluid, i.e. with zero viscosity)
 * Column 7: Thickness of the layer, in km. The value is present for the user's convenience and is not read by the program.
