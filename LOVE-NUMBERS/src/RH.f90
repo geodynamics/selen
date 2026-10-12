@@ -1,0 +1,19 @@
+!
+!
+!
+!====================================
+ SUBROUTINE RH(IU,N)
+! READS JUNKS IN THE HEADERS  
+ USE FMZM
+ IMPLICIT NONE
+ INTEGER I, IU, N
+ CHARACTER*10 CJUNK
+!
+ DO I=1, N
+     READ(IU,'(A10)')CJUNK
+ ENDDO 
+!
+ END SUBROUTINE RH
+!
+!
+!
